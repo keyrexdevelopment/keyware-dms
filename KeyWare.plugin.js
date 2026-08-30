@@ -44,6 +44,7 @@ module.exports = class KeyWare {
         this.initMessageListener();
         this.patchContextMenu();
         this.scheduleRender();
+        this.checkForUpdates();
         this.checkChangelog();
     }
 
@@ -2919,6 +2920,84 @@ module.exports = class KeyWare {
         };
 
         document.body.appendChild(backdrop);
+    }
+
+    async checkForUpdates() {
+        try {
+            const currentVersion = "5.9.0";
+            const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
+
+            const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
+            if (!response.ok) return;
+
+            const remoteContent = await response.text();
+            const match = remoteContent.match(/@version\s+([0-9.]+)/i);
+            if (!match || !match[1]) return;
+
+            const remoteVersion = match[1];
+
+            const isNewer = (remote, current) => {
+                const rParts = remote.split('.').map(Number);
+                const cParts = current.split('.').map(Number);
+                for (let i = 0; i < Math.max(rParts.length, cParts.length); i++) {
+                    const r = rParts[i] || 0;
+                    const c = cParts[i] || 0;
+                    if (r > c) return true;
+                    if (r < c) return false;
+                }
+                return false;
+            };
+
+            if (isNewer(remoteVersion, currentVersion)) {
+                console.log(`[KeyWare] New update available: v${remoteVersion} (current: v${currentVersion})`);
+
+                const updatePlugin = () => {
+                    try {
+                        const fs = require('fs');
+                        const path = require('path');
+                        const pluginsFolder = (BdApi.Plugins && BdApi.Plugins.folder) ? BdApi.Plugins.folder : path.join(process.env.APPDATA || '', 'BetterDiscord', 'plugins');
+
+                        let targetFile = path.join(pluginsFolder, 'KeyWare.plugin.js');
+                        if (!fs.existsSync(targetFile)) {
+                            const files = fs.readdirSync(pluginsFolder);
+                            const found = files.find(f => f.toLowerCase().includes('keyware') && f.endsWith('.plugin.js'));
+                            if (found) targetFile = path.join(pluginsFolder, found);
+                        }
+
+                        fs.writeFileSync(targetFile, remoteContent, 'utf8');
+
+                        if (BdApi.UI && typeof BdApi.UI.showToast === 'function') {
+                            BdApi.UI.showToast(`KeyWare v${remoteVersion} başarıyla güncellendi!`, { type: "success" });
+                        }
+                    } catch (err) {
+                        console.error("[KeyWare] Update write error:", err);
+                        if (BdApi.UI && typeof BdApi.UI.showToast === 'function') {
+                            BdApi.UI.showToast("KeyWare güncellenirken bir hata oluştu.", { type: "error" });
+                        }
+                    }
+                };
+
+                if (BdApi.UI && typeof BdApi.UI.showNotice === 'function') {
+                    BdApi.UI.showNotice(
+                        `KeyWare için yeni bir güncelleme mevcut (v${remoteVersion})!`,
+                        {
+                            type: "info",
+                            buttons: [
+                                {
+                                    label: "Şimdi Güncelle",
+                                    onClick: (closeNotice) => {
+                                        updatePlugin();
+                                        if (typeof closeNotice === 'function') closeNotice();
+                                    }
+                                }
+                            ]
+                        }
+                    );
+                }
+            }
+        } catch (e) {
+            console.warn("[KeyWare] Update check failed:", e);
+        }
     }
 
     checkChangelog() {
