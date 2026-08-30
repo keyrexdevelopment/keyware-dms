@@ -1,16 +1,16 @@
 /**
- * @name DMCategories
+ * @name KeyWare
  * @author keyrex
  * @version 5.8.1
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 bildirim sesi, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
- * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/DMCategories.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
  * @website https://github.com/keyrexdevelopment/keyware-dms
  */
 
-module.exports = class DMCategories {
+module.exports = class KeyWare {
     constructor() {
-        this.pluginName = "DMCategories";
+        this.pluginName = "KeyWare";
         this.categories = [];
         this.customSounds = {};
         this.observer = null;
@@ -80,7 +80,10 @@ module.exports = class DMCategories {
     }
 
     loadSettings() {
-        const saved = BdApi.Data.load(this.pluginName, "categories");
+        let saved = BdApi.Data.load(this.pluginName, "categories");
+        if (!saved || !Array.isArray(saved)) {
+            saved = BdApi.Data.load("DMCategories", "categories");
+        }
         this.categories = Array.isArray(saved) ? saved : [
             {
                 id: "cat_favs",
@@ -111,7 +114,10 @@ module.exports = class DMCategories {
             });
         }
 
-        const savedSounds = BdApi.Data.load(this.pluginName, "customSounds");
+        let savedSounds = BdApi.Data.load(this.pluginName, "customSounds");
+        if (!savedSounds || typeof savedSounds !== 'object') {
+            savedSounds = BdApi.Data.load("DMCategories", "customSounds");
+        }
         this.customSounds = (savedSounds && typeof savedSounds === 'object') ? savedSounds : {};
     }
 

@@ -26,7 +26,7 @@
 
 ### Overview
 
-**KeyWare DMs** replaces standard Discord direct message lists with an organized, extensible workspace system. Designed from the ground up to prevent React unmount cycles, it operates synchronously within Discord's native event pipeline without introducing layout thrashing or background resource leaks.
+**KeyWare** replaces standard Discord direct message lists with an organized, extensible workspace system. Designed from the ground up to prevent React unmount cycles, it operates synchronously within Discord's native event pipeline without introducing layout thrashing or background resource leaks.
 
 ---
 
@@ -75,26 +75,26 @@
 
 #### Windows (PowerShell)
 ```powershell
-iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/DMCategories.plugin.js" -OutFile "$env:APPDATA\BetterDiscord\plugins\DMCategories.plugin.js"
+iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js" -OutFile "$env:APPDATA\BetterDiscord\plugins\KeyWare.plugin.js"
 ```
 
 #### Manual Installation
 1. Ensure **[BetterDiscord](https://betterdiscord.app/)** is installed.
-2. Download [`DMCategories.plugin.js`](https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/DMCategories.plugin.js).
+2. Download [`KeyWare.plugin.js`](https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js).
 3. Place the file inside your BetterDiscord plugins directory:
    ```
    %appdata%\BetterDiscord\plugins
    ```
-4. Open Discord Settings ➔ **Plugins** and enable **KeyWare DMs**.
+4. Open Discord Settings ➔ **Plugins** and enable **KeyWare**.
 
 ---
 
 ### Automatic Updates
 
-KeyWare DMs utilizes BetterDiscord's native update pipeline. When a new release is pushed to GitHub, an update notification will automatically appear in your Discord client:
+KeyWare utilizes BetterDiscord's native update pipeline. When a new release is pushed to GitHub, an update notification will automatically appear in your Discord client:
 
 ```
-[ Update Available ] KeyWare DMs v5.8.x ➔ [ Update Now ]
+[ Update Available ] KeyWare v5.8.x ➔ [ Update Now ]
 ```
 
 ---
