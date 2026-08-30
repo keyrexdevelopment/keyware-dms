@@ -16,7 +16,6 @@
 
 <p align="center">
   <a href="#overview">Overview</a> •
-  <a href="#core-architecture">Architecture</a> •
   <a href="#key-modules">Modules</a> •
   <a href="#one-liner-install">Quick Start</a> •
   <a href="#technical-specifications">Specifications</a> •
@@ -28,20 +27,6 @@
 ### Overview
 
 **KeyWare DMs** replaces standard Discord direct message lists with an organized, extensible workspace system. Designed from the ground up to prevent React unmount cycles, it operates synchronously within Discord's native event pipeline without introducing layout thrashing or background resource leaks.
-
-```
-┌────────────────────────────────────────────────────────┐
-│                   DISPATCHER PIPELINE                  │
-├───────────────────┬───────────────────┬────────────────┤
-│  MESSAGE_CREATE   │  CHANNEL_SELECT   │   AUDIO_HOOK   │
-│  Custom Ping Match│  Instant 0ms Sync │  Silence Native│
-└─────────┬─────────┴─────────┬─────────┴────────┬───────┘
-          ▼                   ▼                  ▼
-┌───────────────────┬───────────────────┬────────────────┐
-│ REACT-SAFE DOM    │ TYPOGRAPHY ENGINE │ THEME SHADERS  │
-│ Order-based Sort  │ OS / Web Fonts    │ Glass / Neon   │
-└───────────────────┴───────────────────┴────────────────┘
-```
 
 ---
 
