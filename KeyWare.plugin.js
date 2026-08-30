@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 5.9.0
+ * @version 5.9.1
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -2924,7 +2924,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates() {
         try {
-            const currentVersion = "5.9.0";
+            const currentVersion = "5.9.1";
             const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
 
             const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
@@ -3001,7 +3001,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "5.9.0";
+        const currentVersion = "5.9.1";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3020,7 +3020,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v5.9.0</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v5.9.1</div>
                         </div>
                     </div>
                 </div>
