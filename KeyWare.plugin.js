@@ -1,8 +1,8 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 5.9.1
- * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
+ * @version 6.0.0
+ * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
  * @website https://github.com/keyrexdevelopment/keyware-dms
@@ -23,6 +23,20 @@ module.exports = class KeyWare {
         this.suppressDiscordSound = false;
         this.suppressTimeout = null;
 
+        // Shimeji Desktop Mascot State
+        this.shimejiSettings = {
+            enabled: false,
+            character: 'dante', // 'dante' | 'vergil' | 'both'
+            mode: 'follow', // 'follow' | 'roam' | 'sit'
+            scale: 0.85,
+            speed: 2.5,
+            physics: true
+        };
+        this.shimejis = [];
+        this.shimejiRafId = null;
+        this.mouseX = window.innerWidth / 2;
+        this.mouseY = window.innerHeight / 2;
+
         this.handleClick = this.handleClick.bind(this);
         this.handleContextMenu = this.handleContextMenu.bind(this);
         this.handleDragStart = this.handleDragStart.bind(this);
@@ -31,6 +45,8 @@ module.exports = class KeyWare {
         this.handleDrop = this.handleDrop.bind(this);
         this.handleDragEnd = this.handleDragEnd.bind(this);
         this.onMessageCreate = this.onMessageCreate.bind(this);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.handleMouseUp = this.handleMouseUp.bind(this);
     }
 
     start() {
@@ -44,6 +60,7 @@ module.exports = class KeyWare {
         this.initMessageListener();
         this.patchContextMenu();
         this.scheduleRender();
+        this.initShimejis();
         this.checkForUpdates();
         this.checkChangelog();
     }
@@ -74,6 +91,7 @@ module.exports = class KeyWare {
         this.unpatchContextMenu();
         this.removeMessageListener();
         this.clearAllRain();
+        this.destroyShimejis();
         this.detachGlobalEvents();
         this.closeModal();
         this.closeContextMenu();
@@ -121,11 +139,17 @@ module.exports = class KeyWare {
             savedSounds = BdApi.Data.load("DMCategories", "customSounds");
         }
         this.customSounds = (savedSounds && typeof savedSounds === 'object') ? savedSounds : {};
+
+        const savedShimeji = BdApi.Data.load(this.pluginName, "shimeji");
+        if (savedShimeji && typeof savedShimeji === 'object') {
+            this.shimejiSettings = Object.assign(this.shimejiSettings, savedShimeji);
+        }
     }
 
     saveSettings() {
         BdApi.Data.save(this.pluginName, "categories", this.categories);
         BdApi.Data.save(this.pluginName, "customSounds", this.customSounds);
+        BdApi.Data.save(this.pluginName, "shimeji", this.shimejiSettings);
     }
 
     getDispatcher() {
@@ -1309,6 +1333,89 @@ module.exports = class KeyWare {
                 gap: 8px;
             }
 
+            /* Shimeji Desktop Mascot Styles */
+            #dm-cat-shimeji-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                pointer-events: none;
+                z-index: 99998;
+                overflow: hidden;
+            }
+            .dm-cat-shimeji {
+                position: absolute;
+                top: 0;
+                left: 0;
+                pointer-events: auto;
+                cursor: grab;
+                user-select: none;
+                will-change: transform;
+                filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+                transition: filter 0.2s ease;
+            }
+            .dm-cat-shimeji:hover {
+                filter: drop-shadow(0 6px 14px rgba(88, 101, 242, 0.7)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+            }
+            .dm-cat-shimeji.dragging {
+                cursor: grabbing !important;
+                filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.7)) scale(1.06);
+            }
+            .dm-cat-shimeji canvas {
+                display: block;
+                image-rendering: pixelated;
+                image-rendering: -moz-crisp-edges;
+                image-rendering: crisp-edges;
+            }
+
+            .dm-cat-shimeji-btn {
+                cursor: pointer !important;
+                color: var(--interactive-normal, #b5bac1) !important;
+                padding: 2px 4px;
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                transition: color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+                margin-left: 2px;
+                pointer-events: auto !important;
+                position: relative;
+                z-index: 10;
+            }
+            .dm-cat-shimeji-btn:hover {
+                color: #ffffff !important;
+                background-color: var(--background-modifier-hover, rgba(78, 80, 88, 0.16));
+                transform: scale(1.1);
+            }
+            .dm-cat-shimeji-btn.active {
+                color: var(--brand-500, #5865f2) !important;
+            }
+
+            .dm-cat-shimeji-card {
+                background: var(--background-secondary, #2b2d31);
+                border: 2px solid rgba(255, 255, 255, 0.08);
+                border-radius: 8px;
+                padding: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 8px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .dm-cat-shimeji-card:hover {
+                border-color: rgba(255, 255, 255, 0.25);
+                transform: translateY(-2px);
+                background: var(--background-secondary-alt, #1e1f22);
+            }
+            .dm-cat-shimeji-card.active {
+                border-color: var(--brand-500, #5865f2) !important;
+                background: rgba(88, 101, 242, 0.15) !important;
+                box-shadow: 0 0 16px rgba(88, 101, 242, 0.35);
+            }
+
             @keyframes dmCatFadeIn {
                 from { opacity: 0; transform: scale(0.96); }
                 to { opacity: 1; transform: scale(1); }
@@ -1354,6 +1461,30 @@ module.exports = class KeyWare {
         });
     }
 
+    handleMouseMove(e) {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+    }
+
+    handleMouseUp(e) {
+        if (this.shimejis && this.shimejis.length > 0) {
+            this.shimejis.forEach(pet => {
+                if (pet.isDragged) {
+                    let throwVx = 0;
+                    let throwVy = 0;
+                    if (pet.dragHistory && pet.dragHistory.length >= 2) {
+                        const first = pet.dragHistory[0];
+                        const last = pet.dragHistory[pet.dragHistory.length - 1];
+                        const dt = Math.max(1, (last.t - first.t));
+                        throwVx = ((last.x - first.x) / dt) * 16;
+                        throwVy = ((last.y - first.y) / dt) * 16;
+                    }
+                    pet.release(throwVx, throwVy);
+                }
+            });
+        }
+    }
+
     attachGlobalEvents() {
         document.addEventListener('click', this.handleClick, true);
         document.addEventListener('contextmenu', this.handleContextMenu, true);
@@ -1362,6 +1493,8 @@ module.exports = class KeyWare {
         document.addEventListener('dragleave', this.handleDragLeave);
         document.addEventListener('drop', this.handleDrop);
         document.addEventListener('dragend', this.handleDragEnd);
+        window.addEventListener('mousemove', this.handleMouseMove, { passive: true });
+        window.addEventListener('mouseup', this.handleMouseUp);
     }
 
     detachGlobalEvents() {
@@ -1372,6 +1505,8 @@ module.exports = class KeyWare {
         document.removeEventListener('dragleave', this.handleDragLeave);
         document.removeEventListener('drop', this.handleDrop);
         document.removeEventListener('dragend', this.handleDragEnd);
+        window.removeEventListener('mousemove', this.handleMouseMove);
+        window.removeEventListener('mouseup', this.handleMouseUp);
     }
 
     renderAll() {
@@ -1391,35 +1526,55 @@ module.exports = class KeyWare {
     }
 
     injectCreateCategoryButton() {
-        if (document.querySelector('.dm-cat-add-btn')) return;
-
         const header = document.querySelector('[class*="privateChannelsHeaderContainer"], h2[class*="privateChannelsHeader"], [class*="privateChannels"] header, [class*="privateChannels"] [role="heading"]');
         if (!header) return;
 
-        const btn = document.createElement('div');
-        btn.className = 'dm-cat-add-btn';
-        btn.title = 'Kategori Oluştur';
-        btn.setAttribute('role', 'button');
-        btn.setAttribute('aria-label', 'Kategori Oluştur');
-        btn.innerHTML = `
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-1 8h-3v3h-2v-3h-3v-2h3V9h2v3h3v2z"/>
-            </svg>
-        `;
-
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.openCreateModal();
-        });
-
         const existingActions = header.querySelector('[class*="buttons"], [class*="actions"]') || header.querySelector('div[class*="clickable"]')?.parentElement;
-        if (existingActions) {
-            existingActions.appendChild(btn);
-        } else {
+        const targetContainer = existingActions || header;
+
+        if (!header.style.display || header.style.display !== 'flex') {
             header.style.display = 'flex';
             header.style.alignItems = 'center';
-            header.appendChild(btn);
+        }
+
+        // Shimeji Pet Button
+        if (!header.querySelector('.dm-cat-shimeji-btn')) {
+            const shimejiBtn = document.createElement('div');
+            shimejiBtn.className = `dm-cat-shimeji-btn ${this.shimejiSettings?.enabled ? 'active' : ''}`;
+            shimejiBtn.title = 'Shimeji Evcil Hayvanlar (Dante & Vergil)';
+            shimejiBtn.setAttribute('role', 'button');
+            shimejiBtn.setAttribute('aria-label', 'Shimeji Evcil Hayvanlar');
+            shimejiBtn.innerHTML = `
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                </svg>
+            `;
+            shimejiBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.openShimejiModal();
+            });
+            targetContainer.appendChild(shimejiBtn);
+        }
+
+        // Category Add Button
+        if (!header.querySelector('.dm-cat-add-btn')) {
+            const btn = document.createElement('div');
+            btn.className = 'dm-cat-add-btn';
+            btn.title = 'Kategori Oluştur';
+            btn.setAttribute('role', 'button');
+            btn.setAttribute('aria-label', 'Kategori Oluştur');
+            btn.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-1 8h-3v3h-2v-3h-3v-2h3V9h2v3h3v2z"/>
+                </svg>
+            `;
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.openCreateModal();
+            });
+            targetContainer.appendChild(btn);
         }
     }
 
@@ -2924,7 +3079,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates() {
         try {
-            const currentVersion = "5.9.1";
+            const currentVersion = "6.0.0";
             const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
 
             const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
@@ -3001,7 +3156,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "5.9.1";
+        const currentVersion = "6.0.0";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3020,7 +3175,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v5.9.1</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.0.0</div>
                         </div>
                     </div>
                 </div>
@@ -3030,24 +3185,24 @@ module.exports = class KeyWare {
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 10px; background: var(--background-secondary, #2b2d31); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
                         <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; line-height: 1;">⚔️</span>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Dante & Vergil Shimeji Masaüstü Evcil Hayvanları</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Discord içinde canlı yürüyen, fare imlecinizi takip eden, tutup fırlatabileceğiniz gerçek zamanlı fizik motorlu Shimeji maskotları eklendi!</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; line-height: 1;">🔄</span>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Dahili Otomatik Güncelleyici (Auto-Updater)</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Artık yeni sürümler çıktığında Discord'unuz anında algılar ve tek tıkla otomatik olarak güncellenir.</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
                             <span style="font-size: 18px; line-height: 1;">🔊</span>
                             <div>
                                 <div style="font-size: 13px; font-weight: 600; color: #fff;">Discord Sunucu Soundboard Desteği</div>
-                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Artık üye olduğunuz tüm sunuculardaki ses tahtası (Soundboard) seslerini kişiye özel bildirim sesi olarak atayabilirsiniz.</div>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 10px; align-items: flex-start;">
-                            <span style="font-size: 18px; line-height: 1;">🔍</span>
-                            <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Canlı Arama & Anında Önizleme</div>
-                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Yüzlerce ses arasından ses adı veya sunucu adı ile arama yapabilir, kaydetmeden önce tek tıkla dinleyebilirsiniz.</div>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 10px; align-items: flex-start;">
-                            <span style="font-size: 18px; line-height: 1;">📁</span>
-                            <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Yenilenmiş Sekmeli Arayüz</div>
-                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Hem Soundboard hem de özel MP3 / yerel ses dosyası desteği tek ve şık bir pencerede toplandı.</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Üye olduğunuz tüm sunuculardaki ses tahtası seslerini kişiye özel bildirim sesi olarak atayabilirsiniz.</div>
                             </div>
                         </div>
                     </div>
@@ -3523,6 +3678,307 @@ module.exports = class KeyWare {
         });
     }
 
+    // --- SHIMEJI DESKTOP MASCOT ENGINE (DANTE & VERGIL) ---
+
+    getShimejiImage(character) {
+        try {
+            const fs = require('fs');
+            const path = require('path');
+            const possiblePaths = [
+                path.join(process.env.APPDATA || '', 'BetterDiscord', 'plugins', 'shimejis', `${character}.png`),
+                path.join(process.cwd?.() || '', 'shimejis', `${character}.png`),
+                `c:\\Users\\deus ex machina\\Desktop\\dc plugini\\shimejis\\${character}.png`
+            ];
+            for (const p of possiblePaths) {
+                if (fs.existsSync(p)) {
+                    const buf = fs.readFileSync(p);
+                    return `data:image/png;base64,${buf.toString('base64')}`;
+                }
+            }
+        } catch (e) { }
+
+        return `https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/shimejis/${character}.png`;
+    }
+
+    initShimejis() {
+        this.destroyShimejis();
+
+        if (!this.shimejiSettings || !this.shimejiSettings.enabled) return;
+
+        let container = document.getElementById('dm-cat-shimeji-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'dm-cat-shimeji-container';
+            document.body.appendChild(container);
+        }
+
+        const char = this.shimejiSettings.character || 'dante';
+        if (char === 'dante') {
+            const pet = new ShimejiPet(this, 'dante', window.innerWidth * 0.4, window.innerHeight - 150);
+            this.shimejis.push(pet);
+            container.appendChild(pet.element);
+        } else if (char === 'vergil') {
+            const pet = new ShimejiPet(this, 'vergil', window.innerWidth * 0.6, window.innerHeight - 150);
+            this.shimejis.push(pet);
+            container.appendChild(pet.element);
+        } else if (char === 'both') {
+            const dante = new ShimejiPet(this, 'dante', window.innerWidth * 0.35, window.innerHeight - 150);
+            const vergil = new ShimejiPet(this, 'vergil', window.innerWidth * 0.65, window.innerHeight - 150);
+            this.shimejis.push(dante, vergil);
+            container.appendChild(dante.element);
+            container.appendChild(vergil.element);
+        }
+
+        let lastTime = performance.now();
+        const loop = (now) => {
+            const dt = Math.min(100, now - lastTime);
+            lastTime = now;
+            this.shimejis.forEach(p => p.update(dt));
+            this.shimejiRafId = requestAnimationFrame(loop);
+        };
+        this.shimejiRafId = requestAnimationFrame(loop);
+    }
+
+    destroyShimejis() {
+        if (this.shimejiRafId) {
+            cancelAnimationFrame(this.shimejiRafId);
+            this.shimejiRafId = null;
+        }
+        this.shimejis = [];
+        const container = document.getElementById('dm-cat-shimeji-container');
+        if (container) container.remove();
+    }
+
+    openShimejiModal() {
+        this.closeModal();
+        const cfg = this.shimejiSettings;
+
+        let selectedEnabled = !!cfg.enabled;
+        let selectedChar = cfg.character || 'dante';
+        let selectedMode = cfg.mode || 'follow';
+        let selectedScale = cfg.scale || 0.85;
+        let selectedSpeed = cfg.speed || 2.5;
+
+        const backdrop = document.createElement('div');
+        backdrop.className = 'dm-cat-modal-backdrop';
+        backdrop.innerHTML = `
+            <div class="dm-cat-modal-box" style="width: 540px;">
+                <div class="dm-cat-modal-header">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 20px;">⚔️</span>
+                        <span>Shimeji Evcil Hayvanlar (Dante & Vergil)</span>
+                    </div>
+                </div>
+
+                <div class="dm-cat-modal-body" style="padding: 16px 20px; gap: 14px;">
+                    <!-- Character Picker -->
+                    <div class="dm-cat-setting-row">
+                        <label class="dm-cat-setting-label">Karakter Seçimi</label>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                            <div class="dm-cat-shimeji-card ${selectedEnabled && selectedChar === 'dante' ? 'active' : ''}" data-char="dante">
+                                <div style="font-size: 28px;">🔴</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #fff;">Dante</div>
+                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Jackpot!</div>
+                            </div>
+                            <div class="dm-cat-shimeji-card ${selectedEnabled && selectedChar === 'vergil' ? 'active' : ''}" data-char="vergil">
+                                <div style="font-size: 28px;">🔵</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #fff;">Vergil</div>
+                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Power!</div>
+                            </div>
+                            <div class="dm-cat-shimeji-card ${selectedEnabled && selectedChar === 'both' ? 'active' : ''}" data-char="both">
+                                <div style="font-size: 28px;">⚔️</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #fff;">Her İkisi</div>
+                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Dante & Vergil</div>
+                            </div>
+                            <div class="dm-cat-shimeji-card ${!selectedEnabled ? 'active' : ''}" data-char="off">
+                                <div style="font-size: 28px;">🚫</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #fff;">Kapalı</div>
+                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Devre Dışı</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Behavior Mode -->
+                    <div class="dm-cat-setting-row">
+                        <label class="dm-cat-setting-label">Davranış Modu</label>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="dm-cat-btn dm-cat-mode-btn ${selectedMode === 'follow' ? 'dm-cat-btn-primary' : ''}" data-mode="follow" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${selectedMode === 'follow' ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
+                                <span>🖱️ Fareyi Takip Et</span>
+                            </button>
+                            <button type="button" class="dm-cat-btn dm-cat-mode-btn ${selectedMode === 'roam' ? 'dm-cat-btn-primary' : ''}" data-mode="roam" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${selectedMode === 'roam' ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
+                                <span>🚶 Serbest Gezinti</span>
+                            </button>
+                            <button type="button" class="dm-cat-btn dm-cat-mode-btn ${selectedMode === 'sit' ? 'dm-cat-btn-primary' : ''}" data-mode="sit" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${selectedMode === 'sit' ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
+                                <span>🪑 Sakin / Otur</span>
+                            </button>
+                        </div>
+                        <div class="dm-cat-setting-desc">Fareyi Takip Et seçildiğinde karakter fare imlecinizin peşinden koşar ve yanınızda bekler.</div>
+                    </div>
+
+                    <!-- Scale Slider -->
+                    <div class="dm-cat-setting-row">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label class="dm-cat-setting-label" style="margin-bottom: 0;">Boyut (Ölçek)</label>
+                            <span id="dmShimejiScaleText" style="color: var(--text-normal, #fff); font-size: 13px; font-weight: 600;">${Math.round(selectedScale * 100)}%</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" id="dmShimejiScale" min="0.5" max="1.4" step="0.05" value="${selectedScale}" style="flex: 1; accent-color: var(--brand-500, #5865f2); cursor: pointer;" />
+                        </div>
+                    </div>
+
+                    <!-- Speed Slider -->
+                    <div class="dm-cat-setting-row">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label class="dm-cat-setting-label" style="margin-bottom: 0;">Yürüme Hızı</label>
+                            <span id="dmShimejiSpeedText" style="color: var(--text-normal, #fff); font-size: 13px; font-weight: 600;">${selectedSpeed}x</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" id="dmShimejiSpeed" min="1" max="5" step="0.5" value="${selectedSpeed}" style="flex: 1; accent-color: var(--brand-500, #5865f2); cursor: pointer;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dm-cat-modal-footer">
+                    <button class="dm-cat-btn dm-cat-btn-cancel" id="dmShimejiCancel">İptal</button>
+                    <button class="dm-cat-btn dm-cat-btn-primary" id="dmShimejiSave">Kaydet ve Uygula</button>
+                </div>
+            </div>
+        `;
+
+        // Card clicks
+        backdrop.querySelectorAll('.dm-cat-shimeji-card').forEach(card => {
+            card.onclick = () => {
+                backdrop.querySelectorAll('.dm-cat-shimeji-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                const ch = card.dataset.char;
+                if (ch === 'off') {
+                    selectedEnabled = false;
+                } else {
+                    selectedEnabled = true;
+                    selectedChar = ch;
+                }
+            };
+        });
+
+        // Mode clicks
+        backdrop.querySelectorAll('.dm-cat-mode-btn').forEach(btn => {
+            btn.onclick = () => {
+                backdrop.querySelectorAll('.dm-cat-mode-btn').forEach(b => {
+                    b.classList.remove('dm-cat-btn-primary');
+                    b.style.background = 'var(--background-secondary-alt, #1e1f22)';
+                });
+                btn.classList.add('dm-cat-btn-primary');
+                btn.style.background = 'var(--brand-500, #5865f2)';
+                selectedMode = btn.dataset.mode;
+            };
+        });
+
+        const scaleInput = backdrop.querySelector('#dmShimejiScale');
+        const scaleText = backdrop.querySelector('#dmShimejiScaleText');
+        scaleInput.oninput = () => {
+            selectedScale = parseFloat(scaleInput.value);
+            scaleText.textContent = `${Math.round(selectedScale * 100)}%`;
+        };
+
+        const speedInput = backdrop.querySelector('#dmShimejiSpeed');
+        const speedText = backdrop.querySelector('#dmShimejiSpeedText');
+        speedInput.oninput = () => {
+            selectedSpeed = parseFloat(speedInput.value);
+            speedText.textContent = `${selectedSpeed}x`;
+        };
+
+        backdrop.querySelector('#dmShimejiSave').onclick = () => {
+            this.shimejiSettings = {
+                enabled: selectedEnabled,
+                character: selectedChar,
+                mode: selectedMode,
+                scale: selectedScale,
+                speed: selectedSpeed,
+                physics: true
+            };
+            this.saveSettings();
+            this.initShimejis();
+            const btn = document.querySelector('.dm-cat-shimeji-btn');
+            if (btn) btn.classList.toggle('active', selectedEnabled);
+            this.closeModal();
+        };
+
+        backdrop.querySelector('#dmShimejiCancel').onclick = () => this.closeModal();
+        backdrop.onclick = (e) => { if (e.target === backdrop) this.closeModal(); };
+
+        document.body.appendChild(backdrop);
+    }
+
+    openShimejiContextMenu(x, y, pet) {
+        this.closeContextMenu();
+        const menu = document.createElement('div');
+        menu.className = 'dm-cat-context-menu';
+        menu.style.left = `${Math.min(x, window.innerWidth - 200)}px`;
+        menu.style.top = `${Math.min(y, window.innerHeight - 220)}px`;
+
+        const curMode = this.shimejiSettings.mode;
+
+        menu.innerHTML = `
+            <div style="padding: 6px 10px; font-size: 11px; font-weight: 700; color: var(--brand-500, #5865f2); text-transform: uppercase;">
+                ${pet.charName.toUpperCase()} (SHIMEJI)
+            </div>
+            <div class="dm-cat-menu-item" id="dmShimejiMenuFollow">
+                <span>${curMode === 'follow' ? '✓ ' : ''}Fareyi Takip Et</span>
+            </div>
+            <div class="dm-cat-menu-item" id="dmShimejiMenuRoam">
+                <span>${curMode === 'roam' ? '✓ ' : ''}Serbest Gezinti</span>
+            </div>
+            <div class="dm-cat-menu-item" id="dmShimejiMenuSit">
+                <span>${curMode === 'sit' ? '✓ ' : ''}Otur / Sabit Dur</span>
+            </div>
+            <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 4px 0;"></div>
+            <div class="dm-cat-menu-item" id="dmShimejiMenuSettings">
+                <span>Shimeji Ayarları</span>
+            </div>
+            <div class="dm-cat-menu-item danger" id="dmShimejiMenuDismiss">
+                <span>Kaldır / Kapat</span>
+            </div>
+        `;
+
+        menu.querySelector('#dmShimejiMenuFollow').onclick = () => {
+            this.closeContextMenu();
+            this.shimejiSettings.mode = 'follow';
+            this.saveSettings();
+        };
+        menu.querySelector('#dmShimejiMenuRoam').onclick = () => {
+            this.closeContextMenu();
+            this.shimejiSettings.mode = 'roam';
+            this.saveSettings();
+        };
+        menu.querySelector('#dmShimejiMenuSit').onclick = () => {
+            this.closeContextMenu();
+            this.shimejiSettings.mode = 'sit';
+            this.saveSettings();
+        };
+        menu.querySelector('#dmShimejiMenuSettings').onclick = () => {
+            this.closeContextMenu();
+            this.openShimejiModal();
+        };
+        menu.querySelector('#dmShimejiMenuDismiss').onclick = () => {
+            this.closeContextMenu();
+            this.shimejiSettings.enabled = false;
+            this.saveSettings();
+            this.destroyShimejis();
+            const btn = document.querySelector('.dm-cat-shimeji-btn');
+            if (btn) btn.classList.remove('active');
+        };
+
+        const onDocClick = (e) => {
+            if (!menu.contains(e.target)) {
+                this.closeContextMenu();
+                document.removeEventListener('click', onDocClick, true);
+            }
+        };
+        setTimeout(() => document.addEventListener('click', onDocClick, true), 10);
+
+        document.body.appendChild(menu);
+    }
+
     escapeHtml(str) {
         return String(str)
             .replace(/&/g, "&amp;")
@@ -3532,3 +3988,286 @@ module.exports = class KeyWare {
             .replace(/'/g, "&#039;");
     }
 };
+
+class ShimejiPet {
+    constructor(manager, charName, x, y) {
+        this.manager = manager;
+        this.charName = charName;
+        this.x = x || (Math.random() * (window.innerWidth - 250) + 100);
+        this.y = y || (window.innerHeight - 150);
+        this.vx = 0;
+        this.vy = 0;
+        this.facing = 1;
+        this.state = 'IDLE';
+        this.stateTimer = Math.random() * 3000 + 2000;
+        this.animTimer = 0;
+        this.animIndex = 0;
+        this.isDragged = false;
+        this.dragStartX = 0;
+        this.dragStartY = 0;
+        this.dragHistory = [];
+        this.frame = 0;
+
+        this.element = document.createElement('div');
+        this.element.className = 'dm-cat-shimeji';
+        this.element.title = `${charName.toUpperCase()} (Tıkla & Sürükle / Sağ Tıkla)`;
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = 128;
+        this.canvas.height = 128;
+        this.ctx = this.canvas.getContext('2d');
+        this.element.appendChild(this.canvas);
+
+        this.img = new Image();
+        this.img.src = this.manager.getShimejiImage(charName);
+        this.img.onload = () => {
+            this.draw();
+        };
+
+        this.attachEvents();
+        this.updateStyle();
+    }
+
+    attachEvents() {
+        this.element.addEventListener('mousedown', (e) => {
+            if (e.button === 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.isDragged = true;
+                this.state = 'DRAGGED';
+                this.dragStartX = e.clientX - this.x;
+                this.dragStartY = e.clientY - this.y;
+                this.dragHistory = [{ x: e.clientX, y: e.clientY, t: Date.now() }];
+                this.element.classList.add('dragging');
+            }
+        });
+
+        this.element.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.manager.openShimejiContextMenu(e.clientX, e.clientY, this);
+        });
+    }
+
+    update(dt) {
+        const scale = this.manager.shimejiSettings.scale || 0.85;
+        const width = 128 * scale;
+        const height = 128 * scale;
+        const floorY = window.innerHeight - height - 8;
+        const speed = (this.manager.shimejiSettings.speed || 2.5) * (dt / 16);
+        const mode = this.manager.shimejiSettings.mode || 'follow';
+
+        // 1. DRAGGED STATE
+        if (this.isDragged) {
+            this.x = this.manager.mouseX - this.dragStartX;
+            this.y = this.manager.mouseY - this.dragStartY;
+            this.facing = this.manager.mouseX > (this.x + width / 2) ? 1 : -1;
+            
+            this.dragHistory.push({ x: this.manager.mouseX, y: this.manager.mouseY, t: Date.now() });
+            if (this.dragHistory.length > 5) this.dragHistory.shift();
+
+            this.animTimer += dt;
+            if (this.animTimer > 140) {
+                this.animTimer = 0;
+                this.animIndex = (this.animIndex + 1) % 2;
+                this.frame = 12 + this.animIndex;
+            }
+            this.updateStyle();
+            this.draw();
+            return;
+        }
+
+        // 2. FALLING STATE (Gravity & Toss Physics)
+        if (this.state === 'FALLING') {
+            const gravity = 0.55;
+            this.vy += gravity;
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.x < 0) {
+                this.x = 0;
+                this.vx = -this.vx * 0.6;
+            } else if (this.x > window.innerWidth - width) {
+                this.x = window.innerWidth - width;
+                this.vx = -this.vx * 0.6;
+            }
+
+            this.vx *= 0.98;
+
+            this.animTimer += dt;
+            if (this.animTimer > 120) {
+                this.animTimer = 0;
+                this.animIndex = (this.animIndex + 1) % 2;
+                this.frame = 4 + this.animIndex;
+            }
+
+            if (this.y >= floorY) {
+                this.y = floorY;
+                this.vy = 0;
+                this.vx = 0;
+                this.state = 'LANDING';
+                this.frame = 6;
+                this.stateTimer = 250;
+            }
+            this.updateStyle();
+            this.draw();
+            return;
+        }
+
+        // 3. LANDING SQUISH
+        if (this.state === 'LANDING') {
+            this.stateTimer -= dt;
+            if (this.stateTimer <= 0) {
+                this.state = 'IDLE';
+                this.stateTimer = 1500;
+            }
+            this.updateStyle();
+            this.draw();
+            return;
+        }
+
+        // 4. BEHAVIOR MODES (Follow Mouse, Free Roam, Sit)
+        if (mode === 'sit') {
+            this.state = 'SIT';
+            this.frame = 8;
+            this.y = floorY;
+            this.facing = this.manager.mouseX > (this.x + width / 2) ? 1 : -1;
+            this.updateStyle();
+            this.draw();
+            return;
+        }
+
+        if (mode === 'follow') {
+            const targetX = this.manager.mouseX - (width / 2);
+            const dist = Math.abs(targetX - this.x);
+
+            if (dist > 75) {
+                this.facing = targetX > this.x ? 1 : -1;
+                this.x += this.facing * Math.min(speed * 1.5, dist);
+                this.y = floorY;
+                this.state = 'WALK';
+
+                this.animTimer += dt;
+                if (this.animTimer > 100) {
+                    this.animTimer = 0;
+                    this.animIndex = (this.animIndex + 1) % 4;
+                    const walkFrames = [0, 1, 2, 3];
+                    this.frame = walkFrames[this.animIndex];
+                }
+            } else {
+                this.facing = this.manager.mouseX > (this.x + width / 2) ? 1 : -1;
+                this.y = floorY;
+                this.state = 'IDLE';
+                this.animTimer += dt;
+                if (this.animTimer > 400) {
+                    this.animTimer = 0;
+                    this.animIndex = (this.animIndex + 1) % 4;
+                    const idleFrames = [0, 0, 10, 0];
+                    this.frame = idleFrames[this.animIndex];
+                }
+            }
+            this.updateStyle();
+            this.draw();
+            return;
+        }
+
+        // 5. FREE ROAM MODE (Autonomous Walking, Sitting, Posing)
+        this.stateTimer -= dt;
+        if (this.stateTimer <= 0) {
+            const rand = Math.random();
+            if (rand < 0.45) {
+                this.state = 'WALK';
+                this.facing = Math.random() > 0.5 ? 1 : -1;
+                this.stateTimer = Math.random() * 4000 + 2000;
+            } else if (rand < 0.7) {
+                this.state = 'IDLE';
+                this.stateTimer = Math.random() * 3000 + 1500;
+            } else if (rand < 0.88) {
+                this.state = 'SIT';
+                this.stateTimer = Math.random() * 4000 + 2000;
+                this.frame = 8;
+            } else {
+                this.state = 'ATTACK';
+                this.stateTimer = 1200;
+                this.frame = 16;
+            }
+        }
+
+        if (this.state === 'WALK') {
+            this.x += this.facing * speed;
+            this.y = floorY;
+
+            if (this.x <= 10) {
+                this.x = 10;
+                this.facing = 1;
+            } else if (this.x >= window.innerWidth - width - 10) {
+                this.x = window.innerWidth - width - 10;
+                this.facing = -1;
+            }
+
+            this.animTimer += dt;
+            if (this.animTimer > 120) {
+                this.animTimer = 0;
+                this.animIndex = (this.animIndex + 1) % 4;
+                const walkFrames = [0, 1, 2, 3];
+                this.frame = walkFrames[this.animIndex];
+            }
+        } else if (this.state === 'IDLE') {
+            this.y = floorY;
+            this.animTimer += dt;
+            if (this.animTimer > 400) {
+                this.animTimer = 0;
+                this.animIndex = (this.animIndex + 1) % 4;
+                const idleFrames = [0, 0, 10, 0];
+                this.frame = idleFrames[this.animIndex];
+            }
+        } else if (this.state === 'ATTACK') {
+            this.animTimer += dt;
+            if (this.animTimer > 150) {
+                this.animTimer = 0;
+                this.animIndex = (this.animIndex + 1) % 4;
+                const attackFrames = [16, 17, 18, 19];
+                this.frame = attackFrames[this.animIndex];
+            }
+        }
+
+        this.updateStyle();
+        this.draw();
+    }
+
+    draw() {
+        if (!this.img || !this.img.complete || !this.img.naturalWidth) return;
+        const col = this.frame % 12;
+        const row = Math.floor(this.frame / 12);
+        const sx = col * 128;
+        const sy = row * 128;
+
+        this.ctx.clearRect(0, 0, 128, 128);
+        this.ctx.save();
+        if (this.facing === -1) {
+            this.ctx.translate(128, 0);
+            this.ctx.scale(-1, 1);
+        }
+        this.ctx.imageSmoothingEnabled = false;
+        this.ctx.drawImage(this.img, sx, sy, 128, 128, 0, 0, 128, 128);
+        this.ctx.restore();
+    }
+
+    updateStyle() {
+        const scale = this.manager.shimejiSettings.scale || 0.85;
+        const w = 128 * scale;
+        const h = 128 * scale;
+        this.element.style.width = `${w}px`;
+        this.element.style.height = `${h}px`;
+        this.canvas.style.width = `${w}px`;
+        this.canvas.style.height = `${h}px`;
+        this.element.style.transform = `translate3d(${Math.round(this.x)}px, ${Math.round(this.y)}px, 0)`;
+    }
+
+    release(throwVx, throwVy) {
+        this.isDragged = false;
+        this.element.classList.remove('dragging');
+        this.state = 'FALLING';
+        this.vx = Math.max(-25, Math.min(25, throwVx || 0));
+        this.vy = Math.max(-25, Math.min(25, throwVy || 0));
+    }
+}

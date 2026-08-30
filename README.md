@@ -4,14 +4,14 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/ENGINE-BETTERDISCORD-0a0c10?style=for-the-badge&logo=discord&logoColor=white" alt="Engine" />
-  <img src="https://img.shields.io/badge/VERSION-5.9.1-0a0c10?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/VERSION-6.0.0-0a0c10?style=for-the-badge" alt="Version" />
   <img src="https://img.shields.io/badge/ARCHITECTURE-REACT%20SAFE-0a0c10?style=for-the-badge" alt="Architecture" />
   <img src="https://img.shields.io/badge/LICENSE-MIT-0a0c10?style=for-the-badge" alt="License" />
 </p>
 
 <p align="center">
   <b>High-performance, modular Direct Messages extension for BetterDiscord.</b><br>
-  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, and granular UI shaders.</sub>
+  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, Dante & Vergil Shimeji desktop pets, and granular UI shaders.</sub>
 </p>
 
 <p align="center">
@@ -43,7 +43,13 @@
 - **Granular Sound Binding:** Assign custom local `.mp3` files, soundboard sounds, or direct HTTP audio streams to individual users or group chats.
 - **Base64 Inline Decoder:** Native conversion of local files to Base64 data URIs to bypass strict client file protocol restrictions.
 
-#### `[03]` Visual Shaders & Atmospheric Engine
+#### `[03]` Shimeji Desktop Mascots Engine (Dante & Vergil)
+- **Interactive Screen Pets:** Spawn Dante and Vergil directly inside your Discord window with real-time sprite animation and physics.
+- **Mouse Cursor Tracking:** Karakterler fare imlecinizin peşinden koşar, yanınıza gelir ve oturur.
+- **Drag & Toss Physics:** Grab pets with left-click, swing them around, and throw them with momentum and bounce collisions.
+- **Modes & Scaling:** Fareyi Takip Et, Serbest Gezinti, Sakin Otur modları ve dinamik boyut ölçekleme.
+
+#### `[04]` Visual Shaders & Atmospheric Engine
 - **Hardware-Accelerated Presets:**
   - `Frosted Glass` (CSS backdrop filter with ambient refraction)
   - `Cyberpunk Neon` (Dual-stop high-contrast magenta/violet gradient)
@@ -52,7 +58,7 @@
   - `Gilded Gold` (Subtle metallic brass shimmer)
 - **Particle Rain Engine:** Background particle canvas supporting custom Discord emojis, image links, variable velocity, and density presets.
 
-#### `[04]` Typography & Aesthetic Engine
+#### `[05]` Typography & Aesthetic Engine
 - **Host OS Font Integration:** Type any font name installed on your Windows system to render immediately with zero network latency.
 - **Embedded Web Fonts:** Integrated Google Web Fonts suite including *Orbitron, Poppins, Montserrat, Cinzel, Righteous, Permanent Marker, and Press Start 2P*.
 - **Left Indicator Accents:** Customizable left-border status indicators with per-category accent colors.
