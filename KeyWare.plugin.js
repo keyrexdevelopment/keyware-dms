@@ -44,6 +44,7 @@ module.exports = class KeyWare {
         this.initMessageListener();
         this.patchContextMenu();
         this.scheduleRender();
+        this.checkChangelog();
     }
 
     onSwitch() {
@@ -2917,6 +2918,69 @@ module.exports = class KeyWare {
             }
         };
 
+        document.body.appendChild(backdrop);
+    }
+
+    checkChangelog() {
+        const currentVersion = "5.9.0";
+        const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
+        if (lastVersion !== currentVersion) {
+            BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
+            setTimeout(() => this.showChangelogModal(), 1200);
+        }
+    }
+
+    showChangelogModal() {
+        this.closeModal();
+        const backdrop = document.createElement('div');
+        backdrop.className = 'dm-cat-modal-backdrop';
+        backdrop.innerHTML = `
+            <div class="dm-cat-modal-box" style="width: 520px; border: 1px solid rgba(88, 101, 242, 0.4); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(88, 101, 242, 0.2);">
+                <div class="dm-cat-modal-header" style="background: linear-gradient(135deg, rgba(88, 101, 242, 0.2), rgba(0,0,0,0));">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 22px;">🎉</span>
+                        <div>
+                            <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v5.9.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dm-cat-modal-body" style="padding: 20px; gap: 16px;">
+                    <div style="font-size: 13px; color: var(--text-normal, #dbdee1); line-height: 1.5;">
+                        KeyWare Direkt Mesajlar eklentisi yeni özelliklerle güncellendi. İşte bu sürümdeki yenilikler:
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 10px; background: var(--background-secondary, #2b2d31); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; line-height: 1;">🔊</span>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Discord Sunucu Soundboard Desteği</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Artık üye olduğunuz tüm sunuculardaki ses tahtası (Soundboard) seslerini kişiye özel bildirim sesi olarak atayabilirsiniz.</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; line-height: 1;">🔍</span>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Canlı Arama & Anında Önizleme</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Yüzlerce ses arasından ses adı veya sunucu adı ile arama yapabilir, kaydetmeden önce tek tıkla dinleyebilirsiniz.</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; line-height: 1;">📁</span>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Yenilenmiş Sekmeli Arayüz</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Hem Soundboard hem de özel MP3 / yerel ses dosyası desteği tek ve şık bir pencerede toplandı.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dm-cat-modal-footer" style="justify-content: flex-end;">
+                    <button class="dm-cat-btn dm-cat-btn-primary" id="dmChangelogClose" style="padding: 8px 24px;">Harika, Başla!</button>
+                </div>
+            </div>
+        `;
+
+        backdrop.querySelector('#dmChangelogClose').onclick = () => this.closeModal();
+        backdrop.onclick = (e) => { if (e.target === backdrop) this.closeModal(); };
         document.body.appendChild(backdrop);
     }
 
