@@ -23,13 +23,13 @@ module.exports = class KeyWare {
         this.suppressDiscordSound = false;
         this.suppressTimeout = null;
 
-        // Shimeji Desktop Mascot State
+        // Shimeji Desktop Mascot State (Dante)
         this.shimejiSettings = {
-            enabled: false,
-            character: 'dante', // 'dante' | 'vergil' | 'both'
+            enabled: true,
+            character: 'dante',
             mode: 'follow', // 'follow' | 'roam' | 'sit'
-            scale: 0.85,
-            speed: 2.5,
+            scale: 0.9,
+            speed: 3.0,
             physics: true
         };
         this.shimejis = [];
@@ -143,6 +143,9 @@ module.exports = class KeyWare {
         const savedShimeji = BdApi.Data.load(this.pluginName, "shimeji");
         if (savedShimeji && typeof savedShimeji === 'object') {
             this.shimejiSettings = Object.assign(this.shimejiSettings, savedShimeji);
+        } else {
+            this.shimejiSettings.enabled = true;
+            this.shimejiSettings.character = 'dante';
         }
     }
 
@@ -1335,25 +1338,26 @@ module.exports = class KeyWare {
 
             /* Shimeji Desktop Mascot Styles */
             #dm-cat-shimeji-container {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                pointer-events: none;
-                z-index: 99998;
-                overflow: hidden;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                pointer-events: none !important;
+                z-index: 999999 !important;
+                overflow: hidden !important;
             }
             .dm-cat-shimeji {
-                position: absolute;
-                top: 0;
-                left: 0;
-                pointer-events: auto;
-                cursor: grab;
-                user-select: none;
-                will-change: transform;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                pointer-events: auto !important;
+                cursor: grab !important;
+                user-select: none !important;
+                will-change: transform !important;
                 filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
                 transition: filter 0.2s ease;
+                z-index: 999999 !important;
             }
             .dm-cat-shimeji:hover {
                 filter: drop-shadow(0 6px 14px rgba(88, 101, 242, 0.7)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
@@ -1363,10 +1367,11 @@ module.exports = class KeyWare {
                 filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.7)) scale(1.06);
             }
             .dm-cat-shimeji canvas {
-                display: block;
-                image-rendering: pixelated;
-                image-rendering: -moz-crisp-edges;
-                image-rendering: crisp-edges;
+                display: block !important;
+                pointer-events: none !important;
+                image-rendering: pixelated !important;
+                image-rendering: -moz-crisp-edges !important;
+                image-rendering: crisp-edges !important;
             }
 
             .dm-cat-shimeji-btn {
@@ -3678,16 +3683,16 @@ module.exports = class KeyWare {
         });
     }
 
-    // --- SHIMEJI DESKTOP MASCOT ENGINE (DANTE & VERGIL) ---
+    // --- SHIMEJI DESKTOP MASCOT ENGINE (DANTE) ---
 
-    getShimejiImage(character) {
+    getShimejiImage(character = 'dante') {
         try {
             const fs = require('fs');
             const path = require('path');
             const possiblePaths = [
-                path.join(process.env.APPDATA || '', 'BetterDiscord', 'plugins', 'shimejis', `${character}.png`),
-                path.join(process.cwd?.() || '', 'shimejis', `${character}.png`),
-                `c:\\Users\\deus ex machina\\Desktop\\dc plugini\\shimejis\\${character}.png`
+                path.join(process.env.APPDATA || '', 'BetterDiscord', 'plugins', 'shimejis', 'dante.png'),
+                path.join(process.cwd?.() || '', 'shimejis', 'dante.png'),
+                `c:\\Users\\deus ex machina\\Desktop\\dc plugini\\shimejis\\dante.png`
             ];
             for (const p of possiblePaths) {
                 if (fs.existsSync(p)) {
@@ -3697,7 +3702,7 @@ module.exports = class KeyWare {
             }
         } catch (e) { }
 
-        return `https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/shimejis/${character}.png`;
+        return `https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/shimejis/dante.png`;
     }
 
     initShimejis() {
@@ -3712,22 +3717,9 @@ module.exports = class KeyWare {
             document.body.appendChild(container);
         }
 
-        const char = this.shimejiSettings.character || 'dante';
-        if (char === 'dante') {
-            const pet = new ShimejiPet(this, 'dante', window.innerWidth * 0.4, window.innerHeight - 150);
-            this.shimejis.push(pet);
-            container.appendChild(pet.element);
-        } else if (char === 'vergil') {
-            const pet = new ShimejiPet(this, 'vergil', window.innerWidth * 0.6, window.innerHeight - 150);
-            this.shimejis.push(pet);
-            container.appendChild(pet.element);
-        } else if (char === 'both') {
-            const dante = new ShimejiPet(this, 'dante', window.innerWidth * 0.35, window.innerHeight - 150);
-            const vergil = new ShimejiPet(this, 'vergil', window.innerWidth * 0.65, window.innerHeight - 150);
-            this.shimejis.push(dante, vergil);
-            container.appendChild(dante.element);
-            container.appendChild(vergil.element);
-        }
+        const dante = new ShimejiPet(this, 'dante', window.innerWidth * 0.5 - 64, window.innerHeight - 160);
+        this.shimejis.push(dante);
+        container.appendChild(dante.element);
 
         let lastTime = performance.now();
         const loop = (now) => {
@@ -3753,48 +3745,33 @@ module.exports = class KeyWare {
         this.closeModal();
         const cfg = this.shimejiSettings;
 
-        let selectedEnabled = !!cfg.enabled;
-        let selectedChar = cfg.character || 'dante';
+        let selectedEnabled = cfg.enabled !== false;
         let selectedMode = cfg.mode || 'follow';
-        let selectedScale = cfg.scale || 0.85;
-        let selectedSpeed = cfg.speed || 2.5;
+        let selectedScale = cfg.scale || 0.9;
+        let selectedSpeed = cfg.speed || 3.0;
 
         const backdrop = document.createElement('div');
         backdrop.className = 'dm-cat-modal-backdrop';
         backdrop.innerHTML = `
-            <div class="dm-cat-modal-box" style="width: 540px;">
+            <div class="dm-cat-modal-box" style="width: 500px;">
                 <div class="dm-cat-modal-header">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 20px;">⚔️</span>
-                        <span>Shimeji Evcil Hayvanlar (Dante & Vergil)</span>
+                        <span style="font-size: 22px;">🔴</span>
+                        <span>Dante Masaüstü Maskotu (Shimeji)</span>
                     </div>
                 </div>
 
                 <div class="dm-cat-modal-body" style="padding: 16px 20px; gap: 14px;">
-                    <!-- Character Picker -->
+                    <!-- Status Toggle -->
                     <div class="dm-cat-setting-row">
-                        <label class="dm-cat-setting-label">Karakter Seçimi</label>
-                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
-                            <div class="dm-cat-shimeji-card ${selectedEnabled && selectedChar === 'dante' ? 'active' : ''}" data-char="dante">
-                                <div style="font-size: 28px;">🔴</div>
-                                <div style="font-size: 13px; font-weight: 700; color: #fff;">Dante</div>
-                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Jackpot!</div>
-                            </div>
-                            <div class="dm-cat-shimeji-card ${selectedEnabled && selectedChar === 'vergil' ? 'active' : ''}" data-char="vergil">
-                                <div style="font-size: 28px;">🔵</div>
-                                <div style="font-size: 13px; font-weight: 700; color: #fff;">Vergil</div>
-                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Power!</div>
-                            </div>
-                            <div class="dm-cat-shimeji-card ${selectedEnabled && selectedChar === 'both' ? 'active' : ''}" data-char="both">
-                                <div style="font-size: 28px;">⚔️</div>
-                                <div style="font-size: 13px; font-weight: 700; color: #fff;">Her İkisi</div>
-                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Dante & Vergil</div>
-                            </div>
-                            <div class="dm-cat-shimeji-card ${!selectedEnabled ? 'active' : ''}" data-char="off">
-                                <div style="font-size: 28px;">🚫</div>
-                                <div style="font-size: 13px; font-weight: 700; color: #fff;">Kapalı</div>
-                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Devre Dışı</div>
-                            </div>
+                        <label class="dm-cat-setting-label">Dante Durumu</label>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="dm-cat-btn dm-cat-status-btn ${selectedEnabled ? 'dm-cat-btn-primary' : ''}" data-enabled="true" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${selectedEnabled ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
+                                <span>🔴 Dante Aktif (Ekranda Gezsin)</span>
+                            </button>
+                            <button type="button" class="dm-cat-btn dm-cat-status-btn ${!selectedEnabled ? 'dm-cat-btn-primary' : ''}" data-enabled="false" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${!selectedEnabled ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
+                                <span>🚫 Dante Kapalı (Gizle)</span>
+                            </button>
                         </div>
                     </div>
 
@@ -3812,7 +3789,7 @@ module.exports = class KeyWare {
                                 <span>🪑 Sakin / Otur</span>
                             </button>
                         </div>
-                        <div class="dm-cat-setting-desc">Fareyi Takip Et seçildiğinde karakter fare imlecinizin peşinden koşar ve yanınızda bekler.</div>
+                        <div class="dm-cat-setting-desc">Fareyi Takip Et seçildiğinde Dante fare imlecinizin peşinden koşar ve yanınızda bekler.</div>
                     </div>
 
                     <!-- Scale Slider -->
@@ -3822,7 +3799,7 @@ module.exports = class KeyWare {
                             <span id="dmShimejiScaleText" style="color: var(--text-normal, #fff); font-size: 13px; font-weight: 600;">${Math.round(selectedScale * 100)}%</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <input type="range" id="dmShimejiScale" min="0.5" max="1.4" step="0.05" value="${selectedScale}" style="flex: 1; accent-color: var(--brand-500, #5865f2); cursor: pointer;" />
+                            <input type="range" id="dmShimejiScale" min="0.6" max="1.4" step="0.05" value="${selectedScale}" style="flex: 1; accent-color: var(--brand-500, #5865f2); cursor: pointer;" />
                         </div>
                     </div>
 
@@ -3845,18 +3822,16 @@ module.exports = class KeyWare {
             </div>
         `;
 
-        // Card clicks
-        backdrop.querySelectorAll('.dm-cat-shimeji-card').forEach(card => {
-            card.onclick = () => {
-                backdrop.querySelectorAll('.dm-cat-shimeji-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-                const ch = card.dataset.char;
-                if (ch === 'off') {
-                    selectedEnabled = false;
-                } else {
-                    selectedEnabled = true;
-                    selectedChar = ch;
-                }
+        // Status clicks
+        backdrop.querySelectorAll('.dm-cat-status-btn').forEach(btn => {
+            btn.onclick = () => {
+                backdrop.querySelectorAll('.dm-cat-status-btn').forEach(b => {
+                    b.classList.remove('dm-cat-btn-primary');
+                    b.style.background = 'var(--background-secondary-alt, #1e1f22)';
+                });
+                btn.classList.add('dm-cat-btn-primary');
+                btn.style.background = 'var(--brand-500, #5865f2)';
+                selectedEnabled = btn.dataset.enabled === 'true';
             };
         });
 
@@ -3890,7 +3865,7 @@ module.exports = class KeyWare {
         backdrop.querySelector('#dmShimejiSave').onclick = () => {
             this.shimejiSettings = {
                 enabled: selectedEnabled,
-                character: selectedChar,
+                character: 'dante',
                 mode: selectedMode,
                 scale: selectedScale,
                 speed: selectedSpeed,
@@ -3920,7 +3895,7 @@ module.exports = class KeyWare {
 
         menu.innerHTML = `
             <div style="padding: 6px 10px; font-size: 11px; font-weight: 700; color: var(--brand-500, #5865f2); text-transform: uppercase;">
-                ${pet.charName.toUpperCase()} (SHIMEJI)
+                🔴 DANTE (SHIMEJI)
             </div>
             <div class="dm-cat-menu-item" id="dmShimejiMenuFollow">
                 <span>${curMode === 'follow' ? '✓ ' : ''}Fareyi Takip Et</span>
@@ -3933,10 +3908,10 @@ module.exports = class KeyWare {
             </div>
             <div style="height: 1px; background: rgba(255,255,255,0.08); margin: 4px 0;"></div>
             <div class="dm-cat-menu-item" id="dmShimejiMenuSettings">
-                <span>Shimeji Ayarları</span>
+                <span>Dante Ayarları</span>
             </div>
             <div class="dm-cat-menu-item danger" id="dmShimejiMenuDismiss">
-                <span>Kaldır / Kapat</span>
+                <span>Dante'yi Kapat</span>
             </div>
         `;
 
@@ -3992,14 +3967,14 @@ module.exports = class KeyWare {
 class ShimejiPet {
     constructor(manager, charName, x, y) {
         this.manager = manager;
-        this.charName = charName;
-        this.x = x || (Math.random() * (window.innerWidth - 250) + 100);
-        this.y = y || (window.innerHeight - 150);
+        this.charName = 'dante';
+        this.x = x || (window.innerWidth / 2 - 64);
+        this.y = y || (window.innerHeight - 160);
         this.vx = 0;
         this.vy = 0;
-        this.facing = 1;
+        this.facing = 1; // 1 = Sağ, -1 = Sol
         this.state = 'IDLE';
-        this.stateTimer = Math.random() * 3000 + 2000;
+        this.stateTimer = 2000;
         this.animTimer = 0;
         this.animIndex = 0;
         this.isDragged = false;
@@ -4010,7 +3985,8 @@ class ShimejiPet {
 
         this.element = document.createElement('div');
         this.element.className = 'dm-cat-shimeji';
-        this.element.title = `${charName.toUpperCase()} (Tıkla & Sürükle / Sağ Tıkla)`;
+        this.element.title = 'Dante (Tıkla & Sürükle / Sağ Tıkla)';
+        
         this.canvas = document.createElement('canvas');
         this.canvas.width = 128;
         this.canvas.height = 128;
@@ -4018,7 +3994,7 @@ class ShimejiPet {
         this.element.appendChild(this.canvas);
 
         this.img = new Image();
-        this.img.src = this.manager.getShimejiImage(charName);
+        this.img.src = this.manager.getShimejiImage('dante');
         this.img.onload = () => {
             this.draw();
         };
@@ -4049,14 +4025,14 @@ class ShimejiPet {
     }
 
     update(dt) {
-        const scale = this.manager.shimejiSettings.scale || 0.85;
+        const scale = this.manager.shimejiSettings.scale || 0.9;
         const width = 128 * scale;
         const height = 128 * scale;
         const floorY = window.innerHeight - height - 8;
-        const speed = (this.manager.shimejiSettings.speed || 2.5) * (dt / 16);
+        const speed = (this.manager.shimejiSettings.speed || 3.0) * (dt / 16);
         const mode = this.manager.shimejiSettings.mode || 'follow';
 
-        // 1. DRAGGED STATE
+        // 1. FARE İLE TUTULMA / SÜRÜKLEME (DRAGGED)
         if (this.isDragged) {
             this.x = this.manager.mouseX - this.dragStartX;
             this.y = this.manager.mouseY - this.dragStartY;
@@ -4066,17 +4042,17 @@ class ShimejiPet {
             if (this.dragHistory.length > 5) this.dragHistory.shift();
 
             this.animTimer += dt;
-            if (this.animTimer > 140) {
+            if (this.animTimer > 130) {
                 this.animTimer = 0;
                 this.animIndex = (this.animIndex + 1) % 2;
-                this.frame = 12 + this.animIndex;
+                this.frame = 12 + this.animIndex; // Asılı kalıp çırpınma
             }
             this.updateStyle();
             this.draw();
             return;
         }
 
-        // 2. FALLING STATE (Gravity & Toss Physics)
+        // 2. DÜŞME & FIRLATILMA FİZİĞİ (FALLING & GRAVITY)
         if (this.state === 'FALLING') {
             const gravity = 0.55;
             this.vy += gravity;
@@ -4097,7 +4073,7 @@ class ShimejiPet {
             if (this.animTimer > 120) {
                 this.animTimer = 0;
                 this.animIndex = (this.animIndex + 1) % 2;
-                this.frame = 4 + this.animIndex;
+                this.frame = 4 + this.animIndex; // Düşüş kareleri
             }
 
             if (this.y >= floorY) {
@@ -4105,7 +4081,7 @@ class ShimejiPet {
                 this.vy = 0;
                 this.vx = 0;
                 this.state = 'LANDING';
-                this.frame = 6;
+                this.frame = 6; // Yere iniş karesi
                 this.stateTimer = 250;
             }
             this.updateStyle();
@@ -4113,38 +4089,46 @@ class ShimejiPet {
             return;
         }
 
-        // 3. LANDING SQUISH
+        // 3. YERE İNİŞ ANİMASYONU (LANDING SQUISH)
         if (this.state === 'LANDING') {
             this.stateTimer -= dt;
             if (this.stateTimer <= 0) {
                 this.state = 'IDLE';
-                this.stateTimer = 1500;
+                this.stateTimer = 1000;
             }
             this.updateStyle();
             this.draw();
             return;
         }
 
-        // 4. BEHAVIOR MODES (Follow Mouse, Free Roam, Sit)
+        // 4. OTURMA / SABİT DURMA MODU (SIT)
         if (mode === 'sit') {
-            this.state = 'SIT';
-            this.frame = 8;
             this.y = floorY;
             this.facing = this.manager.mouseX > (this.x + width / 2) ? 1 : -1;
+            this.frame = 8; // Oturma
             this.updateStyle();
             this.draw();
             return;
         }
 
+        // 5. FAREYİ TAKİP ETME MODU (FOLLOW MOUSE)
         if (mode === 'follow') {
             const targetX = this.manager.mouseX - (width / 2);
-            const dist = Math.abs(targetX - this.x);
+            const diffX = targetX - this.x;
+            const dist = Math.abs(diffX);
 
-            if (dist > 75) {
-                this.facing = targetX > this.x ? 1 : -1;
+            this.y = floorY;
+
+            if (dist > 50) {
+                if (diffX > 0) {
+                    this.facing = 1; // Sağa dön
+                    this.state = 'WALK_RIGHT';
+                } else {
+                    this.facing = -1; // Sola dön
+                    this.state = 'WALK_LEFT';
+                }
+
                 this.x += this.facing * Math.min(speed * 1.5, dist);
-                this.y = floorY;
-                this.state = 'WALK';
 
                 this.animTimer += dt;
                 if (this.animTimer > 100) {
@@ -4154,58 +4138,62 @@ class ShimejiPet {
                     this.frame = walkFrames[this.animIndex];
                 }
             } else {
+                // Fareye yakın: Dur, fareye bak ve göz kırp
                 this.facing = this.manager.mouseX > (this.x + width / 2) ? 1 : -1;
-                this.y = floorY;
                 this.state = 'IDLE';
+
                 this.animTimer += dt;
-                if (this.animTimer > 400) {
+                if (this.animTimer > 350) {
                     this.animTimer = 0;
-                    this.animIndex = (this.animIndex + 1) % 4;
-                    const idleFrames = [0, 0, 10, 0];
+                    this.animIndex = (this.animIndex + 1) % 6;
+                    const idleFrames = [0, 0, 10, 0, 11, 0];
                     this.frame = idleFrames[this.animIndex];
                 }
             }
+
             this.updateStyle();
             this.draw();
             return;
         }
 
-        // 5. FREE ROAM MODE (Autonomous Walking, Sitting, Posing)
+        // 6. SERBEST GEZİNTİ MODU (FREE ROAM)
         this.stateTimer -= dt;
         if (this.stateTimer <= 0) {
             const rand = Math.random();
-            if (rand < 0.45) {
-                this.state = 'WALK';
-                this.facing = Math.random() > 0.5 ? 1 : -1;
-                this.stateTimer = Math.random() * 4000 + 2000;
-            } else if (rand < 0.7) {
+            if (rand < 0.35) {
+                this.state = 'WALK_RIGHT';
+                this.facing = 1;
+                this.stateTimer = Math.random() * 3500 + 2000;
+            } else if (rand < 0.70) {
+                this.state = 'WALK_LEFT';
+                this.facing = -1;
+                this.stateTimer = Math.random() * 3500 + 2000;
+            } else if (rand < 0.88) {
                 this.state = 'IDLE';
                 this.stateTimer = Math.random() * 3000 + 1500;
-            } else if (rand < 0.88) {
+            } else {
                 this.state = 'SIT';
                 this.stateTimer = Math.random() * 4000 + 2000;
                 this.frame = 8;
-            } else {
-                this.state = 'ATTACK';
-                this.stateTimer = 1200;
-                this.frame = 16;
             }
         }
 
-        if (this.state === 'WALK') {
-            this.x += this.facing * speed;
+        if (this.state === 'WALK_RIGHT' || this.state === 'WALK_LEFT') {
             this.y = floorY;
+            this.x += this.facing * speed;
 
             if (this.x <= 10) {
                 this.x = 10;
                 this.facing = 1;
+                this.state = 'WALK_RIGHT';
             } else if (this.x >= window.innerWidth - width - 10) {
                 this.x = window.innerWidth - width - 10;
                 this.facing = -1;
+                this.state = 'WALK_LEFT';
             }
 
             this.animTimer += dt;
-            if (this.animTimer > 120) {
+            if (this.animTimer > 110) {
                 this.animTimer = 0;
                 this.animIndex = (this.animIndex + 1) % 4;
                 const walkFrames = [0, 1, 2, 3];
@@ -4214,19 +4202,11 @@ class ShimejiPet {
         } else if (this.state === 'IDLE') {
             this.y = floorY;
             this.animTimer += dt;
-            if (this.animTimer > 400) {
+            if (this.animTimer > 350) {
                 this.animTimer = 0;
-                this.animIndex = (this.animIndex + 1) % 4;
-                const idleFrames = [0, 0, 10, 0];
+                this.animIndex = (this.animIndex + 1) % 6;
+                const idleFrames = [0, 0, 10, 0, 11, 0];
                 this.frame = idleFrames[this.animIndex];
-            }
-        } else if (this.state === 'ATTACK') {
-            this.animTimer += dt;
-            if (this.animTimer > 150) {
-                this.animTimer = 0;
-                this.animIndex = (this.animIndex + 1) % 4;
-                const attackFrames = [16, 17, 18, 19];
-                this.frame = attackFrames[this.animIndex];
             }
         }
 
@@ -4243,17 +4223,20 @@ class ShimejiPet {
 
         this.ctx.clearRect(0, 0, 128, 128);
         this.ctx.save();
+        
         if (this.facing === -1) {
+            // SOLA YÜRÜME / DÖNME (Flip X)
             this.ctx.translate(128, 0);
             this.ctx.scale(-1, 1);
         }
+        
         this.ctx.imageSmoothingEnabled = false;
         this.ctx.drawImage(this.img, sx, sy, 128, 128, 0, 0, 128, 128);
         this.ctx.restore();
     }
 
     updateStyle() {
-        const scale = this.manager.shimejiSettings.scale || 0.85;
+        const scale = this.manager.shimejiSettings.scale || 0.9;
         const w = 128 * scale;
         const h = 128 * scale;
         this.element.style.width = `${w}px`;
