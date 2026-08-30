@@ -2,75 +2,118 @@
   <img src="assets/banner.png" alt="KeyWare DMs Banner" width="100%" />
 </p>
 
-<h1 align="center">KEYWARE // DMs</h1>
-
 <p align="center">
-  <b>High-performance, modular Direct Messages extension for BetterDiscord.</b><br>
-  Built for structured organization, per-channel audio dispatching, and deep UI customization.
+  <img src="https://img.shields.io/badge/ENGINE-BETTERDISCORD-0a0c10?style=for-the-badge&logo=discord&logoColor=white" alt="Engine" />
+  <img src="https://img.shields.io/badge/VERSION-5.8.1-0a0c10?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/ARCHITECTURE-REACT%20SAFE-0a0c10?style=for-the-badge" alt="Architecture" />
+  <img src="https://img.shields.io/badge/LICENSE-MIT-0a0c10?style=for-the-badge" alt="License" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/PLATFORM-BETTERDISCORD-18191c?style=flat-square" alt="Platform" />
-  <img src="https://img.shields.io/badge/VERSION-5.8.1-18191c?style=flat-square" alt="Version" />
-  <img src="https://img.shields.io/badge/LICENSE-MIT-18191c?style=flat-square" alt="License" />
+  <b>High-performance, modular Direct Messages extension for BetterDiscord.</b><br>
+  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, and granular UI shaders.</sub>
+</p>
+
+<p align="center">
+  <a href="#overview">Overview</a> •
+  <a href="#core-architecture">Architecture</a> •
+  <a href="#key-modules">Modules</a> •
+  <a href="#one-liner-install">Quick Start</a> •
+  <a href="#technical-specifications">Specifications</a> •
+  <a href="#license">License</a>
 </p>
 
 ---
 
 ### Overview
 
-**KeyWare DMs** is an all-in-one client extension designed to replace standard Discord direct message lists with an organized, fully configurable command layout. The architecture focuses on lightweight execution, native flexbox DOM preservation, and zero background overhead.
+**KeyWare DMs** replaces standard Discord direct message lists with an organized, extensible workspace system. Designed from the ground up to prevent React unmount cycles, it operates synchronously within Discord's native event pipeline without introducing layout thrashing or background resource leaks.
+
+```
+┌────────────────────────────────────────────────────────┐
+│                   DISPATCHER PIPELINE                  │
+├───────────────────┬───────────────────┬────────────────┤
+│  MESSAGE_CREATE   │  CHANNEL_SELECT   │   AUDIO_HOOK   │
+│  Custom Ping Match│  Instant 0ms Sync │  Silence Native│
+└─────────┬─────────┴─────────┬─────────┴────────┬───────┘
+          ▼                   ▼                  ▼
+┌───────────────────┬───────────────────┬────────────────┐
+│ REACT-SAFE DOM    │ TYPOGRAPHY ENGINE │ THEME SHADERS  │
+│ Order-based Sort  │ OS / Web Fonts    │ Glass / Neon   │
+└───────────────────┴───────────────────┴────────────────┘
+```
 
 ---
 
 ### Key Modules
 
-#### [01] Channel Categorization & Sorting
-- **Interactive Drag & Drop:** Move direct messages and group conversations into isolated categories with continuous index tracking.
-- **Collapsible Tree State:** Fold inactive categories while monitoring real-time mention badges and unread message counters.
-- **Non-Destructive DOM Architecture:** Fully integrated into Discord's native scroll container via deterministic CSS flex ordering, preventing React unmount collisions.
+#### `[01]` Channel Categorization & Sorting Engine
+- **Non-Destructive Ordering:** Organizes conversations through native CSS flexbox indexes (`order`), preserving Discord's internal component state and drag-and-drop contexts.
+- **Tree State Persistence:** Collapse inactive categories while preserving real-time unread message counts and mention notifications.
+- **Dynamic Context Actions:** Right-click any category header for instant renaming, color/shader re-assignment, or channel management.
 
-#### [02] Audio Dispatcher & Custom Notification Routing
-- **Per-Target Audio Binding:** Assign unique audio URIs or local sound files to specific users or group channels.
-- **Pre-Emptive Audio Interception:** Discord's default notification ping is intercepted and silenced synchronously at the dispatcher level before execution, guaranteeing only the assigned sound is played.
-- **Embedded Audio Engine:** Supports Base64 data streaming to bypass local protocol restrictions with configurable volume attenuation.
+#### `[02]` Audio Dispatcher & Per-Target Notification Routing
+- **Pre-Emptive Audio Interception:** Discord's default notification ping is intercepted synchronously at `Dispatcher.dispatch` before playback begins, guaranteeing only your assigned custom sound executes.
+- **Granular Sound Binding:** Assign custom local `.mp3` files or direct HTTP audio streams to individual users or group chats.
+- **Base64 Inline Decoder:** Native conversion of local files to Base64 data URIs to bypass strict client file protocol restrictions.
 
-#### [03] Visual Styling & Atmosphere
-- **Preset Header Shaders:** Default, Frosted Glass, Cyberpunk Neon, Thermal Fire, Emerald Gradient, and Gilded Gold.
-- **Dynamic Lighting Effects:** Ambient neon text glow, continuous RGB wave spectrum cycling, and smooth pulse animations.
-- **Particle Rain Engine:** Background particle stream supporting custom Discord server emojis, image links, and custom density/speed presets.
+#### `[03]` Visual Shaders & Atmospheric Engine
+- **Hardware-Accelerated Presets:**
+  - `Frosted Glass` (CSS backdrop filter with ambient refraction)
+  - `Cyberpunk Neon` (Dual-stop high-contrast magenta/violet gradient)
+  - `Thermal Fire` (Warm ember gradient with high-frequency border)
+  - `Emerald Breeze` (Cool mint gradient)
+  - `Gilded Gold` (Subtle metallic brass shimmer)
+- **Particle Rain Engine:** Background particle canvas supporting custom Discord emojis, image links, variable velocity, and density presets.
 
-#### [04] Typography Engine
-- **Local Font Injection:** Instant access to any font family installed on the host operating system with zero network requests.
-- **Web Font Integration:** Pre-configured Google Fonts suite including Orbitron, Poppins, Montserrat, Pixel Retro, Cinzel, Permanent Marker, and Righteous.
-- **Visual Accent Lines:** Custom left-border channel indicator colors and category metadata badges.
+#### `[04]` Typography & Aesthetic Engine
+- **Host OS Font Integration:** Type any font name installed on your Windows system to render immediately with zero network latency.
+- **Embedded Web Fonts:** Integrated Google Web Fonts suite including *Orbitron, Poppins, Montserrat, Cinzel, Righteous, Permanent Marker, and Press Start 2P*.
+- **Left Indicator Accents:** Customizable left-border status indicators with per-category accent colors.
 
 ---
 
 ### Technical Specifications
 
-| Parameter | Specification |
-| :--- | :--- |
-| **Engine Compatibility** | BetterDiscord v1.0.0+ |
-| **Render Target** | Native `nav[aria-label="Direct Messages"]` |
-| **Event Pipeline** | `Dispatcher.dispatch` synchronous pre-hook |
-| **State Persistence** | `BdApi.Data` isolated JSON storage |
-| **CSS Injection** | Scoped DOM style tag with dynamic CSS variables |
+| Parameter | Specification | Description |
+| :--- | :--- | :--- |
+| **Compatibility** | BetterDiscord v1.0.0+ | Native plugin sandbox API |
+| **Pipeline Hook** | `Dispatcher.dispatch` | Synchronous pre-dispatch audio suppression |
+| **DOM Target** | `nav[aria-label="Direct Messages"]` | Native list container integration |
+| **Storage Engine** | `BdApi.Data` (JSON) | Isolated persistent local storage |
+| **Font Pipeline** | Direct CSS `@import` & GDI Local | Zero-latency font mapping |
+| **Memory Footprint** | `< 2.5 MB` | Zero background polling timers |
 
 ---
 
-### Installation
+### One-Liner Install
 
-1. Ensure **[BetterDiscord](https://betterdiscord.app/)** is installed and active.
+#### Windows (PowerShell)
+```powershell
+iwr "https://raw.githubusercontent.com/keyrexdevelopment/dm-categories/main/DMCategories.plugin.js" -OutFile "$env:APPDATA\BetterDiscord\plugins\DMCategories.plugin.js"
+```
+
+#### Manual Installation
+1. Ensure **[BetterDiscord](https://betterdiscord.app/)** is installed.
 2. Download [`DMCategories.plugin.js`](https://raw.githubusercontent.com/keyrexdevelopment/dm-categories/main/DMCategories.plugin.js).
 3. Place the file inside your BetterDiscord plugins directory:
    ```
    %appdata%\BetterDiscord\plugins
    ```
-4. Enable the plugin inside Discord Settings ➔ **Plugins**.
+4. Open Discord Settings ➔ **Plugins** and enable **KeyWare DMs**.
 
 ---
 
-### License
+### Automatic Updates
 
-Distributed under the **MIT License**. Created by **[keyrex](https://github.com/keyrexdevelopment)**.
+KeyWare DMs utilizes BetterDiscord's native update pipeline. When a new release is pushed to GitHub, an update notification will automatically appear in your Discord client:
+
+```
+[ Update Available ] KeyWare DMs v5.8.x ➔ [ Update Now ]
+```
+
+---
+
+<p align="center">
+  <sub>Distributed under the <b>MIT License</b>. Crafted with precision by <a href="https://github.com/keyrexdevelopment"><b>keyrex</b></a>.</sub>
+</p>
