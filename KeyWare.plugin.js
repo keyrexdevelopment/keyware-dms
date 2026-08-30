@@ -61,8 +61,9 @@ module.exports = class KeyWare {
         this.patchContextMenu();
         this.scheduleRender();
         this.initShimejis();
-        this.checkForUpdates();
-        this.checkChangelog();
+        setTimeout(() => this.checkForUpdates(), 2500);
+        setTimeout(() => this.checkChangelog(), 3500);
+        this.updateInterval = setInterval(() => this.checkForUpdates(), 30 * 60 * 1000);
     }
 
     onSwitch() {
@@ -71,6 +72,10 @@ module.exports = class KeyWare {
     }
 
     stop() {
+        if (this.updateInterval) {
+            clearInterval(this.updateInterval);
+            this.updateInterval = null;
+        }
         if (this.observer) {
             this.observer.disconnect();
             this.observer = null;
@@ -3082,13 +3087,18 @@ module.exports = class KeyWare {
         document.body.appendChild(backdrop);
     }
 
-    async checkForUpdates() {
+    async checkForUpdates(manual = false) {
         try {
             const currentVersion = "6.1.0";
             const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
 
             const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
-            if (!response.ok) return;
+            if (!response.ok) {
+                if (manual && BdApi.UI && typeof BdApi.UI.showToast === 'function') {
+                    BdApi.UI.showToast("Güncelleme sunucusuna ulaşılamadı.", { type: "error" });
+                }
+                return;
+            }
 
             const remoteContent = await response.text();
             const match = remoteContent.match(/@version\s+([0-9.]+)/i);
@@ -3153,6 +3163,10 @@ module.exports = class KeyWare {
                             ]
                         }
                     );
+                }
+            } else if (manual) {
+                if (BdApi.UI && typeof BdApi.UI.showToast === 'function') {
+                    BdApi.UI.showToast(`KeyWare zaten güncel (v${currentVersion})`, { type: "info" });
                 }
             }
         } catch (e) {
