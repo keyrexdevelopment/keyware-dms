@@ -47,7 +47,8 @@ module.exports = class DMCategories {
     }
 
     onSwitch() {
-        this.scheduleRender(false);
+        this.scheduleRender(true);
+        [0, 20, 50, 100, 200].forEach(d => setTimeout(() => this.renderAll(), d));
     }
 
     stop() {
@@ -162,7 +163,8 @@ module.exports = class DMCategories {
                         if (!event) return;
 
                         if (event.type === "CHANNEL_SELECT" || event.type === "NAVIGATE" || event.type === "GUILD_SELECT" || event.type === "CONNECTION_OPEN" || event.type === "LAYER_POP" || event.type === "POST_CONNECTION_OPEN") {
-                            this.scheduleRender(false);
+                            this.scheduleRender(true);
+                            [0, 20, 50, 100, 200].forEach(d => setTimeout(() => this.renderAll(), d));
                             return;
                         }
 
@@ -965,15 +967,17 @@ module.exports = class DMCategories {
     }
 
     scheduleRender(immediate = false) {
-        if (this.renderTimeout) clearTimeout(this.renderTimeout);
         if (immediate) {
             this.renderAll();
             return;
         }
-        this.renderTimeout = setTimeout(() => {
-            this.renderTimeout = null;
+        if (this.isScheduled) return;
+        this.isScheduled = true;
+        this.rafId = requestAnimationFrame(() => {
+            this.isScheduled = false;
+            this.rafId = null;
             this.renderAll();
-        }, 40);
+        });
     }
 
     attachGlobalEvents() {
