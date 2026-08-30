@@ -75,12 +75,12 @@
 
 #### Windows (PowerShell)
 ```powershell
-iwr "https://raw.githubusercontent.com/keyrexdevelopment/dm-categories/main/DMCategories.plugin.js" -OutFile "$env:APPDATA\BetterDiscord\plugins\DMCategories.plugin.js"
+iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/DMCategories.plugin.js" -OutFile "$env:APPDATA\BetterDiscord\plugins\DMCategories.plugin.js"
 ```
 
 #### Manual Installation
 1. Ensure **[BetterDiscord](https://betterdiscord.app/)** is installed.
-2. Download [`DMCategories.plugin.js`](https://raw.githubusercontent.com/keyrexdevelopment/dm-categories/main/DMCategories.plugin.js).
+2. Download [`DMCategories.plugin.js`](https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/DMCategories.plugin.js).
 3. Place the file inside your BetterDiscord plugins directory:
    ```
    %appdata%\BetterDiscord\plugins

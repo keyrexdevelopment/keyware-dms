@@ -3,9 +3,9 @@
  * @author keyrex
  * @version 5.8.1
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 bildirim sesi, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
- * @source https://github.com/keyrexdevelopment/dm-categories
- * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/dm-categories/main/DMCategories.plugin.js
- * @website https://github.com/keyrexdevelopment/dm-categories
+ * @source https://github.com/keyrexdevelopment/keyware-dms
+ * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/DMCategories.plugin.js
+ * @website https://github.com/keyrexdevelopment/keyware-dms
  */
 
 module.exports = class DMCategories {
