@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.0.0
+ * @version 6.1.0
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -3084,7 +3084,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates() {
         try {
-            const currentVersion = "6.0.0";
+            const currentVersion = "6.1.0";
             const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
 
             const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
@@ -3161,7 +3161,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.0.0";
+        const currentVersion = "6.1.0";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3180,7 +3180,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.0.0</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.1.0</div>
                         </div>
                     </div>
                 </div>
@@ -3192,8 +3192,8 @@ module.exports = class KeyWare {
                         <div style="display: flex; gap: 10px; align-items: flex-start;">
                             <span style="font-size: 18px; line-height: 1;">⚔️</span>
                             <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Dante & Vergil Shimeji Masaüstü Evcil Hayvanları</div>
-                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Discord içinde canlı yürüyen, fare imlecinizi takip eden, tutup fırlatabileceğiniz gerçek zamanlı fizik motorlu Shimeji maskotları eklendi!</div>
+                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Dante Shimeji Yenilendi & Geliştirildi</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Tüm görseller bağımsız olarak eklentiye gömüldü, ters yürüme hatası düzeltildi, sağ tık ve ayarlara hızlı boyutlandırma (%30 - %100) eklendi!</div>
                             </div>
                         </div>
                         <div style="display: flex; gap: 10px; align-items: flex-start;">
