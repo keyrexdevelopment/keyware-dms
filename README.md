@@ -4,14 +4,14 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/ENGINE-BETTERDISCORD-0a0c10?style=for-the-badge&logo=discord&logoColor=white" alt="Engine" />
-  <img src="https://img.shields.io/badge/VERSION-5.8.1-0a0c10?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/VERSION-5.9.0-0a0c10?style=for-the-badge" alt="Version" />
   <img src="https://img.shields.io/badge/ARCHITECTURE-REACT%20SAFE-0a0c10?style=for-the-badge" alt="Architecture" />
   <img src="https://img.shields.io/badge/LICENSE-MIT-0a0c10?style=for-the-badge" alt="License" />
 </p>
 
 <p align="center">
   <b>High-performance, modular Direct Messages extension for BetterDiscord.</b><br>
-  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, and granular UI shaders.</sub>
+  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, and granular UI shaders.</sub>
 </p>
 
 <p align="center">
@@ -39,7 +39,8 @@
 
 #### `[02]` Audio Dispatcher & Per-Target Notification Routing
 - **Pre-Emptive Audio Interception:** Discord's default notification ping is intercepted synchronously at `Dispatcher.dispatch` before playback begins, guaranteeing only your assigned custom sound executes.
-- **Granular Sound Binding:** Assign custom local `.mp3` files or direct HTTP audio streams to individual users or group chats.
+- **Discord Server Soundboard Integration:** Browse, search, preview, and assign soundboard sounds from any server you belong to directly to individual DMs.
+- **Granular Sound Binding:** Assign custom local `.mp3` files, soundboard sounds, or direct HTTP audio streams to individual users or group chats.
 - **Base64 Inline Decoder:** Native conversion of local files to Base64 data URIs to bypass strict client file protocol restrictions.
 
 #### `[03]` Visual Shaders & Atmospheric Engine

@@ -1,8 +1,8 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 5.8.1
- * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 bildirim sesi, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
+ * @version 5.9.0
+ * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
  * @website https://github.com/keyrexdevelopment/keyware-dms
@@ -128,15 +128,186 @@ module.exports = class KeyWare {
 
     getDispatcher() {
         try {
-            return BdApi.Webpack.getStore("UserStore")?._dispatcher 
-                || BdApi.Webpack.getStore("MessageStore")?._dispatcher 
-                || BdApi.Webpack.getByKeys("dispatch", "subscribe", { searchExports: true }) 
-                || BdApi.Webpack.getModule(m => m?.dispatch && m?.subscribe) 
+            return BdApi.Webpack.getStore("UserStore")?._dispatcher
+                || BdApi.Webpack.getStore("MessageStore")?._dispatcher
+                || BdApi.Webpack.getByKeys("dispatch", "subscribe", { searchExports: true })
+                || BdApi.Webpack.getModule(m => m?.dispatch && m?.subscribe)
                 || BdApi.Webpack.getModule(m => m?.default?.dispatch && m?.default?.subscribe)?.default
                 || BdApi.Webpack.getModule(m => m?.isDispatching);
         } catch (e) {
             return null;
         }
+    }
+
+    getSoundboardStore() {
+        try {
+            return BdApi.Webpack.getStore("SoundboardStore")
+                || BdApi.Webpack.getStore("SoundboardSoundsStore")
+                || BdApi.Webpack.getByKeys("getSoundById", "getSounds")
+                || BdApi.Webpack.getByKeys("getSoundsForGuild")
+                || BdApi.Webpack.getByKeys("getGuildSounds")
+                || BdApi.Webpack.getModule(m => m?.getSounds && m?.getSoundById)
+                || BdApi.Webpack.getModule(m => m?.default?.getSounds && m?.default?.getSoundById)?.default;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    getSoundboardActions() {
+        try {
+            return BdApi.Webpack.getByKeys("fetchSoundboardSounds", "sendSoundboardSound")
+                || BdApi.Webpack.getByKeys("fetchSoundboardSounds")
+                || BdApi.Webpack.getByKeys("fetchSounds")
+                || BdApi.Webpack.getModule(m => m?.fetchSoundboardSounds || m?.fetchAllSoundboardSounds)
+                || BdApi.Webpack.getModule(m => m?.default?.fetchSoundboardSounds)?.default;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    fetchSoundboardSounds() {
+        try {
+            const soundActions = this.getSoundboardActions();
+            if (soundActions) {
+                if (typeof soundActions.fetchAllSoundboardSounds === 'function') {
+                    soundActions.fetchAllSoundboardSounds();
+                } else if (typeof soundActions.fetchSoundboardSounds === 'function') {
+                    soundActions.fetchSoundboardSounds();
+                } else if (typeof soundActions.fetchSounds === 'function') {
+                    soundActions.fetchSounds();
+                }
+            }
+
+            const GuildStore = BdApi.Webpack.getStore("GuildStore");
+            const guilds = GuildStore?.getGuilds?.() || {};
+            const guildIds = Object.keys(guilds);
+
+            if (soundActions && typeof soundActions.fetchSoundboardSoundsForGuild === 'function') {
+                guildIds.forEach(gId => {
+                    try { soundActions.fetchSoundboardSoundsForGuild(gId); } catch (err) { }
+                });
+            }
+        } catch (e) {
+            console.error("[KeyWare] fetchSoundboardSounds error:", e);
+        }
+    }
+
+    getAllSoundboardSounds() {
+        const results = [];
+        try {
+            const soundStore = this.getSoundboardStore();
+            const GuildStore = BdApi.Webpack.getStore("GuildStore");
+            const guilds = GuildStore?.getGuilds?.() || {};
+
+            let allSoundsRaw = null;
+            if (soundStore) {
+                if (typeof soundStore.getSounds === 'function') allSoundsRaw = soundStore.getSounds();
+                else if (typeof soundStore.getAllSounds === 'function') allSoundsRaw = soundStore.getAllSounds();
+                else if (typeof soundStore.getSoundboardSounds === 'function') allSoundsRaw = soundStore.getSoundboardSounds();
+            }
+
+            const guildIdList = ["0", ...Object.keys(guilds)];
+            const processedGuilds = new Set();
+
+            for (const gId of guildIdList) {
+                const isDefault = (gId === "0" || gId === "default");
+                const guildObj = isDefault ? { id: "0", name: "Discord Varsayılan", icon: null } : guilds[gId];
+                if (!guildObj) continue;
+
+                let soundArray = [];
+                if (allSoundsRaw) {
+                    if (allSoundsRaw instanceof Map) {
+                        soundArray = allSoundsRaw.get(gId) || [];
+                    } else if (typeof allSoundsRaw === 'object' && allSoundsRaw[gId]) {
+                        soundArray = allSoundsRaw[gId];
+                    }
+                }
+
+                if ((!soundArray || soundArray.length === 0) && soundStore) {
+                    if (typeof soundStore.getSoundsForGuild === 'function') {
+                        soundArray = soundStore.getSoundsForGuild(gId) || [];
+                    } else if (typeof soundStore.getGuildSounds === 'function') {
+                        soundArray = soundStore.getGuildSounds(gId) || [];
+                    } else if (typeof soundStore.getSoundboardSoundsForGuild === 'function') {
+                        soundArray = soundStore.getSoundboardSoundsForGuild(gId) || [];
+                    }
+                }
+
+                if (soundArray && (Array.isArray(soundArray) ? soundArray.length > 0 : Object.keys(soundArray).length > 0)) {
+                    processedGuilds.add(gId);
+                    const list = Array.isArray(soundArray) ? soundArray : Object.values(soundArray);
+                    const parsedSounds = list.map(s => {
+                        const soundId = String(s.soundId || s.sound_id || s.id || "");
+                        const name = s.name || "Ses";
+                        const emojiId = s.emojiId || s.emoji_id || null;
+                        const emojiName = s.emojiName || s.emoji_name || null;
+                        const volume = typeof s.volume === 'number' ? s.volume : 1;
+                        const url = `https://cdn.discordapp.com/soundboard-sounds/${soundId}`;
+                        return {
+                            soundId,
+                            name,
+                            emojiId,
+                            emojiName,
+                            volume,
+                            url,
+                            guildId: gId,
+                            guildName: guildObj.name
+                        };
+                    }).filter(s => s.soundId);
+
+                    if (parsedSounds.length > 0) {
+                        results.push({
+                            guildId: gId,
+                            guildName: guildObj.name,
+                            guildIcon: guildObj.icon ? `https://cdn.discordapp.com/icons/${guildObj.id}/${guildObj.icon}.webp?size=48` : null,
+                            sounds: parsedSounds
+                        });
+                    }
+                }
+            }
+
+            if (allSoundsRaw) {
+                const entries = allSoundsRaw instanceof Map ? Array.from(allSoundsRaw.entries()) : Object.entries(allSoundsRaw);
+                for (const [gId, soundArray] of entries) {
+                    if (processedGuilds.has(gId)) continue;
+                    if (!soundArray || (!Array.isArray(soundArray) && typeof soundArray !== 'object')) continue;
+                    const list = Array.isArray(soundArray) ? soundArray : Object.values(soundArray);
+                    if (list.length === 0) continue;
+
+                    const guildObj = guilds[gId] || { id: gId, name: (gId === "0" ? "Discord Varsayılan" : "Sunucu"), icon: null };
+                    const parsedSounds = list.map(s => {
+                        const soundId = String(s.soundId || s.sound_id || s.id || "");
+                        const name = s.name || "Ses";
+                        const emojiId = s.emojiId || s.emoji_id || null;
+                        const emojiName = s.emojiName || s.emoji_name || null;
+                        const volume = typeof s.volume === 'number' ? s.volume : 1;
+                        const url = `https://cdn.discordapp.com/soundboard-sounds/${soundId}`;
+                        return {
+                            soundId,
+                            name,
+                            emojiId,
+                            emojiName,
+                            volume,
+                            url,
+                            guildId: gId,
+                            guildName: guildObj.name
+                        };
+                    }).filter(s => s.soundId);
+
+                    if (parsedSounds.length > 0) {
+                        results.push({
+                            guildId: gId,
+                            guildName: guildObj.name,
+                            guildIcon: guildObj.icon ? `https://cdn.discordapp.com/icons/${guildObj.id}/${guildObj.icon}.webp?size=48` : null,
+                            sounds: parsedSounds
+                        });
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("[KeyWare] getAllSoundboardSounds error:", e);
+        }
+        return results;
     }
 
     hasCustomSound(channelId, authorId) {
@@ -154,7 +325,7 @@ module.exports = class KeyWare {
                 if (dmChannelId && this.customSounds[dmChannelId]?.url) {
                     return this.customSounds[dmChannelId];
                 }
-            } catch (e) {}
+            } catch (e) { }
         }
         return null;
     }
@@ -208,7 +379,7 @@ module.exports = class KeyWare {
     patchAudioPrototype() {
         try {
             const self = this;
-            BdApi.Patcher.instead(this.pluginName, window.Audio.prototype, "play", function(thisObject, args, original) {
+            BdApi.Patcher.instead(this.pluginName, window.Audio.prototype, "play", function (thisObject, args, original) {
                 if (self.suppressDiscordSound && !thisObject._isDMCatCustomAudio) {
                     return Promise.resolve();
                 }
@@ -257,7 +428,7 @@ module.exports = class KeyWare {
             if (Dispatcher && typeof Dispatcher.unsubscribe === 'function') {
                 Dispatcher.unsubscribe("MESSAGE_CREATE", this.onMessageCreate);
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     playCustomSound(soundData) {
@@ -941,6 +1112,201 @@ module.exports = class KeyWare {
             .dm-cat-btn-danger:hover {
                 background: var(--button-danger-background-hover, #a12828);
             }
+
+            /* Soundboard Picker Styles */
+            .dm-cat-sound-search-wrap {
+                position: relative;
+                display: flex;
+                align-items: center;
+                margin-bottom: 4px;
+            }
+            .dm-cat-sound-search-icon {
+                position: absolute;
+                left: 10px;
+                color: var(--text-muted, #949ba4);
+                pointer-events: none;
+                display: flex;
+                align-items: center;
+            }
+            .dm-cat-sound-search-input {
+                width: 100%;
+                background: var(--input-background, #1e1f22);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 6px;
+                color: var(--text-normal, #dbdee1);
+                padding: 8px 12px 8px 32px;
+                font-size: 13px;
+                outline: none;
+                transition: border-color 0.2s ease;
+            }
+            .dm-cat-sound-search-input:focus {
+                border-color: var(--brand-500, #5865f2);
+            }
+            .dm-cat-soundboard-container {
+                max-height: 290px;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                padding-right: 4px;
+            }
+            .dm-cat-soundboard-container::-webkit-scrollbar {
+                width: 6px;
+            }
+            .dm-cat-soundboard-container::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.15);
+                border-radius: 3px;
+            }
+            .dm-cat-soundboard-guild {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+            .dm-cat-soundboard-guild-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 12px;
+                font-weight: 700;
+                color: var(--header-secondary, #b5bac1);
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+                padding: 2px 0;
+            }
+            .dm-cat-soundboard-guild-icon {
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                object-fit: cover;
+                background: var(--background-secondary-alt, #1e1f22);
+                flex-shrink: 0;
+            }
+            .dm-cat-soundboard-guild-badge {
+                font-size: 10px;
+                font-weight: 600;
+                background: rgba(255, 255, 255, 0.08);
+                padding: 1px 6px;
+                border-radius: 8px;
+                color: var(--text-muted, #949ba4);
+                margin-left: auto;
+                text-transform: none;
+            }
+            .dm-cat-soundboard-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 6px;
+            }
+            .dm-cat-sound-card {
+                background: var(--background-secondary, #2b2d31);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                border-radius: 6px;
+                padding: 8px 10px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                position: relative;
+                overflow: hidden;
+                user-select: none;
+            }
+            .dm-cat-sound-card:hover {
+                background: var(--background-secondary-alt, #1e1f22);
+                border-color: rgba(255, 255, 255, 0.18);
+                transform: translateY(-1px);
+            }
+            .dm-cat-sound-card.active {
+                border-color: var(--brand-500, #5865f2) !important;
+                background: rgba(88, 101, 242, 0.15) !important;
+                box-shadow: 0 0 10px rgba(88, 101, 242, 0.25);
+            }
+            .dm-cat-sound-card.playing {
+                border-color: #23a55a !important;
+                background: rgba(35, 165, 90, 0.15) !important;
+            }
+            .dm-cat-sound-card-emoji {
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                flex-shrink: 0;
+            }
+            .dm-cat-sound-card-emoji img {
+                width: 20px;
+                height: 20px;
+                object-fit: contain;
+            }
+            .dm-cat-sound-card-name {
+                flex: 1;
+                font-size: 12px;
+                font-weight: 500;
+                color: var(--text-normal, #dbdee1);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .dm-cat-sound-card.active .dm-cat-sound-card-name {
+                color: #ffffff;
+                font-weight: 600;
+            }
+            .dm-cat-sound-card-play-btn {
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.08);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--interactive-normal, #b5bac1);
+                flex-shrink: 0;
+                transition: all 0.15s ease;
+            }
+            .dm-cat-sound-card-play-btn:hover {
+                background: var(--brand-500, #5865f2);
+                color: #ffffff;
+                transform: scale(1.1);
+            }
+            .dm-cat-sound-active-banner {
+                background: rgba(88, 101, 242, 0.12);
+                border: 1px solid rgba(88, 101, 242, 0.3);
+                border-radius: 6px;
+                padding: 8px 12px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+            }
+            .dm-cat-sound-active-info {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                overflow: hidden;
+            }
+            .dm-cat-sound-active-title {
+                font-size: 13px;
+                font-weight: 600;
+                color: #ffffff;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .dm-cat-sound-active-sub {
+                font-size: 11px;
+                color: var(--text-muted, #949ba4);
+            }
+            .dm-cat-sound-empty {
+                text-align: center;
+                padding: 24px 16px;
+                color: var(--text-muted, #949ba4);
+                font-size: 13px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
             @keyframes dmCatFadeIn {
                 from { opacity: 0; transform: scale(0.96); }
                 to { opacity: 1; transform: scale(1); }
@@ -1334,7 +1700,7 @@ module.exports = class KeyWare {
                 }
                 return 0;
             }
-        } catch (e) {}
+        } catch (e) { }
 
         try {
             const scroller = document.querySelector('nav[aria-label="Direkt Mesajlar"] [class*="scroller"], nav[aria-label="Direct Messages"] [class*="scroller"], [class*="privateChannels"] [class*="scroller"]');
@@ -1348,7 +1714,7 @@ module.exports = class KeyWare {
                     }
                 }
             }
-        } catch (e) {}
+        } catch (e) { }
 
         return 0;
     }
@@ -1390,7 +1756,7 @@ module.exports = class KeyWare {
                                 }
                             }
                         });
-                    } catch (e) {}
+                    } catch (e) { }
                 }
             });
         } catch (e) {
@@ -1448,7 +1814,7 @@ module.exports = class KeyWare {
                 `;
             }
             document.head.appendChild(style);
-        } catch (e) {}
+        } catch (e) { }
     }
 
     applyCategoryUpdatesDirectly(cat) {
@@ -2070,45 +2436,139 @@ module.exports = class KeyWare {
         this.closeModal();
         const existing = this.customSounds[channelId] || { url: "", volume: 0.8 };
         let previewAudio = null;
+        let activePlayingCard = null;
+
+        // Fetch / refresh soundboard sounds in background so store has all guild sounds
+        this.fetchSoundboardSounds();
+
+        // Target name resolution for modal header
+        let targetName = "";
+        try {
+            const ChannelStore = BdApi.Webpack.getStore("ChannelStore");
+            const UserStore = BdApi.Webpack.getStore("UserStore");
+            const channel = ChannelStore?.getChannel?.(channelId);
+            if (channel) {
+                if (channel.isDM?.() && channel.getRecipientId?.()) {
+                    const u = UserStore?.getUser?.(channel.getRecipientId());
+                    if (u) targetName = ` - @${u.globalName || u.username}`;
+                } else if (channel.name) {
+                    targetName = ` - #${channel.name}`;
+                }
+            } else {
+                const u = UserStore?.getUser?.(channelId);
+                if (u) targetName = ` - @${u.globalName || u.username}`;
+            }
+        } catch (e) { }
+
+        // State tracking
+        let selectedUrl = existing.url || "";
+        let selectedVolume = (typeof existing.volume === 'number') ? existing.volume : 0.8;
+        let selectedSoundName = existing.soundName || (selectedUrl.includes('discordapp.com/soundboard-sounds') ? 'Soundboard Sesi' : (selectedUrl ? 'Özel Ses' : ''));
+        let selectedGuildName = existing.guildName || "";
+        let selectedEmoji = existing.emoji || "";
+        let selectedEmojiId = existing.emojiId || "";
+        let selectedSourceType = existing.sourceType || (selectedUrl.includes('discordapp.com/soundboard-sounds') ? 'soundboard' : (selectedUrl ? 'custom' : 'soundboard'));
+
+        const isSoundboardInitially = (selectedSourceType === 'soundboard' || selectedUrl.includes('discordapp.com/soundboard-sounds') || !selectedUrl);
 
         const backdrop = document.createElement('div');
         backdrop.className = 'dm-cat-modal-backdrop';
         backdrop.innerHTML = `
-            <div class="dm-cat-modal-box">
+            <div class="dm-cat-modal-box" style="width: 580px;">
                 <div class="dm-cat-modal-header">
-                    <span>Kişiye Özel Bildirim Sesi</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--brand-500, #5865f2)">
+                            <path d="M12 3v9.28a4.39 4.39 0 0 0-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/>
+                        </svg>
+                        <span>Özel Bildirim Sesi${this.escapeHtml(targetName)}</span>
+                    </div>
                 </div>
-                <div class="dm-cat-modal-body">
-                    <div class="dm-cat-setting-row">
-                        <label class="dm-cat-setting-label">MP3 Bağlantısı veya Bilgisayardan Dosya</label>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="text" class="dm-cat-modal-input" id="dmSoundUrlInput" value="${this.escapeHtml(existing.url || '')}" placeholder="https://site.com/ses.mp3 veya dosya seçin" style="flex: 1;" />
-                            <input type="file" id="dmSoundFileInput" accept="audio/*,.mp3,.wav,.ogg,.m4a" style="display: none;" />
-                            <button type="button" class="dm-cat-btn" id="dmBrowseFileBtn" style="background: var(--brand-500, #5865f2); color: #fff; padding: 9px 12px; font-size: 13px; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
-                                </svg>
-                                <span>Dosya Seç</span>
-                            </button>
-                        </div>
-                        <div class="dm-cat-setting-desc">İster sağdaki butondan bilgisayarındaki bir ses dosyasını seç, ister link yapıştır.</div>
-                    </div>
 
-                    <div class="dm-cat-setting-row" style="margin-top: 4px;">
-                        <label class="dm-cat-setting-label">Ses Düzeyi</label>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <input type="range" id="dmSoundVolume" min="0" max="1" step="0.05" value="${existing.volume !== undefined ? existing.volume : 0.8}" style="flex: 1; accent-color: var(--brand-500, #5865f2); cursor: pointer;" />
-                            <span id="dmSoundVolText" style="color: var(--text-normal, #fff); font-size: 13px; min-width: 38px;">${Math.round((existing.volume !== undefined ? existing.volume : 0.8) * 100)}%</span>
+                <!-- Active Selected Sound Banner -->
+                <div style="padding: 12px 20px 0 20px;">
+                    <div class="dm-cat-sound-active-banner" id="dmSoundActiveBanner">
+                        <div class="dm-cat-sound-active-info">
+                            <div id="dmActiveSoundEmoji" style="font-size: 20px; display: flex; align-items: center; justify-content: center; min-width: 24px;">
+                                ${selectedEmojiId ? `<img src="https://cdn.discordapp.com/emojis/${selectedEmojiId}.webp?size=48" style="width: 22px; height: 22px; object-fit: contain;" />` : (selectedEmoji || '🔔')}
+                            </div>
+                            <div style="overflow: hidden;">
+                                <div class="dm-cat-sound-active-title" id="dmActiveSoundName">${this.escapeHtml(selectedSoundName || 'Ses Seçilmedi')}</div>
+                                <div class="dm-cat-sound-active-sub" id="dmActiveSoundSub">${selectedGuildName ? this.escapeHtml(selectedGuildName) : (selectedUrl ? 'Özel MP3 / Ses Dosyası' : 'Aşağıdaki seçeneklerden bir ses belirleyin')}</div>
+                            </div>
                         </div>
-                    </div>
-
-                    <div style="display: flex; gap: 8px; margin-top: 6px;">
-                        <button class="dm-cat-btn" id="dmTestSoundBtn" style="background: var(--background-secondary-alt, #1e1f22); color: #fff; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                            <span>Sesi Dinle</span>
+                        <button type="button" class="dm-cat-btn" id="dmQuickTestBtn" style="background: var(--brand-500, #5865f2); color: #fff; padding: 6px 12px; font-size: 12px; display: flex; align-items: center; gap: 5px; flex-shrink: 0; ${selectedUrl ? '' : 'display: none;'}">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            <span>Dinle</span>
                         </button>
                     </div>
                 </div>
+
+                <div class="dm-cat-tabs" style="margin-top: 12px;">
+                    <div class="dm-cat-tab-btn ${isSoundboardInitially ? 'active' : ''}" data-sound-tab="soundboard">
+                        <span style="display: flex; align-items: center; gap: 6px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5zm4 4h-2v-6h2v6zm0-8h-2V7h2v1z"/></svg>
+                            Sunucu Soundboard
+                        </span>
+                    </div>
+                    <div class="dm-cat-tab-btn ${!isSoundboardInitially ? 'active' : ''}" data-sound-tab="custom">
+                        <span style="display: flex; align-items: center; gap: 6px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>
+                            Özel Dosya / MP3 Linki
+                        </span>
+                    </div>
+                </div>
+
+                <div class="dm-cat-modal-body" style="padding-top: 12px;">
+                    <!-- Soundboard Pane -->
+                    <div class="dm-cat-tab-pane ${isSoundboardInitially ? 'active' : ''}" id="dmTabSoundboard">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <div class="dm-cat-sound-search-wrap" style="flex: 1; margin-bottom: 0;">
+                                <div class="dm-cat-sound-search-icon">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                </div>
+                                <input type="text" class="dm-cat-sound-search-input" id="dmSoundSearch" placeholder="Soundboard sesi veya sunucu ara..." />
+                            </div>
+                            <button type="button" class="dm-cat-btn" id="dmSoundboardRefresh" title="Soundboard seslerini yenile" style="background: var(--background-secondary-alt, #1e1f22); color: var(--interactive-normal, #b5bac1); padding: 8px 10px; display: flex; align-items: center; justify-content: center;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="dm-cat-soundboard-container" id="dmSoundboardContainer">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Custom MP3 / File Pane -->
+                    <div class="dm-cat-tab-pane ${!isSoundboardInitially ? 'active' : ''}" id="dmTabCustom">
+                        <div class="dm-cat-setting-row">
+                            <label class="dm-cat-setting-label">MP3 Bağlantısı veya Bilgisayardan Dosya</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="text" class="dm-cat-modal-input" id="dmSoundUrlInput" value="${this.escapeHtml((selectedSourceType === 'custom' && selectedUrl) ? selectedUrl : '')}" placeholder="https://site.com/ses.mp3 veya dosya seçin" style="flex: 1;" />
+                                <input type="file" id="dmSoundFileInput" accept="audio/*,.mp3,.wav,.ogg,.m4a" style="display: none;" />
+                                <button type="button" class="dm-cat-btn" id="dmBrowseFileBtn" style="background: var(--brand-500, #5865f2); color: #fff; padding: 9px 12px; font-size: 13px; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                                    </svg>
+                                    <span>Dosya Seç</span>
+                                </button>
+                            </div>
+                            <div class="dm-cat-setting-desc">İster bilgisayarındaki bir ses dosyasını (.mp3, .wav, .ogg vb.) seç, ister internetteki bir ses linkini yapıştır.</div>
+                        </div>
+                    </div>
+
+                    <!-- Shared Volume Controls -->
+                    <div style="background: rgba(0,0,0,0.15); border-radius: 6px; padding: 10px 14px; margin-top: 4px; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label class="dm-cat-setting-label" style="margin-bottom: 0;">Ses Düzeyi</label>
+                            <span id="dmSoundVolText" style="color: var(--text-normal, #fff); font-size: 13px; font-weight: 600;">${Math.round(selectedVolume * 100)}%</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-muted, #949ba4)"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                            <input type="range" id="dmSoundVolume" min="0" max="1" step="0.05" value="${selectedVolume}" style="flex: 1; accent-color: var(--brand-500, #5865f2); cursor: pointer;" />
+                        </div>
+                    </div>
+                </div>
+
                 <div class="dm-cat-modal-footer">
                     ${existing.url ? `<button class="dm-cat-btn dm-cat-btn-danger" id="dmRemoveSoundBtn" style="margin-right: auto;">Sesi Kaldır</button>` : ''}
                     <button class="dm-cat-btn dm-cat-btn-cancel" id="dmSoundCancel">İptal</button>
@@ -2117,17 +2577,261 @@ module.exports = class KeyWare {
             </div>
         `;
 
+        const tabs = backdrop.querySelectorAll('.dm-cat-tab-btn');
+        const tabSoundboard = backdrop.querySelector('#dmTabSoundboard');
+        const tabCustom = backdrop.querySelector('#dmTabCustom');
+        const soundboardContainer = backdrop.querySelector('#dmSoundboardContainer');
+        const searchInput = backdrop.querySelector('#dmSoundSearch');
+        const refreshBtn = backdrop.querySelector('#dmSoundboardRefresh');
         const urlInput = backdrop.querySelector('#dmSoundUrlInput');
         const fileInput = backdrop.querySelector('#dmSoundFileInput');
         const browseBtn = backdrop.querySelector('#dmBrowseFileBtn');
         const volumeInput = backdrop.querySelector('#dmSoundVolume');
         const volumeText = backdrop.querySelector('#dmSoundVolText');
-        const testBtn = backdrop.querySelector('#dmTestSoundBtn');
+        const activeName = backdrop.querySelector('#dmActiveSoundName');
+        const activeSub = backdrop.querySelector('#dmActiveSoundSub');
+        const activeEmoji = backdrop.querySelector('#dmActiveSoundEmoji');
+        const quickTestBtn = backdrop.querySelector('#dmQuickTestBtn');
         const removeBtn = backdrop.querySelector('#dmRemoveSoundBtn');
 
-        browseBtn.onclick = () => {
-            fileInput.click();
+        const updateActiveBanner = () => {
+            if (selectedUrl) {
+                activeName.textContent = selectedSoundName || 'Seçili Ses';
+                activeSub.textContent = selectedGuildName ? selectedGuildName : (selectedSourceType === 'custom' ? 'Özel MP3 / Ses Dosyası' : 'Soundboard Sesi');
+                if (selectedEmojiId) {
+                    activeEmoji.innerHTML = `<img src="https://cdn.discordapp.com/emojis/${selectedEmojiId}.webp?size=48" style="width: 22px; height: 22px; object-fit: contain;" />`;
+                } else {
+                    activeEmoji.textContent = selectedEmoji || '🔊';
+                }
+                quickTestBtn.style.display = 'flex';
+            } else {
+                activeName.textContent = 'Ses Seçilmedi';
+                activeSub.textContent = 'Aşağıdaki seçeneklerden bir ses belirleyin';
+                activeEmoji.textContent = '🔔';
+                quickTestBtn.style.display = 'none';
+            }
         };
+
+        const playPreview = (url, vol, cardEl) => {
+            if (previewAudio) {
+                previewAudio.pause();
+                previewAudio = null;
+            }
+            if (activePlayingCard) {
+                activePlayingCard.classList.remove('playing');
+                const pIcon = activePlayingCard.querySelector('.dm-cat-sound-card-play-btn');
+                if (pIcon) pIcon.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+                activePlayingCard = null;
+            }
+
+            if (!url) return;
+
+            try {
+                let src = url;
+                if (src.startsWith('file://') || src.match(/^[a-zA-Z]:[\\\/]/)) {
+                    try {
+                        const fs = require('fs');
+                        let cleanPath = src.replace(/^file:\/\/\/?/, '');
+                        cleanPath = decodeURIComponent(cleanPath).replace(/\//g, '\\');
+                        if (fs.existsSync(cleanPath)) {
+                            const buffer = fs.readFileSync(cleanPath);
+                            src = `data:audio/mp3;base64,${buffer.toString('base64')}`;
+                        }
+                    } catch (err) { }
+                }
+
+                previewAudio = new Audio(src);
+                previewAudio._isDMCatCustomAudio = true;
+                previewAudio.volume = (typeof vol === 'number') ? Math.max(0, Math.min(1, vol)) : 0.8;
+
+                if (cardEl) {
+                    activePlayingCard = cardEl;
+                    cardEl.classList.add('playing');
+                    const pIcon = cardEl.querySelector('.dm-cat-sound-card-play-btn');
+                    if (pIcon) pIcon.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+                }
+
+                const clearPlaying = () => {
+                    if (cardEl) {
+                        cardEl.classList.remove('playing');
+                        const pIcon = cardEl.querySelector('.dm-cat-sound-card-play-btn');
+                        if (pIcon) pIcon.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+                    }
+                    if (activePlayingCard === cardEl) activePlayingCard = null;
+                };
+
+                previewAudio.onended = clearPlaying;
+                previewAudio.onerror = clearPlaying;
+                previewAudio.onpause = clearPlaying;
+
+                previewAudio.play().catch(err => {
+                    console.warn("[KeyWare] Preview audio error:", err);
+                    clearPlaying();
+                });
+            } catch (e) {
+                console.error("[KeyWare] playPreview error:", e);
+            }
+        };
+
+        const renderSoundboard = () => {
+            const query = (searchInput.value || '').trim().toLowerCase();
+            const guildGroups = this.getAllSoundboardSounds();
+
+            if (!guildGroups || guildGroups.length === 0) {
+                soundboardContainer.innerHTML = `
+                    <div class="dm-cat-sound-empty">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.5;">
+                            <path d="M12 3v9.28a4.39 4.39 0 0 0-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/>
+                        </svg>
+                        <div>Bulunduğunuz sunucularda Soundboard sesi bulunamadı veya henüz yüklenmedi.</div>
+                        <button type="button" class="dm-cat-btn" id="dmSoundboardRetryBtn" style="background: var(--brand-500, #5865f2); color: #fff; font-size: 12px; margin-top: 4px;">Sesleri Tara / Yenile</button>
+                    </div>
+                `;
+                const retryBtn = soundboardContainer.querySelector('#dmSoundboardRetryBtn');
+                if (retryBtn) {
+                    retryBtn.onclick = () => {
+                        this.fetchSoundboardSounds();
+                        setTimeout(() => renderSoundboard(), 500);
+                    };
+                }
+                return;
+            }
+
+            let html = '';
+            let totalMatch = 0;
+
+            for (const group of guildGroups) {
+                const filteredSounds = group.sounds.filter(s => {
+                    if (!query) return true;
+                    return (s.name && s.name.toLowerCase().includes(query)) || (group.guildName && group.guildName.toLowerCase().includes(query));
+                });
+
+                if (filteredSounds.length === 0) continue;
+                totalMatch += filteredSounds.length;
+
+                html += `
+                    <div class="dm-cat-soundboard-guild">
+                        <div class="dm-cat-soundboard-guild-header">
+                            ${group.guildIcon ? `<img src="${group.guildIcon}" class="dm-cat-soundboard-guild-icon" />` : `<div class="dm-cat-soundboard-guild-icon" style="display: flex; align-items: center; justify-content: center; font-size: 9px; color: #fff; background: #5865f2;">${group.guildName.charAt(0).toUpperCase()}</div>`}
+                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${this.escapeHtml(group.guildName)}</span>
+                            <span class="dm-cat-soundboard-guild-badge">${filteredSounds.length} ses</span>
+                        </div>
+                        <div class="dm-cat-soundboard-grid">
+                            ${filteredSounds.map(s => {
+                                const isSelected = (selectedUrl === s.url);
+                                const emojiHtml = s.emojiId
+                                    ? `<img src="https://cdn.discordapp.com/emojis/${s.emojiId}.webp?size=48" />`
+                                    : (s.emojiName || '🔊');
+
+                                return `
+                                    <div class="dm-cat-sound-card ${isSelected ? 'active' : ''}" data-sound-url="${this.escapeHtml(s.url)}" data-sound-name="${this.escapeHtml(s.name)}" data-guild-name="${this.escapeHtml(group.guildName)}" data-emoji="${this.escapeHtml(s.emojiName || '')}" data-emoji-id="${this.escapeHtml(s.emojiId || '')}">
+                                        <div class="dm-cat-sound-card-emoji">${emojiHtml}</div>
+                                        <div class="dm-cat-sound-card-name" title="${this.escapeHtml(s.name)}">${this.escapeHtml(s.name)}</div>
+                                        <div class="dm-cat-sound-card-play-btn" title="Önizle">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (totalMatch === 0) {
+                html = `<div class="dm-cat-sound-empty">"${this.escapeHtml(query)}" ile eşleşen ses bulunamadı.</div>`;
+            }
+
+            soundboardContainer.innerHTML = html;
+
+            // Attach card events
+            soundboardContainer.querySelectorAll('.dm-cat-sound-card').forEach(card => {
+                const url = card.dataset.soundUrl;
+                const name = card.dataset.soundName;
+                const gName = card.dataset.guildName;
+                const em = card.dataset.emoji;
+                const emId = card.dataset.emojiId;
+
+                const playBtn = card.querySelector('.dm-cat-sound-card-play-btn');
+                playBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    if (card.classList.contains('playing')) {
+                        if (previewAudio) previewAudio.pause();
+                    } else {
+                        playPreview(url, parseFloat(volumeInput.value), card);
+                    }
+                };
+
+                card.onclick = () => {
+                    soundboardContainer.querySelectorAll('.dm-cat-sound-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+
+                    selectedUrl = url;
+                    selectedSoundName = name;
+                    selectedGuildName = gName;
+                    selectedEmoji = em;
+                    selectedEmojiId = emId;
+                    selectedSourceType = 'soundboard';
+
+                    urlInput.value = '';
+                    updateActiveBanner();
+                };
+            });
+        };
+
+        // Render initial soundboard list
+        renderSoundboard();
+
+        // Search debounce
+        let searchTimeout = null;
+        searchInput.oninput = () => {
+            if (searchTimeout) clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => renderSoundboard(), 100);
+        };
+
+        refreshBtn.onclick = () => {
+            this.fetchSoundboardSounds();
+            setTimeout(() => renderSoundboard(), 300);
+        };
+
+        // Tabs click
+        tabs.forEach(tab => {
+            tab.onclick = () => {
+                const target = tab.dataset.soundTab;
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                if (target === 'soundboard') {
+                    tabSoundboard.classList.add('active');
+                    tabCustom.classList.remove('active');
+                } else {
+                    tabSoundboard.classList.remove('active');
+                    tabCustom.classList.add('active');
+                }
+            };
+        });
+
+        // Custom URL input
+        urlInput.oninput = () => {
+            const val = urlInput.value.trim();
+            if (val) {
+                selectedUrl = val;
+                selectedSoundName = val.split('/').pop().split('?')[0] || 'Özel MP3';
+                selectedGuildName = '';
+                selectedEmoji = '🎵';
+                selectedEmojiId = '';
+                selectedSourceType = 'custom';
+                soundboardContainer.querySelectorAll('.dm-cat-sound-card').forEach(c => c.classList.remove('active'));
+            } else if (selectedSourceType === 'custom') {
+                selectedUrl = '';
+                selectedSoundName = '';
+                selectedEmoji = '';
+                selectedEmojiId = '';
+            }
+            updateActiveBanner();
+        };
+
+        browseBtn.onclick = () => fileInput.click();
 
         fileInput.onchange = (e) => {
             const file = e.target.files && e.target.files[0];
@@ -2136,6 +2840,14 @@ module.exports = class KeyWare {
             const reader = new FileReader();
             reader.onload = (re) => {
                 urlInput.value = re.target.result;
+                selectedUrl = re.target.result;
+                selectedSoundName = file.name;
+                selectedGuildName = 'Yerel Dosya';
+                selectedEmoji = '📁';
+                selectedEmojiId = '';
+                selectedSourceType = 'custom';
+                soundboardContainer.querySelectorAll('.dm-cat-sound-card').forEach(c => c.classList.remove('active'));
+                updateActiveBanner();
             };
             reader.readAsDataURL(file);
         };
@@ -2145,18 +2857,9 @@ module.exports = class KeyWare {
             if (previewAudio) previewAudio.volume = parseFloat(volumeInput.value);
         };
 
-        testBtn.onclick = () => {
-            const finalUrl = urlInput.value.trim();
-            if (!finalUrl) return;
-
-            if (previewAudio) {
-                previewAudio.pause();
-                previewAudio = null;
-            }
-            this.playCustomSound({
-                url: finalUrl,
-                volume: parseFloat(volumeInput.value)
-            });
+        quickTestBtn.onclick = () => {
+            if (!selectedUrl) return;
+            playPreview(selectedUrl, parseFloat(volumeInput.value), null);
         };
 
         if (removeBtn) {
@@ -2170,7 +2873,7 @@ module.exports = class KeyWare {
 
         backdrop.querySelector('#dmSoundSave').onclick = () => {
             if (previewAudio) previewAudio.pause();
-            let finalUrl = urlInput.value.trim();
+            let finalUrl = selectedUrl;
 
             if (finalUrl) {
                 if (finalUrl.startsWith('file://') || finalUrl.match(/^[a-zA-Z]:[\\\/]/)) {
@@ -2182,12 +2885,17 @@ module.exports = class KeyWare {
                             const buffer = fs.readFileSync(cleanPath);
                             finalUrl = `data:audio/mp3;base64,${buffer.toString('base64')}`;
                         }
-                    } catch (err) {}
+                    } catch (err) { }
                 }
 
                 this.customSounds[channelId] = {
                     url: finalUrl,
-                    volume: parseFloat(volumeInput.value)
+                    volume: parseFloat(volumeInput.value),
+                    soundName: selectedSoundName || '',
+                    guildName: selectedGuildName || '',
+                    emoji: selectedEmoji || '',
+                    emojiId: selectedEmojiId || '',
+                    sourceType: selectedSourceType || 'custom'
                 };
             } else {
                 delete this.customSounds[channelId];
@@ -2277,7 +2985,7 @@ module.exports = class KeyWare {
             BdApi.ContextMenu.unpatch("user-context");
             BdApi.ContextMenu.unpatch("gdm-context");
             BdApi.ContextMenu.unpatch("channel-context");
-        } catch (e) {}
+        } catch (e) { }
     }
 
     handleContextMenu(e) {
