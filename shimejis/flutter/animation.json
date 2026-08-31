@@ -1,0 +1,5936 @@
+{
+  "schema_id": "default",
+  "version": 1,
+  "default_animation": "fall",
+  "initial_candidates": [
+    "fall"
+  ],
+  "animations": [
+    {
+      "key": "stand",
+      "type": "GROUND",
+      "subtype": "STAND",
+      "level": 1,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 0,
+          "durationTicks": 180,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "stand",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "walk_left",
+      "type": "GROUND",
+      "subtype": "WALK",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "LEFT",
+      "frames": [
+        {
+          "sprite": 1,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 2,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 3,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 4,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 5,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 6,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "LEFT",
+          "choices": [
+            {
+              "to": "walk_right",
+              "weight": 3,
+              "setFacing": "RIGHT"
+            },
+            {
+              "to": "climb_left",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "walk_right",
+      "type": "GROUND",
+      "subtype": "WALK",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "RIGHT",
+      "frames": [
+        {
+          "sprite": 1,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 2,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 3,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 4,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 5,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 6,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "RIGHT",
+          "choices": [
+            {
+              "to": "walk_left",
+              "weight": 3,
+              "setFacing": "LEFT"
+            },
+            {
+              "to": "climb_right",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "bounce",
+      "type": "GROUND",
+      "subtype": "BOUNCE",
+      "level": 1,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 15,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 16,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 17,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 18,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 19,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 20,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 21,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 22,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 23,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "idle",
+      "type": "GROUND",
+      "subtype": "IDLE",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 24,
+          "durationTicks": 14,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 25,
+          "durationTicks": 12,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 26,
+          "durationTicks": 12,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 27,
+          "durationTicks": 9,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 28,
+          "durationTicks": 9,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 29,
+          "durationTicks": 12,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 30,
+          "durationTicks": 12,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "idle",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "climb_ceiling_left",
+      "type": "CEILING",
+      "subtype": "HANG",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "LEFT",
+      "frames": [
+        {
+          "sprite": 38,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 39,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 40,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 41,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 42,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 43,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        },
+        {
+          "sprite": 44,
+          "durationTicks": 8,
+          "dx": -1,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "climb_ceiling_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "LEFT",
+          "choices": [
+            {
+              "to": "climb_ceiling_right",
+              "weight": 1,
+              "setFacing": "RIGHT"
+            },
+            {
+              "to": "descend_left",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "climb_ceiling_right",
+      "type": "CEILING",
+      "subtype": "HANG",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "RIGHT",
+      "frames": [
+        {
+          "sprite": 38,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 39,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 40,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 41,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 42,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 43,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        },
+        {
+          "sprite": 44,
+          "durationTicks": 8,
+          "dx": 1,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "climb_ceiling_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "RIGHT",
+          "choices": [
+            {
+              "to": "climb_ceiling_left",
+              "weight": 1,
+              "setFacing": "LEFT"
+            },
+            {
+              "to": "descend_right",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "climb_left",
+      "type": "WALL",
+      "subtype": "CLIMB",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "LEFT",
+      "frames": [
+        {
+          "sprite": 45,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 46,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 47,
+          "durationTicks": 4,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 48,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": -2
+        },
+        {
+          "sprite": 49,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": -2
+        },
+        {
+          "sprite": 50,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 51,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 52,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 53,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 54,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "descend_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "hang_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "climb_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "TOP",
+          "choices": [
+            {
+              "to": "descend_left",
+              "weight": 1
+            },
+            {
+              "to": "climb_ceiling_right",
+              "weight": 1,
+              "setFacing": "RIGHT"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "climb_right",
+      "type": "WALL",
+      "subtype": "CLIMB",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "RIGHT",
+      "frames": [
+        {
+          "sprite": 45,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 46,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 47,
+          "durationTicks": 4,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 48,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": -2
+        },
+        {
+          "sprite": 49,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": -2
+        },
+        {
+          "sprite": 50,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 51,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 52,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 53,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 54,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": -1
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "descend_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "hang_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "climb_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "TOP",
+          "choices": [
+            {
+              "to": "descend_right",
+              "weight": 1
+            },
+            {
+              "to": "climb_ceiling_left",
+              "weight": 1,
+              "setFacing": "LEFT"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "descend_left",
+      "type": "WALL",
+      "subtype": "DESCEND",
+      "level": 3,
+      "loop": "LOOP",
+      "direction": "LEFT",
+      "frames": [
+        {
+          "sprite": 54,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 53,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 52,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 51,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 50,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 49,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 48,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 47,
+          "durationTicks": 4,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 46,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 45,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "climb_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "hang_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "descend_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "BOTTOM",
+          "choices": [
+            {
+              "to": "walk_right",
+              "weight": 1,
+              "setFacing": "RIGHT"
+            },
+            {
+              "to": "stand",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "descend_right",
+      "type": "WALL",
+      "subtype": "DESCEND",
+      "level": 3,
+      "loop": "LOOP",
+      "direction": "RIGHT",
+      "frames": [
+        {
+          "sprite": 54,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 53,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 52,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 51,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 50,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 49,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 48,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 47,
+          "durationTicks": 4,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 46,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        },
+        {
+          "sprite": 45,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 1
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "climb_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "hang_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "descend_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "BOTTOM",
+          "choices": [
+            {
+              "to": "walk_left",
+              "weight": 1,
+              "setFacing": "LEFT"
+            },
+            {
+              "to": "stand",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "fall",
+      "type": "AIR",
+      "subtype": "FALL",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 14,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 10
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "fall",
+            "weight": 1
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "BOTTOM",
+          "choices": [
+            {
+              "to": "bounce",
+              "weight": 1,
+              "setFacing": "LEFT"
+            }
+          ]
+        },
+        {
+          "when": "BOTTOM",
+          "choices": [
+            {
+              "to": "bounce",
+              "weight": 1,
+              "setFacing": "RIGHT"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "drag",
+      "type": "USER",
+      "subtype": "DRAG",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 55,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 56,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 57,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 58,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "drag",
+            "weight": 1
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      }
+    },
+    {
+      "key": "fling",
+      "type": "USER",
+      "subtype": "FLING",
+      "level": 2,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 59,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "fling",
+            "weight": 1
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      }
+    },
+    {
+      "key": "happy_walk_left",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 4,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 7,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 8,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 9,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 10,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 11,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 12,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 13,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "LEFT",
+          "choices": [
+            {
+              "to": "happy_walk_right",
+              "weight": 3,
+              "setFacing": "RIGHT"
+            },
+            {
+              "to": "climb_left",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "happy_walk_right",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 4,
+      "loop": "LOOP",
+      "direction": "RIGHT",
+      "frames": [
+        {
+          "sprite": 7,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 8,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 9,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 10,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 11,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 12,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 13,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "RIGHT",
+          "choices": [
+            {
+              "to": "happy_walk_left",
+              "weight": 3,
+              "setFacing": "LEFT"
+            },
+            {
+              "to": "climb_right",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "crawl_left",
+      "type": "GROUND",
+      "subtype": "WALK",
+      "level": 3,
+      "loop": "LOOP",
+      "direction": "LEFT",
+      "frames": [
+        {
+          "sprite": 31,
+          "durationTicks": 4,
+          "dx": -3,
+          "dy": 0
+        },
+        {
+          "sprite": 32,
+          "durationTicks": 4,
+          "dx": -3,
+          "dy": 0
+        },
+        {
+          "sprite": 33,
+          "durationTicks": 4,
+          "dx": -3,
+          "dy": 0
+        },
+        {
+          "sprite": 34,
+          "durationTicks": 4,
+          "dx": -3,
+          "dy": 0
+        },
+        {
+          "sprite": 35,
+          "durationTicks": 4,
+          "dx": -3,
+          "dy": 0
+        },
+        {
+          "sprite": 36,
+          "durationTicks": 4,
+          "dx": -3,
+          "dy": 0
+        },
+        {
+          "sprite": 37,
+          "durationTicks": 4,
+          "dx": -3,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "LEFT",
+          "choices": [
+            {
+              "to": "crawl_right",
+              "weight": 3,
+              "setFacing": "RIGHT"
+            },
+            {
+              "to": "climb_left",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "crawl_right",
+      "type": "GROUND",
+      "subtype": "WALK",
+      "level": 3,
+      "loop": "LOOP",
+      "direction": "RIGHT",
+      "frames": [
+        {
+          "sprite": 31,
+          "durationTicks": 4,
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "sprite": 32,
+          "durationTicks": 4,
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "sprite": 33,
+          "durationTicks": 4,
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "sprite": 34,
+          "durationTicks": 4,
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "sprite": 35,
+          "durationTicks": 4,
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "sprite": 36,
+          "durationTicks": 4,
+          "dx": 3,
+          "dy": 0
+        },
+        {
+          "sprite": 37,
+          "durationTicks": 4,
+          "dx": 3,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "RIGHT",
+          "choices": [
+            {
+              "to": "crawl_left",
+              "weight": 3,
+              "setFacing": "LEFT"
+            },
+            {
+              "to": "climb_right",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hang_left",
+      "type": "WALL",
+      "subtype": "CUSTOM",
+      "level": 2,
+      "loop": "LOOP",
+      "direction": "LEFT",
+      "frames": [
+        {
+          "sprite": 48,
+          "durationTicks": 600
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "climb_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "descend_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "hang_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      }
+    },
+    {
+      "key": "hang_right",
+      "type": "WALL",
+      "subtype": "CUSTOM",
+      "level": 2,
+      "loop": "LOOP",
+      "direction": "RIGHT",
+      "frames": [
+        {
+          "sprite": 48,
+          "durationTicks": 600
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "climb_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "descend_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "hang_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      }
+    },
+    {
+      "key": "sleep",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 3,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 60,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 61,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 62,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 63,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 64,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 65,
+          "durationTicks": 500,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "sleep1",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 4,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 66,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 67,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 68,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 69,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 70,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 71,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 72,
+          "durationTicks": 600,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "sleep2",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 5,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 73,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 74,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 75,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 76,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 77,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 78,
+          "durationTicks": 1200,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "sleep3",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 6,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 79,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 80,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 81,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 82,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 83,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 82,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 81,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 80,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 79,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 80,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 81,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 82,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 83,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 82,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 81,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 80,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 79,
+          "durationTicks": 600,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "sleep4",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 7,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 84,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 85,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 86,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 87,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 88,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 89,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 90,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 91,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 92,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 93,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 94,
+          "durationTicks": 800,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "eat",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 3,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 95,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 96,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 97,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 98,
+          "durationTicks": 5,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      }
+    },
+    {
+      "key": "eat2",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 4,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 99,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 100,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 101,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 102,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 103,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      }
+    },
+    {
+      "key": "drink",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 5,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 104,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 105,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 106,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 107,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 108,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 109,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 110,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 111,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 112,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 113,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "dance",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 5,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 114,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 115,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 116,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 117,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 118,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 119,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 120,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 121,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 122,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 123,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 124,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 125,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      }
+    },
+    {
+      "key": "turn",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 7,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 126,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 127,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 128,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 129,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 130,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 131,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 132,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 133,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 134,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 133,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 132,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 131,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 130,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 129,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 128,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 127,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 126,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "sword",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 6,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 135,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 136,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 137,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 138,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 139,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 140,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 139,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 138,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 137,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 136,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      }
+    },
+    {
+      "key": "eat3",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 6,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 141,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 142,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 143,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 144,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 145,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 146,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 147,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 148,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 149,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 150,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 151,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 152,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "walk_stick_left",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 6,
+      "loop": "LOOP",
+      "direction": "LEFT",
+      "frames": [
+        {
+          "sprite": 153,
+          "durationTicks": 6,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 154,
+          "durationTicks": 6,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 155,
+          "durationTicks": 6,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 156,
+          "durationTicks": 6,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 157,
+          "durationTicks": 6,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 158,
+          "durationTicks": 6,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 159,
+          "durationTicks": 6,
+          "dx": -2,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "LEFT",
+          "choices": [
+            {
+              "to": "walk_stick_right",
+              "weight": 3,
+              "setFacing": "RIGHT"
+            },
+            {
+              "to": "climb_left",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "walk_stick_right",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 6,
+      "loop": "LOOP",
+      "direction": "RIGHT",
+      "frames": [
+        {
+          "sprite": 153,
+          "durationTicks": 6,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 154,
+          "durationTicks": 6,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 155,
+          "durationTicks": 6,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 156,
+          "durationTicks": 6,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 157,
+          "durationTicks": 6,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 158,
+          "durationTicks": 6,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 159,
+          "durationTicks": 6,
+          "dx": 2,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      },
+      "borderTransitions": [
+        {
+          "when": "RIGHT",
+          "choices": [
+            {
+              "to": "walk_stick_left",
+              "weight": 3,
+              "setFacing": "LEFT"
+            },
+            {
+              "to": "climb_right",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "wave",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 2,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 160,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 161,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 162,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 163,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 164,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 165,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 166,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 165,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 164,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 163,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 162,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 161,
+          "durationTicks": 7,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          }
+        ]
+      }
+    },
+    {
+      "key": "dance2",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 7,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 167,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 168,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 169,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 170,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 171,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 172,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 173,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 174,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 175,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 176,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 177,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 178,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 179,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 180,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 179,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 178,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 177,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 176,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 175,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 174,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 173,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 172,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 171,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 170,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 169,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 168,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      }
+    },
+    {
+      "key": "dance3",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 7,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 181,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 182,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 183,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 184,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 185,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 186,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 187,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 188,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 189,
+          "durationTicks": 6,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 240,
+          "maxTicks": 480
+        }
+      }
+    },
+    {
+      "key": "sleep5",
+      "type": "GROUND",
+      "subtype": "CUSTOM",
+      "level": 5,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 190,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 191,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 192,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 193,
+          "durationTicks": 8,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 194,
+          "durationTicks": 900,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "stand",
+            "weight": 1
+          },
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "happy_walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "happy_walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "crawl_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "crawl_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "sleep",
+            "weight": 1
+          },
+          {
+            "to": "sleep1",
+            "weight": 1
+          },
+          {
+            "to": "sleep2",
+            "weight": 1
+          },
+          {
+            "to": "sleep3",
+            "weight": 1
+          },
+          {
+            "to": "sleep4",
+            "weight": 1
+          },
+          {
+            "to": "eat",
+            "weight": 1
+          },
+          {
+            "to": "eat2",
+            "weight": 1
+          },
+          {
+            "to": "drink",
+            "weight": 1
+          },
+          {
+            "to": "dance",
+            "weight": 1
+          },
+          {
+            "to": "turn",
+            "weight": 1
+          },
+          {
+            "to": "sword",
+            "weight": 1
+          },
+          {
+            "to": "eat3",
+            "weight": 1
+          },
+          {
+            "to": "walk_stick_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_stick_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          },
+          {
+            "to": "wave",
+            "weight": 1
+          },
+          {
+            "to": "dance2",
+            "weight": 1
+          },
+          {
+            "to": "dance3",
+            "weight": 1
+          },
+          {
+            "to": "sleep5",
+            "weight": 1
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "event": "DRAG_START",
+      "from": "*",
+      "setFacing": "RANDOM",
+      "to": "drag"
+    },
+    {
+      "event": "DRAG_END",
+      "from": "drag",
+      "when": "LEFT",
+      "choices": [
+        {
+          "to": "climb_left",
+          "weight": 1,
+          "setFacing": "LEFT"
+        },
+        {
+          "to": "descend_left",
+          "weight": 1,
+          "setFacing": "LEFT"
+        },
+        {
+          "to": "hang_left",
+          "weight": 1,
+          "setFacing": "LEFT"
+        }
+      ]
+    },
+    {
+      "event": "DRAG_END",
+      "from": "drag",
+      "when": "RIGHT",
+      "choices": [
+        {
+          "to": "climb_right",
+          "weight": 1,
+          "setFacing": "RIGHT"
+        },
+        {
+          "to": "descend_right",
+          "weight": 1,
+          "setFacing": "RIGHT"
+        },
+        {
+          "to": "hang_right",
+          "weight": 1,
+          "setFacing": "RIGHT"
+        }
+      ]
+    },
+    {
+      "event": "DRAG_END",
+      "from": "drag",
+      "when": "TOP",
+      "facing": "LEFT",
+      "choices": [
+        {
+          "to": "climb_ceiling_left",
+          "weight": 1,
+          "setFacing": "LEFT"
+        }
+      ]
+    },
+    {
+      "event": "DRAG_END",
+      "from": "drag",
+      "when": "TOP",
+      "facing": "RIGHT",
+      "choices": [
+        {
+          "to": "climb_ceiling_right",
+          "weight": 1,
+          "setFacing": "RIGHT"
+        }
+      ]
+    },
+    {
+      "event": "DRAG_END",
+      "from": "drag",
+      "setFacing": "RANDOM",
+      "to": "fall"
+    },
+    {
+      "event": "FLING_START",
+      "from": "*",
+      "choices": [
+        {
+          "to": "fling",
+          "weight": 1,
+          "setFacing": "EVENT_VELOCITY"
+        }
+      ]
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "when": "LEFT",
+      "choices": [
+        {
+          "to": "climb_left",
+          "weight": 1,
+          "setFacing": "LEFT"
+        },
+        {
+          "to": "descend_left",
+          "weight": 1,
+          "setFacing": "LEFT"
+        },
+        {
+          "to": "hang_left",
+          "weight": 1,
+          "setFacing": "LEFT"
+        }
+      ]
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "when": "RIGHT",
+      "choices": [
+        {
+          "to": "climb_right",
+          "weight": 1,
+          "setFacing": "RIGHT"
+        },
+        {
+          "to": "descend_right",
+          "weight": 1,
+          "setFacing": "RIGHT"
+        },
+        {
+          "to": "hang_right",
+          "weight": 1,
+          "setFacing": "RIGHT"
+        }
+      ]
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "when": "TOP",
+      "facing": "LEFT",
+      "choices": [
+        {
+          "to": "climb_ceiling_left",
+          "weight": 1,
+          "setFacing": "LEFT"
+        }
+      ]
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "when": "TOP",
+      "facing": "RIGHT",
+      "choices": [
+        {
+          "to": "climb_ceiling_right",
+          "weight": 1,
+          "setFacing": "RIGHT"
+        }
+      ]
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "when": "BOTTOM",
+      "facing": "LEFT",
+      "setFacing": "LEFT",
+      "to": "bounce"
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "when": "BOTTOM",
+      "facing": "RIGHT",
+      "setFacing": "RIGHT",
+      "to": "bounce"
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "to": "fall"
+    },
+    {
+      "event": "TAP",
+      "from": "stand",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "walk_left",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "walk_right",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "happy_walk_left",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "happy_walk_right",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "crawl_left",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "crawl_right",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "sleep",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "sleep1",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "sleep2",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "sleep3",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "sleep4",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "eat",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "eat2",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "drink",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "dance",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "turn",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "sword",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "eat3",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "walk_stick_left",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "walk_stick_right",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "wave",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "dance2",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "dance3",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "sleep5",
+      "choices": [
+        {
+          "to": "idle",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "from": "idle",
+      "choices": [
+        {
+          "to": "walk_left",
+          "weight": 1,
+          "setFacing": "LEFT"
+        },
+        {
+          "to": "walk_right",
+          "weight": 1,
+          "setFacing": "RIGHT"
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "allowedTypes": [
+        "WALL"
+      ],
+      "choices": [
+        {
+          "to": "fall",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "allowedTypes": [
+        "CEILING"
+      ],
+      "choices": [
+        {
+          "to": "fall",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}
