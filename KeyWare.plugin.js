@@ -3391,20 +3391,95 @@ module.exports = class KeyWare {
 
     sendChatMessage(channelId, content) {
         if (!channelId || !content) return false;
+        const cleanContent = String(content).trim();
+        if (!cleanContent) return false;
+
+        const cleanChannelId = String(channelId);
+
+        // Tier 1: Discord Webpack MessageActions
         try {
-            const messageActions = this.getMessageActions();
-            if (messageActions && typeof messageActions.sendMessage === 'function') {
-                messageActions.sendMessage(channelId, {
-                    content: String(content),
+            const MessageActions = this.getMessageActions();
+            if (MessageActions && typeof MessageActions.sendMessage === 'function') {
+                const nonce = String(Math.floor((Date.now() - 1420070400000) * 4194304) + Math.floor(Math.random() * 4194304));
+                const msgObj = {
+                    content: cleanContent,
                     tts: false,
                     invalidEmojis: [],
                     validNonShortcutEmojis: []
+                };
+
+                try {
+                    // Modern signature: (channelId, message, promise, options)
+                    MessageActions.sendMessage(cleanChannelId, msgObj, false, { nonce });
+                    return true;
+                } catch (e1) {
+                    try {
+                        MessageActions.sendMessage(cleanChannelId, msgObj);
+                        return true;
+                    } catch (e2) {
+                        try {
+                            MessageActions.sendMessage(cleanChannelId, { content: cleanContent });
+                            return true;
+                        } catch (e3) {}
+                    }
+                }
+            }
+        } catch (e) {
+            console.warn("[KeyWare] Tier 1 MessageActions failed:", e);
+        }
+
+        // Tier 2: Discord Internal HTTP API Client
+        try {
+            const HTTP = BdApi.Webpack.getByKeys("post", "get", "put")
+                || BdApi.Webpack.getModule(m => m?.post && m?.get)
+                || BdApi.Webpack.getModule(m => m?.default?.post && m?.default?.get)?.default;
+
+            if (HTTP && typeof HTTP.post === 'function') {
+                const nonce = String(Math.floor((Date.now() - 1420070400000) * 4194304) + Math.floor(Math.random() * 4194304));
+                HTTP.post({
+                    url: `/channels/${cleanChannelId}/messages`,
+                    body: {
+                        content: cleanContent,
+                        tts: false,
+                        nonce,
+                        flags: 0
+                    }
+                }).catch(err => {
+                    console.error("[KeyWare] Tier 2 HTTP post error:", err);
                 });
                 return true;
             }
         } catch (e) {
-            console.error("[KeyWare] sendChatMessage error:", e);
+            console.warn("[KeyWare] Tier 2 HTTP client failed:", e);
         }
+
+        // Tier 3: Direct Authenticated Fetch via Discord Gateway Token
+        try {
+            const AuthStore = BdApi.Webpack.getStore("AuthenticationStore")
+                || BdApi.Webpack.getByKeys("getToken", "getId")
+                || BdApi.Webpack.getModule(m => m?.getToken);
+            const token = AuthStore?.getToken?.();
+
+            if (token) {
+                const nonce = String(Math.floor((Date.now() - 1420070400000) * 4194304) + Math.floor(Math.random() * 4194304));
+                fetch(`https://discord.com/api/v9/channels/${cleanChannelId}/messages`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": token,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        content: cleanContent,
+                        tts: false,
+                        nonce
+                    })
+                }).catch(err => console.error("[KeyWare] Tier 3 Fetch error:", err));
+                return true;
+            }
+        } catch (e) {
+            console.error("[KeyWare] Tier 3 Fetch failed:", e);
+        }
+
         return false;
     }
 
@@ -3612,21 +3687,33 @@ module.exports = class KeyWare {
     handleAutoResponse(channelId, authorId, msg) {
         try {
             if (!this.autoResponderSettings || !this.autoResponderSettings.enabled) return;
-            if (!channelId || !authorId) return;
+            if (!authorId) return;
 
             // Ignore bots
-            if (msg.author?.bot) return;
+            if (msg?.author?.bot) return;
+
+            // Resolve target channel ID reliably
+            let targetChannelId = String(channelId || msg?.channel_id || msg?.channelId || "");
+            if (!targetChannelId && authorId) {
+                try {
+                    const ChannelStore = BdApi.Webpack.getStore("ChannelStore") || BdApi.Webpack.getModule(m => m?.getDMFromUserId);
+                    targetChannelId = String(ChannelStore?.getDMFromUserId?.(authorId) || "");
+                } catch (e) {}
+            }
+            if (!targetChannelId) return;
 
             // Check if DM channel
             if (this.autoResponderSettings.onlyDMs !== false) {
-                const ChannelStore = BdApi.Webpack.getStore("ChannelStore") || BdApi.Webpack.getModule(m => m?.getChannel);
-                const channel = ChannelStore?.getChannel?.(channelId);
-                if (channel && channel.type !== 1 && channel.type !== 3 && channel.guild_id) {
-                    return;
-                }
+                try {
+                    const ChannelStore = BdApi.Webpack.getStore("ChannelStore") || BdApi.Webpack.getModule(m => m?.getChannel);
+                    const channel = ChannelStore?.getChannel?.(targetChannelId);
+                    if (channel && channel.type !== 1 && channel.type !== 3 && channel.guild_id) {
+                        return; // Not a DM channel
+                    }
+                } catch (e) {}
             }
 
-            // Cooldown check
+            // Cooldown check (per author)
             const now = Date.now();
             const cooldownMs = (Number(this.autoResponderSettings.cooldownMinutes) || 10) * 60 * 1000;
             const lastSent = this.autoResponderCooldowns[authorId] || 0;
@@ -3652,14 +3739,16 @@ module.exports = class KeyWare {
 
             if (!replyText || !replyText.trim()) return;
 
+            // Record cooldown timestamp immediately to prevent race conditions
+            this.autoResponderCooldowns[authorId] = Date.now();
+
             setTimeout(() => {
-                const sent = this.sendChatMessage(channelId, replyText);
+                const sent = this.sendChatMessage(targetChannelId, replyText);
                 if (sent) {
-                    this.autoResponderCooldowns[authorId] = Date.now();
-                    const authorName = msg.author?.username || msg.author?.global_name || "Kullanıcı";
-                    this.showToast(`🤖 [${authorName}] için otomatik yanıt gönderildi`, "success");
+                    const authorName = msg?.author?.username || msg?.author?.global_name || "Kullanıcı";
+                    this.showToast(`[${authorName}] için otomatik yanıt gönderildi`, "success");
                 }
-            }, 800);
+            }, 600);
         } catch (e) {
             console.error("[KeyWare] handleAutoResponse error:", e);
         }
