@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.7.2
+ * @version 6.7.3
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -69,8 +69,8 @@ module.exports = class KeyWare {
     }
 
     onSwitch() {
-        this.scheduleRender(true);
-        [0, 20, 50, 100, 200].forEach(d => setTimeout(() => this.renderAll(), d));
+        this.renderAll();
+        [0, 10, 30, 80, 150].forEach(d => setTimeout(() => this.renderAll(), d));
     }
 
     stop() {
@@ -3094,7 +3094,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.7.2";
+            const currentVersion = "6.7.3";
             let remoteVersion = null;
             let remoteContent = null;
 
@@ -3226,7 +3226,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.7.2";
+        const currentVersion = "6.7.3";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3245,7 +3245,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.7.2</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.7.3</div>
                         </div>
                     </div>
                 </div>
