@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.1.0
+ * @version 6.2.0
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -30,6 +30,8 @@ module.exports = class KeyWare {
             mode: 'follow', // 'follow' | 'roam' | 'sit'
             scale: 0.65,
             speed: 3.0,
+            gravity: 0.6,
+            glowColor: '#e23636',
             physics: true
         };
         this.shimejis = [];
@@ -3089,7 +3091,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.1.0";
+            const currentVersion = "6.2.0";
             const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
 
             const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
@@ -3175,7 +3177,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.1.0";
+        const currentVersion = "6.2.0";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3194,7 +3196,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.1.0</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.2.0</div>
                         </div>
                     </div>
                 </div>
@@ -3758,44 +3760,45 @@ module.exports = class KeyWare {
         let selectedMode = cfg.mode || 'follow';
         let selectedScale = cfg.scale || 0.65;
         let selectedSpeed = cfg.speed || 3.0;
+        let selectedGravity = cfg.gravity !== undefined ? cfg.gravity : 0.6;
+        let selectedGlowColor = cfg.glowColor || '#e23636';
 
         const backdrop = document.createElement('div');
         backdrop.className = 'dm-cat-modal-backdrop';
         backdrop.innerHTML = `
-            <div class="dm-cat-modal-box" style="width: 520px;">
-                <div class="dm-cat-modal-header">
+            <div class="dm-cat-modal-box" style="width: 530px; max-height: 85vh; display: flex; flex-direction: column;">
+                <div class="dm-cat-modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.08);">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 22px;">🔴</span>
-                        <span>Dante Masaüstü Maskotu Ayarları</span>
+                        <span style="font-size: 15px; font-weight: 700; color: #fff;">Dante Masaüstü Maskotu Ayarları</span>
                     </div>
                 </div>
 
-                <div class="dm-cat-modal-body" style="padding: 16px 20px; gap: 14px;">
-                    <!-- Status Toggle -->
+                <div class="dm-cat-modal-body" style="padding: 16px 20px; gap: 14px; overflow-y: auto;">
+                    <!-- Status Toggle (No Emojis) -->
                     <div class="dm-cat-setting-row">
                         <label class="dm-cat-setting-label">Dante Durumu</label>
                         <div style="display: flex; gap: 8px;">
-                            <button type="button" class="dm-cat-btn dm-cat-status-btn ${selectedEnabled ? 'dm-cat-btn-primary' : ''}" data-enabled="true" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${selectedEnabled ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
-                                <span>🔴 Dante Aktif (Ekranda Gezsin)</span>
+                            <button type="button" class="dm-cat-btn dm-cat-status-btn ${selectedEnabled ? 'dm-cat-btn-primary' : ''}" data-enabled="true" style="flex: 1; display: flex; align-items: center; justify-content: center; background: ${selectedEnabled ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
+                                <span>Dante Aktif (Ekranda Gezsin)</span>
                             </button>
-                            <button type="button" class="dm-cat-btn dm-cat-status-btn ${!selectedEnabled ? 'dm-cat-btn-primary' : ''}" data-enabled="false" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${!selectedEnabled ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
-                                <span>🚫 Dante Kapalı (Gizle)</span>
+                            <button type="button" class="dm-cat-btn dm-cat-status-btn ${!selectedEnabled ? 'dm-cat-btn-primary' : ''}" data-enabled="false" style="flex: 1; display: flex; align-items: center; justify-content: center; background: ${!selectedEnabled ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
+                                <span>Dante Kapalı (Gizle)</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Behavior Mode -->
+                    <!-- Behavior Mode (No Emojis) -->
                     <div class="dm-cat-setting-row">
                         <label class="dm-cat-setting-label">Davranış Modu</label>
                         <div style="display: flex; gap: 8px;">
-                            <button type="button" class="dm-cat-btn dm-cat-mode-btn ${selectedMode === 'follow' ? 'dm-cat-btn-primary' : ''}" data-mode="follow" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${selectedMode === 'follow' ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
-                                <span>🖱️ Fareyi Takip Et</span>
+                            <button type="button" class="dm-cat-btn dm-cat-mode-btn ${selectedMode === 'follow' ? 'dm-cat-btn-primary' : ''}" data-mode="follow" style="flex: 1; display: flex; align-items: center; justify-content: center; background: ${selectedMode === 'follow' ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
+                                <span>Fareyi Takip Et</span>
                             </button>
-                            <button type="button" class="dm-cat-btn dm-cat-mode-btn ${selectedMode === 'roam' ? 'dm-cat-btn-primary' : ''}" data-mode="roam" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${selectedMode === 'roam' ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
-                                <span>🚶 Serbest Gezinti</span>
+                            <button type="button" class="dm-cat-btn dm-cat-mode-btn ${selectedMode === 'roam' ? 'dm-cat-btn-primary' : ''}" data-mode="roam" style="flex: 1; display: flex; align-items: center; justify-content: center; background: ${selectedMode === 'roam' ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
+                                <span>Serbest Gezinti</span>
                             </button>
-                            <button type="button" class="dm-cat-btn dm-cat-mode-btn ${selectedMode === 'sit' ? 'dm-cat-btn-primary' : ''}" data-mode="sit" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${selectedMode === 'sit' ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
-                                <span>🪑 Otur / Dinlen</span>
+                            <button type="button" class="dm-cat-btn dm-cat-mode-btn ${selectedMode === 'sit' ? 'dm-cat-btn-primary' : ''}" data-mode="sit" style="flex: 1; display: flex; align-items: center; justify-content: center; background: ${selectedMode === 'sit' ? 'var(--brand-500, #5865f2)' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff;">
+                                <span>Otur / Dinlen</span>
                             </button>
                         </div>
                         <div class="dm-cat-setting-desc">Fareyi Takip Et seçildiğinde Dante fare imlecinizin peşinden koşar ve yanınızda bekler.</div>
@@ -3827,6 +3830,44 @@ module.exports = class KeyWare {
                         </div>
                         <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
                             <input type="range" id="dmShimejiSpeed" min="1" max="5" step="0.5" value="${selectedSpeed}" style="flex: 1; accent-color: var(--brand-500, #5865f2); cursor: pointer;" />
+                        </div>
+                    </div>
+
+                    <!-- Gravity / Fall Speed Slider -->
+                    <div class="dm-cat-setting-row">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label class="dm-cat-setting-label" style="margin-bottom: 0;">Düşme & Yerçekimi Hızı</label>
+                            <span id="dmShimejiGravityText" style="color: var(--text-normal, #fff); font-size: 13px; font-weight: 600;">${selectedGravity.toFixed(1)}x</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+                            <input type="range" id="dmShimejiGravity" min="0.2" max="1.8" step="0.1" value="${selectedGravity}" style="flex: 1; accent-color: var(--brand-500, #5865f2); cursor: pointer;" />
+                        </div>
+                        <div style="display: flex; gap: 6px; margin-top: 6px;">
+                            <button type="button" class="dm-cat-btn dm-gravity-preset" data-val="0.3" style="flex: 1; font-size: 11px; padding: 4px 6px;">Hafif (0.3x)</button>
+                            <button type="button" class="dm-cat-btn dm-gravity-preset" data-val="0.6" style="flex: 1; font-size: 11px; padding: 4px 6px;">Normal (0.6x)</button>
+                            <button type="button" class="dm-cat-btn dm-gravity-preset" data-val="1.0" style="flex: 1; font-size: 11px; padding: 4px 6px;">Hızlı (1.0x)</button>
+                            <button type="button" class="dm-cat-btn dm-gravity-preset" data-val="1.5" style="flex: 1; font-size: 11px; padding: 4px 6px;">Ağır (1.5x)</button>
+                        </div>
+                    </div>
+
+                    <!-- Glow / Aura Color Picker -->
+                    <div class="dm-cat-setting-row">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <label class="dm-cat-setting-label" style="margin-bottom: 0;">Vurgu & Işıma Rengi (Aura)</label>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div id="dmShimejiGlowPreview" style="width: 14px; height: 14px; border-radius: 50%; background: ${selectedGlowColor === 'none' ? 'transparent' : selectedGlowColor}; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 0 8px ${selectedGlowColor === 'none' ? 'transparent' : selectedGlowColor};"></div>
+                                <span id="dmShimejiGlowName" style="font-size: 12px; color: var(--text-muted, #949ba4);">${selectedGlowColor === 'none' ? 'Kapalı' : selectedGlowColor}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#e23636' ? 'active' : ''}" data-color="#e23636" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #e23636;">Kırmızı</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#5865f2' ? 'active' : ''}" data-color="#5865f2" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #5865f2;">Mavi</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#9b59b6' ? 'active' : ''}" data-color="#9b59b6" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #9b59b6;">Mor</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#f1c40f' ? 'active' : ''}" data-color="#f1c40f" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #f1c40f;">Altın</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#2ecc71' ? 'active' : ''}" data-color="#2ecc71" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #2ecc71;">Yeşil</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#ffffff' ? 'active' : ''}" data-color="#ffffff" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #ffffff;">Beyaz</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === 'none' ? 'active' : ''}" data-color="none" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0;">Yok</button>
+                            <input type="color" id="dmShimejiGlowCustom" value="${selectedGlowColor.startsWith('#') ? selectedGlowColor : '#e23636'}" title="Özel Renk Seç" style="width: 30px; height: 26px; border: none; border-radius: 4px; background: transparent; cursor: pointer;" />
                         </div>
                     </div>
                 </div>
@@ -3884,6 +3925,45 @@ module.exports = class KeyWare {
             speedText.textContent = selectedSpeed + 'x';
         };
 
+        const gravityInput = backdrop.querySelector('#dmShimejiGravity');
+        const gravityText = backdrop.querySelector('#dmShimejiGravityText');
+        gravityInput.oninput = () => {
+            selectedGravity = parseFloat(gravityInput.value);
+            gravityText.textContent = selectedGravity.toFixed(1) + 'x';
+        };
+
+        backdrop.querySelectorAll('.dm-gravity-preset').forEach(gBtn => {
+            gBtn.onclick = () => {
+                selectedGravity = parseFloat(gBtn.dataset.val);
+                gravityInput.value = selectedGravity;
+                gravityText.textContent = selectedGravity.toFixed(1) + 'x';
+            };
+        });
+
+        const glowPreview = backdrop.querySelector('#dmShimejiGlowPreview');
+        const glowName = backdrop.querySelector('#dmShimejiGlowName');
+        const glowCustom = backdrop.querySelector('#dmShimejiGlowCustom');
+
+        const updateGlowUI = (color) => {
+            selectedGlowColor = color;
+            glowPreview.style.background = color === 'none' ? 'transparent' : color;
+            glowPreview.style.boxShadow = color === 'none' ? 'none' : `0 0 8px ${color}`;
+            glowName.textContent = color === 'none' ? 'Kapalı' : color;
+            backdrop.querySelectorAll('.dm-glow-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.color === color);
+            });
+        };
+
+        backdrop.querySelectorAll('.dm-glow-btn').forEach(btn => {
+            btn.onclick = () => {
+                updateGlowUI(btn.dataset.color);
+            };
+        });
+
+        glowCustom.oninput = () => {
+            updateGlowUI(glowCustom.value);
+        };
+
         backdrop.querySelector('#dmShimejiSave').onclick = () => {
             this.shimejiSettings = {
                 enabled: selectedEnabled,
@@ -3891,6 +3971,8 @@ module.exports = class KeyWare {
                 mode: selectedMode,
                 scale: selectedScale,
                 speed: selectedSpeed,
+                gravity: selectedGravity,
+                glowColor: selectedGlowColor,
                 physics: true
             };
             this.saveSettings();
@@ -3922,7 +4004,7 @@ module.exports = class KeyWare {
 
         menu.innerHTML = `
             <div style="padding: 6px 10px; font-size: 11px; font-weight: 700; color: var(--brand-500, #5865f2); text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 4px;">
-                🔴 DANTE SHIMEJI
+                DANTE SHIMEJI
             </div>
             
             <div class="dm-cat-menu-item" id="dmShimejiMenuFollow">
@@ -4036,6 +4118,7 @@ class ShimejiPet {
         this.isDragged = false;
         this.dragStartX = 0;
         this.dragStartY = 0;
+        this.lastDragMouseX = undefined;
         this.dragHistory = [];
         this.currentFrameKey = 'idle1';
 
@@ -4074,6 +4157,7 @@ class ShimejiPet {
                 this.state = 'DRAGGED';
                 this.dragStartX = e.clientX - this.x;
                 this.dragStartY = e.clientY - this.y;
+                this.lastDragMouseX = e.clientX;
                 this.dragHistory = [{ x: e.clientX, y: e.clientY, t: Date.now() }];
                 this.element.classList.add('dragging');
             }
@@ -4094,24 +4178,39 @@ class ShimejiPet {
         const speed = (this.manager.shimejiSettings.speed || 3.0) * (dt / 16);
         const mode = this.manager.shimejiSettings.mode || 'follow';
 
-        // 1. FARE İLE TUTULMA / SÜRÜKLEME (DRAGGED)
+        // 1. FARE İLE TUTULMA / SÜRÜKLEME (DRAGGED) - Götürülen yöne bakar
         if (this.isDragged) {
-            this.x = this.manager.mouseX - this.dragStartX;
-            this.y = this.manager.mouseY - this.dragStartY;
-            this.facing = this.manager.mouseX > (this.x + width / 2) ? 1 : -1;
+            const curMouseX = this.manager.mouseX;
+            const curMouseY = this.manager.mouseY;
+
+            this.x = curMouseX - this.dragStartX;
+            this.y = curMouseY - this.dragStartY;
+
+            if (this.lastDragMouseX !== undefined) {
+                const dragDeltaX = curMouseX - this.lastDragMouseX;
+                if (dragDeltaX > 1.2) {
+                    this.facing = 1; // Sağa doğru sürükleniyor -> Sağa baksın
+                } else if (dragDeltaX < -1.2) {
+                    this.facing = -1; // Sola doğru sürükleniyor -> Sola baksın
+                }
+            }
+            this.lastDragMouseX = curMouseX;
             this.currentFrameKey = 'dragged';
 
-            this.dragHistory.push({ x: this.manager.mouseX, y: this.manager.mouseY, t: Date.now() });
+            this.dragHistory.push({ x: curMouseX, y: curMouseY, t: Date.now() });
             if (this.dragHistory.length > 5) this.dragHistory.shift();
 
             this.updateStyle();
             this.draw();
             return;
+        } else {
+            this.lastDragMouseX = undefined;
         }
 
-        // 2. DÜŞME & FIRLATILMA FİZİĞİ (FALLING & GRAVITY)
+        // 2. DÜŞME & FIRLATILMA FİZİĞİ (FALLING & GRAVITY) - Ayarlanabilir düşme hızı
         if (this.state === 'FALLING') {
-            const gravity = 0.6;
+            const gravitySetting = this.manager.shimejiSettings.gravity !== undefined ? this.manager.shimejiSettings.gravity : 0.6;
+            const gravity = gravitySetting * (dt / 16);
             this.vy += gravity;
             this.x += this.vx;
             this.y += this.vy;
@@ -4281,6 +4380,7 @@ class ShimejiPet {
 
     updateStyle() {
         const scale = this.manager.shimejiSettings.scale || 0.65;
+        const glow = this.manager.shimejiSettings.glowColor || '#e23636';
         const w = 256 * scale;
         const h = 256 * scale;
         this.element.style.width = w + 'px';
@@ -4288,6 +4388,14 @@ class ShimejiPet {
         this.canvas.style.width = w + 'px';
         this.canvas.style.height = h + 'px';
         this.element.style.transform = 'translate3d(' + Math.round(this.x) + 'px, ' + Math.round(this.y) + 'px, 0)';
+
+        if (glow === 'none' || !glow) {
+            this.element.style.setProperty('--dm-shimeji-hover-filter', 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6))');
+            this.element.style.setProperty('--dm-shimeji-drag-filter', 'drop-shadow(0 10px 22px rgba(0, 0, 0, 0.7))');
+        } else {
+            this.element.style.setProperty('--dm-shimeji-hover-filter', `drop-shadow(0 6px 18px ${glow}) drop-shadow(0 0 10px rgba(255, 255, 255, 0.35))`);
+            this.element.style.setProperty('--dm-shimeji-drag-filter', `drop-shadow(0 14px 28px ${glow})`);
+        }
     }
 
     release(throwVx, throwVy) {
