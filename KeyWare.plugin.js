@@ -3567,6 +3567,48 @@ module.exports = class KeyWare {
         }
     }
 
+    getDetectedGamesList() {
+        const list = [];
+        try {
+            // 1. RunningGameStore
+            const RunningGameStore = BdApi.Webpack.getStore("RunningGameStore")
+                || BdApi.Webpack.getByKeys("getRunningGames", "getVisibleGames")
+                || BdApi.Webpack.getModule(m => m?.getRunningGames);
+            if (RunningGameStore) {
+                if (typeof RunningGameStore.getRunningGames === 'function') {
+                    const games = RunningGameStore.getRunningGames() || [];
+                    games.forEach(g => {
+                        if (g && g.name && !list.includes(g.name)) list.push(g.name);
+                    });
+                }
+                if (typeof RunningGameStore.getVisibleGames === 'function') {
+                    const games = RunningGameStore.getVisibleGames() || [];
+                    games.forEach(g => {
+                        if (g && g.name && !list.includes(g.name)) list.push(g.name);
+                    });
+                }
+            }
+
+            // 2. ActivityStore
+            const UserStore = BdApi.Webpack.getStore("UserStore") || BdApi.Webpack.getModule(m => m?.getCurrentUser);
+            const currentUserId = UserStore?.getCurrentUser?.()?.id;
+            if (currentUserId) {
+                const ActivityStore = BdApi.Webpack.getStore("ActivityStore")
+                    || BdApi.Webpack.getByKeys("getActivities", "getPrimaryActivity")
+                    || BdApi.Webpack.getModule(m => m?.getActivities);
+                if (ActivityStore && typeof ActivityStore.getActivities === 'function') {
+                    const acts = ActivityStore.getActivities(currentUserId) || [];
+                    acts.forEach(a => {
+                        if (a && a.name && !list.includes(a.name)) list.push(a.name);
+                    });
+                }
+            }
+        } catch (e) {
+            console.warn("[KeyWare] getDetectedGamesList error:", e);
+        }
+        return list;
+    }
+
     handleAutoResponse(channelId, authorId, msg) {
         try {
             if (!this.autoResponderSettings || !this.autoResponderSettings.enabled) return;
@@ -3684,57 +3726,59 @@ module.exports = class KeyWare {
     openAutoResponderModal() {
         this.closeModal();
         const settings = this.autoResponderSettings;
-        const liveDetectedGame = this.getCurrentPlayingGame();
+        const liveDetectedGames = this.getDetectedGamesList();
+        const primaryLiveGame = this.getCurrentPlayingGame() || (liveDetectedGames.length > 0 ? liveDetectedGames[0] : "");
 
         let selectedEnabled = settings.enabled !== false;
         let selectedMode = (settings.mode === 'game') ? 'game' : 'custom';
-        let customGameName = settings.customGameName || '';
+        let customGameName = settings.customGameName || primaryLiveGame || '';
+
+        const popularGames = [
+            "Valorant", "Counter-Strike 2", "League of Legends",
+            "GTA V", "Minecraft", "Fortnite", "Apex Legends", "Visual Studio Code"
+        ];
+
+        // Combine live games + popular suggestions without duplicates
+        const allGamePills = [...new Set([...liveDetectedGames, ...popularGames])];
 
         const backdrop = document.createElement('div');
         backdrop.className = 'dm-cat-modal-backdrop';
         backdrop.innerHTML = `
-            <div class="dm-cat-modal-box" style="width: 540px; max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="dm-cat-modal-box" style="width: 550px; max-height: 90vh; display: flex; flex-direction: column;">
                 <div class="dm-cat-modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.08);">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 18px;">🤖</span>
                         <span style="font-size: 15px; font-weight: 700; color: #fff;">Otomatik Yanıtlayıcı Ayarları</span>
                     </div>
                 </div>
 
                 <div class="dm-cat-modal-body" style="padding: 16px 20px; gap: 14px; overflow-y: auto;">
-                    <!-- Status Toggle (Mascot style) -->
+                    <!-- Status Toggle (Clean Mascot Style - No Emojis) -->
                     <div class="dm-cat-setting-row">
                         <label class="dm-cat-setting-label">Sistem Durumu</label>
                         <div style="display: flex; gap: 8px;">
-                            <button type="button" class="dm-cat-btn dm-auto-status-btn" data-enabled="true" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${selectedEnabled ? '#57f287' : 'var(--background-secondary-alt, #1e1f22)'}; color: ${selectedEnabled ? '#000' : '#fff'}; font-weight: 700; transition: all 0.2s;">
-                                <span>🟢 Yanıtlayıcı Açık</span>
+                            <button type="button" class="dm-cat-btn dm-auto-status-btn" data-enabled="true" style="flex: 1; display: flex; align-items: center; justify-content: center; background: ${selectedEnabled ? '#57f287' : 'var(--background-secondary-alt, #1e1f22)'}; color: ${selectedEnabled ? '#000' : '#fff'}; font-weight: 700; transition: all 0.2s;">
+                                <span>Yanıtlayıcı Açık</span>
                             </button>
-                            <button type="button" class="dm-cat-btn dm-auto-status-btn" data-enabled="false" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${!selectedEnabled ? '#ed4245' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff; font-weight: 700; transition: all 0.2s;">
-                                <span>⏸️ Kapalı (Devre Dışı)</span>
+                            <button type="button" class="dm-cat-btn dm-auto-status-btn" data-enabled="false" style="flex: 1; display: flex; align-items: center; justify-content: center; background: ${!selectedEnabled ? '#ed4245' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff; font-weight: 700; transition: all 0.2s;">
+                                <span>Kapalı (Devre Dışı)</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Mode Select (2 Sleek Cards) -->
+                    <!-- Mode Select (2 Sleek Cards - No Emojis) -->
                     <div class="dm-cat-setting-row">
                         <label class="dm-cat-setting-label">Yanıt Modu</label>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                             <!-- Custom Message Card -->
                             <div class="dm-auto-mode-card" data-mode="custom" style="display: flex; flex-direction: column; gap: 4px; padding: 12px; background: ${selectedMode === 'custom' ? 'rgba(88, 101, 242, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedMode === 'custom' ? 'var(--brand-500, #5865f2)' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
-                                <div style="display: flex; align-items: center; gap: 6px;">
-                                    <span style="font-size: 16px;">📝</span>
-                                    <span style="font-size: 13px; font-weight: 700; color: #fff;">Özel Mesaj</span>
-                                </div>
-                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Kişilere kendi yazdığın sabit mesajı gönderir.</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #fff;">Özel Mesaj</div>
+                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Kişilere kendi yazdığınız sabit mesajı gönderir.</div>
                             </div>
 
                             <!-- Game Mode Card -->
                             <div class="dm-auto-mode-card" data-mode="game" style="display: flex; flex-direction: column; gap: 4px; padding: 12px; background: ${selectedMode === 'game' ? 'rgba(87, 242, 135, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedMode === 'game' ? '#57f287' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
-                                <div style="display: flex; align-items: center; gap: 6px;">
-                                    <span style="font-size: 16px;">🎮</span>
-                                    <span style="font-size: 13px; font-weight: 700; color: #fff;">Oyun Algılama</span>
-                                </div>
-                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Oynadığın oyunu dinamik olarak mesaja yerleştirir.</div>
+                                <div style="font-size: 13px; font-weight: 700; color: #fff;">Oyun Algılama</div>
+                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Seçilen veya algılanan oyunu dinamik olarak mesaja ekler.</div>
                             </div>
                         </div>
                     </div>
@@ -3742,19 +3786,33 @@ module.exports = class KeyWare {
                     <!-- Custom Message Section (Only shown when mode === 'custom') -->
                     <div class="dm-cat-setting-row" id="dmAutoCustomSection" style="display: ${selectedMode === 'custom' ? 'flex' : 'none'}; flex-direction: column;">
                         <label class="dm-cat-setting-label">Özel Yanıt Mesajınız</label>
-                        <textarea class="dm-cat-modal-input" id="dmAutoRespCustomMsg" rows="3" style="width: 100%; resize: vertical; min-height: 70px; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 8px 10px;" placeholder="Örn: Şu an bilgisayar başında değilim, daha sonra döneceğim.">${this.escapeHtml(settings.customMessage || '')}</textarea>
+                        <textarea class="dm-cat-modal-input" id="dmAutoRespCustomMsg" rows="3" style="width: 100%; resize: vertical; min-height: 70px; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 8px 10px;" placeholder="Şu an bilgisayar başında değilim, daha sonra döneceğim.">${this.escapeHtml(settings.customMessage || '')}</textarea>
                     </div>
 
                     <!-- Game Mode Section (Only shown when mode === 'game') -->
                     <div id="dmAutoGameSection" style="display: ${selectedMode === 'game' ? 'flex' : 'none'}; flex-direction: column; gap: 12px;">
-                        <!-- Override Game Name Input -->
+                        <!-- Detected & Available Games List -->
                         <div class="dm-cat-setting-row">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <label class="dm-cat-setting-label">Algılanan / Gösterilecek Oyun</label>
-                                <span style="font-size: 11px; color: #57f287;">${liveDetectedGame ? `Discord Algıladı: ${this.escapeHtml(liveDetectedGame)}` : 'Discord\'da oyun açık değil'}</span>
+                                <label class="dm-cat-setting-label">Algılanan ve Önerilen Oyunlar</label>
+                                <span style="font-size: 11px; color: #57f287;">${liveDetectedGames.length > 0 ? liveDetectedGames.length + ' Oyun Tespit Edildi' : 'Listeden Seçin'}</span>
                             </div>
-                            <input type="text" class="dm-cat-modal-input" id="dmAutoRespCustomGame" value="${this.escapeHtml(customGameName || liveDetectedGame || '')}" placeholder="Örn: Valorant, CS2, GTA VI, LoL..." />
-                            <div style="font-size: 11px; color: var(--text-muted, #949ba4); margin-top: 3px;">İstediğin oyunu elle yazabilir veya boş bırakıp Discord'un algılamasını kullanabilirsin.</div>
+                            <div id="dmAutoGamesList" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; max-height: 110px; overflow-y: auto; padding: 4px 0;">
+                                ${allGamePills.map(game => {
+                                    const isLive = liveDetectedGames.includes(game);
+                                    const isSelected = (customGameName === game) || (!customGameName && isLive);
+                                    return `<button type="button" class="dm-auto-game-pill ${isSelected ? 'active' : ''}" data-game="${this.escapeHtml(game)}" style="padding: 5px 10px; font-size: 11px; font-weight: 600; border-radius: 6px; cursor: pointer; border: 1px solid ${isSelected ? '#57f287' : 'rgba(255,255,255,0.1)'}; background: ${isSelected ? 'rgba(87, 242, 135, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; color: ${isSelected ? '#57f287' : '#dbdee1'}; transition: all 0.15s ease;">
+                                        ${this.escapeHtml(game)}${isLive ? ' (Aktif)' : ''}
+                                    </button>`;
+                                }).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Override / Selected Game Name Input -->
+                        <div class="dm-cat-setting-row">
+                            <label class="dm-cat-setting-label">Seçilen Oyun Adı</label>
+                            <input type="text" class="dm-cat-modal-input" id="dmAutoRespCustomGame" value="${this.escapeHtml(customGameName)}" placeholder="Örn: Valorant, CS2, GTA VI, LoL..." />
+                            <div style="font-size: 11px; color: var(--text-muted, #949ba4); margin-top: 3px;">Yukarıdaki listeden tıklayarak seçebilir veya kutuya özel bir isim yazabilirsiniz.</div>
                         </div>
 
                         <!-- Game Message Input -->
@@ -3763,7 +3821,7 @@ module.exports = class KeyWare {
                                 <label class="dm-cat-setting-label">Oyun Yanıt Mesajı Şablonu</label>
                                 <span style="font-size: 11px; color: var(--brand-500, #5865f2);">{game} etiketi oyun adıyla değişir</span>
                             </div>
-                            <textarea class="dm-cat-modal-input" id="dmAutoRespGameMsg" rows="3" style="width: 100%; resize: vertical; min-height: 70px; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 8px 10px;" placeholder="Örn: Şu an {game} oynuyorum, maç bitince döneceğim!">${this.escapeHtml(settings.gameMessage || '')}</textarea>
+                            <textarea class="dm-cat-modal-input" id="dmAutoRespGameMsg" rows="3" style="width: 100%; resize: vertical; min-height: 70px; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 8px 10px;" placeholder="Şu an {game} oynuyorum, maç bitince döneceğim!">${this.escapeHtml(settings.gameMessage || '')}</textarea>
                         </div>
                     </div>
 
@@ -3776,7 +3834,7 @@ module.exports = class KeyWare {
                 </div>
 
                 <div class="dm-cat-modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08);">
-                    <button class="dm-cat-btn dm-cat-btn-cancel" id="dmAutoRespTest" style="background: rgba(255,255,255,0.08); color: #dbdee1;">🧪 Mesajı Test Et</button>
+                    <button class="dm-cat-btn dm-cat-btn-cancel" id="dmAutoRespTest" style="background: rgba(255,255,255,0.08); color: #dbdee1;">Mesajı Test Et</button>
                     <div style="display: flex; gap: 8px;">
                         <button class="dm-cat-btn dm-cat-btn-cancel" id="dmAutoRespCancel">İptal</button>
                         <button class="dm-cat-btn dm-cat-btn-primary" id="dmAutoRespSave" style="background: #57f287; color: #000; font-weight: 700; padding: 8px 20px;">Kaydet</button>
@@ -3832,14 +3890,40 @@ module.exports = class KeyWare {
             };
         });
 
+        // Game Pills Click Handler
+        const gameInput = backdrop.querySelector('#dmAutoRespCustomGame');
+        const gamePills = backdrop.querySelectorAll('.dm-auto-game-pill');
+        gamePills.forEach(pill => {
+            pill.onclick = () => {
+                const gameName = pill.dataset.game;
+                gameInput.value = gameName;
+                gamePills.forEach(p => {
+                    const isPillCur = p.dataset.game === gameName;
+                    p.style.background = isPillCur ? 'rgba(87, 242, 135, 0.15)' : 'var(--background-secondary-alt, #1e1f22)';
+                    p.style.borderColor = isPillCur ? '#57f287' : 'rgba(255,255,255,0.1)';
+                    p.style.color = isPillCur ? '#57f287' : '#dbdee1';
+                });
+            };
+        });
+
+        gameInput.oninput = () => {
+            const val = gameInput.value.trim().toLowerCase();
+            gamePills.forEach(p => {
+                const isPillCur = p.dataset.game.toLowerCase() === val;
+                p.style.background = isPillCur ? 'rgba(87, 242, 135, 0.15)' : 'var(--background-secondary-alt, #1e1f22)';
+                p.style.borderColor = isPillCur ? '#57f287' : 'rgba(255,255,255,0.1)';
+                p.style.color = isPillCur ? '#57f287' : '#dbdee1';
+            });
+        };
+
         // Test Button
         backdrop.querySelector('#dmAutoRespTest').onclick = () => {
             const customVal = backdrop.querySelector('#dmAutoRespCustomMsg').value;
             const gameVal = backdrop.querySelector('#dmAutoRespGameMsg').value;
             const customGameVal = backdrop.querySelector('#dmAutoRespCustomGame').value.trim();
-            const curGame = customGameVal || liveDetectedGame || "Valorant";
+            const curGame = customGameVal || primaryLiveGame || "Valorant";
             let preview = selectedMode === 'game' ? gameVal.replace(/{game}/gi, curGame) : customVal.replace(/{game}/gi, curGame);
-            this.showToast(`🤖 Önizleme: "${preview}"`, "info");
+            this.showToast(`Önizleme: "${preview}"`, "info");
         };
 
         backdrop.querySelector('#dmAutoRespCancel').onclick = () => this.closeModal();
@@ -3869,10 +3953,10 @@ module.exports = class KeyWare {
             if (autoBtn) {
                 if (selectedEnabled) autoBtn.classList.add('active');
                 else autoBtn.classList.remove('active');
-                autoBtn.title = `Akıllı Otomatik Yanıtlayıcı (${selectedEnabled ? 'AÇIK' : 'KAPALI'})`;
+                autoBtn.title = `Otomatik Yanıtlayıcı (${selectedEnabled ? 'AÇIK' : 'KAPALI'})`;
             }
 
-            this.showToast(selectedEnabled ? "🤖 Otomatik Yanıtlayıcı Aktif Edildi!" : "🤖 Otomatik Yanıtlayıcı Kapatıldı", selectedEnabled ? "success" : "info");
+            this.showToast(selectedEnabled ? "Otomatik Yanıtlayıcı Aktif Edildi" : "Otomatik Yanıtlayıcı Kapatıldı", selectedEnabled ? "success" : "info");
         };
 
         backdrop.onclick = (e) => { if (e.target === backdrop) this.closeModal(); };
