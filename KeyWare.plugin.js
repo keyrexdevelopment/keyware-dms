@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.7.1
+ * @version 6.7.2
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -3094,7 +3094,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.7.1";
+            const currentVersion = "6.7.2";
             let remoteVersion = null;
             let remoteContent = null;
 
@@ -3226,7 +3226,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.7.1";
+        const currentVersion = "6.7.2";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3245,7 +3245,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.7.1</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.7.2</div>
                         </div>
                     </div>
                 </div>
@@ -4568,8 +4568,8 @@ class ShimejiPet {
 
         // 1. FARE İLE TUTULMA / SÜRÜKLEME (DRAGGED) - Götürülen yöne anında bakar
         if (this.isDragged) {
-            const curMouseX = this.manager.mouseX;
-            const curMouseY = this.manager.mouseY;
+            const curMouseX = (typeof this.manager.mouseX === 'number' && !isNaN(this.manager.mouseX)) ? this.manager.mouseX : (window.innerWidth / 2);
+            const curMouseY = (typeof this.manager.mouseY === 'number' && !isNaN(this.manager.mouseY)) ? this.manager.mouseY : (window.innerHeight / 2);
 
             this.x = curMouseX - this.dragStartX;
             this.y = curMouseY - this.dragStartY;
@@ -4647,7 +4647,8 @@ class ShimejiPet {
         // 3. OTURMA & DİNLENME MODU (SIT)
         if (mode === 'sit') {
             this.y = floorY;
-            this.facing = this.manager.mouseX > (this.x + width / 2) ? 1 : -1;
+            const validMX = (typeof this.manager.mouseX === 'number' && !isNaN(this.manager.mouseX)) ? this.manager.mouseX : (window.innerWidth / 2);
+            this.facing = validMX > (this.x + width / 2) ? 1 : -1;
             
             if (this.charName === 'husk') {
                 this.animTimer += dt;
@@ -4669,7 +4670,8 @@ class ShimejiPet {
 
         // 4. FAREYİ TAKİP ETME MODU (FOLLOW MOUSE)
         if (mode === 'follow') {
-            const targetX = this.manager.mouseX - (width / 2);
+            const validMouseX = (typeof this.manager.mouseX === 'number' && !isNaN(this.manager.mouseX)) ? this.manager.mouseX : (window.innerWidth / 2);
+            const targetX = validMouseX - (width / 2);
             const diffX = targetX - this.x;
             const dist = Math.abs(diffX);
 
@@ -4700,7 +4702,8 @@ class ShimejiPet {
                 const stepIndex = Math.floor((this.animTimer / 120) % walkCycle.length);
                 this.currentFrameKey = walkCycle[stepIndex];
             } else {
-                this.facing = this.manager.mouseX > (this.x + width / 2) ? 1 : -1;
+                const validMX = (typeof this.manager.mouseX === 'number' && !isNaN(this.manager.mouseX)) ? this.manager.mouseX : (window.innerWidth / 2);
+            this.facing = validMX > (this.x + width / 2) ? 1 : -1;
                 this.state = 'IDLE';
 
                 this.stateTimer -= dt;
