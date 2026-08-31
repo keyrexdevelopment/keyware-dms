@@ -26,11 +26,11 @@ module.exports = class KeyWare {
         // Auto-Responder State
         this.autoResponderSettings = {
             enabled: false,
-            mode: 'custom', // 'custom' | 'game' | 'afk'
+            mode: 'custom', // 'custom' | 'game'
             customMessage: 'Şu an bilgisayar başında değilim, daha sonra döneceğim.',
             gameMessage: 'Şu an {game} oynuyorum, bitince sana yazacağım!',
+            customGameName: '',
             cooldownMinutes: 10,
-            triggerStatus: 'all', // 'all' | 'dnd_only' | 'idle_or_dnd'
             onlyDMs: true
         };
         this.autoResponderCooldowns = {};
@@ -3584,12 +3584,6 @@ module.exports = class KeyWare {
                 }
             }
 
-            // Check status restriction
-            const currentStatus = this.getCurrentUserStatus();
-            const trigger = this.autoResponderSettings.triggerStatus || 'all';
-            if (trigger === 'dnd_only' && currentStatus !== 'dnd') return;
-            if (trigger === 'idle_or_dnd' && currentStatus !== 'idle' && currentStatus !== 'dnd') return;
-
             // Cooldown check
             const now = Date.now();
             const cooldownMs = (Number(this.autoResponderSettings.cooldownMinutes) || 10) * 60 * 1000;
@@ -3598,18 +3592,20 @@ module.exports = class KeyWare {
                 return;
             }
 
-            // Determine message content
-            const activeGame = this.getCurrentPlayingGame();
+            // Determine active game (custom override or live detected)
+            const liveGame = this.getCurrentPlayingGame();
+            const activeGame = (this.autoResponderSettings.customGameName && this.autoResponderSettings.customGameName.trim())
+                ? this.autoResponderSettings.customGameName.trim()
+                : (liveGame || "oyun");
+
             let replyText = "";
 
-            if (this.autoResponderSettings.mode === 'game' || (activeGame && this.autoResponderSettings.mode !== 'custom')) {
+            if (this.autoResponderSettings.mode === 'game') {
                 const template = this.autoResponderSettings.gameMessage || "Şu an {game} oynuyorum, bitince sana yazacağım!";
-                replyText = template.replace(/{game}/gi, activeGame || "oyun");
+                replyText = template.replace(/{game}/gi, activeGame);
             } else {
                 replyText = this.autoResponderSettings.customMessage || "Şu an bilgisayar başında değilim, daha sonra döneceğim.";
-                if (activeGame) {
-                    replyText = replyText.replace(/{game}/gi, activeGame);
-                }
+                replyText = replyText.replace(/{game}/gi, activeGame);
             }
 
             if (!replyText || !replyText.trim()) return;
@@ -3688,131 +3684,180 @@ module.exports = class KeyWare {
     openAutoResponderModal() {
         this.closeModal();
         const settings = this.autoResponderSettings;
-        const activeGame = this.getCurrentPlayingGame();
+        const liveDetectedGame = this.getCurrentPlayingGame();
+
+        let selectedEnabled = settings.enabled !== false;
+        let selectedMode = (settings.mode === 'game') ? 'game' : 'custom';
+        let customGameName = settings.customGameName || '';
 
         const backdrop = document.createElement('div');
         backdrop.className = 'dm-cat-modal-backdrop';
         backdrop.innerHTML = `
-            <div class="dm-cat-modal-box" style="width: 540px; border: 1px solid rgba(87, 242, 135, 0.35); box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 24px rgba(87, 242, 135, 0.15);">
-                <div class="dm-cat-modal-header" style="background: linear-gradient(135deg, rgba(87, 242, 135, 0.15), rgba(0,0,0,0));">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 22px;">🤖</span>
-                        <div>
-                            <div style="font-size: 16px; font-weight: 700; color: #fff;">Akıllı Otomatik Yanıtlayıcı (Auto-Responder)</div>
-                            <div style="font-size: 12px; color: #57f287; font-weight: 600;">KeyWare Akıllı DM Yanıt Sistemi</div>
-                        </div>
+            <div class="dm-cat-modal-box" style="width: 540px; max-height: 90vh; display: flex; flex-direction: column;">
+                <div class="dm-cat-modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 18px;">🤖</span>
+                        <span style="font-size: 15px; font-weight: 700; color: #fff;">Otomatik Yanıtlayıcı Ayarları</span>
                     </div>
                 </div>
 
-                <div class="dm-cat-modal-body" style="padding: 20px; gap: 16px; max-height: 480px; overflow-y: auto;">
-                    <!-- Enable/Disable Switch -->
-                    <div style="display: flex; align-items: center; justify-content: space-between; background: var(--background-secondary, #2b2d31); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
-                        <div>
-                            <div style="font-size: 14px; font-weight: 600; color: #fff;">Otomatik Yanıtlayıcı Durumu</div>
-                            <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Gelen direkt mesajlara otomatik yanıt gönderilmesini kontrol eder.</div>
-                        </div>
-                        <label class="dm-cat-switch">
-                            <input type="checkbox" id="dmAutoRespToggle" ${settings.enabled ? 'checked' : ''}>
-                            <span class="dm-cat-slider"></span>
-                        </label>
-                    </div>
-
-                    <!-- Mode Select -->
+                <div class="dm-cat-modal-body" style="padding: 16px 20px; gap: 14px; overflow-y: auto;">
+                    <!-- Status Toggle (Mascot style) -->
                     <div class="dm-cat-setting-row">
-                        <label class="dm-cat-setting-label">Yanıt Çalışma Modu</label>
+                        <label class="dm-cat-setting-label">Sistem Durumu</label>
                         <div style="display: flex; gap: 8px;">
-                            <button type="button" class="dm-cat-mode-btn ${settings.mode === 'custom' ? 'active' : ''}" data-mode="custom" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--background-secondary, #2b2d31); color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
-                                📝 Özel Mesaj
+                            <button type="button" class="dm-cat-btn dm-auto-status-btn" data-enabled="true" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${selectedEnabled ? '#57f287' : 'var(--background-secondary-alt, #1e1f22)'}; color: ${selectedEnabled ? '#000' : '#fff'}; font-weight: 700; transition: all 0.2s;">
+                                <span>🟢 Yanıtlayıcı Açık</span>
                             </button>
-                            <button type="button" class="dm-cat-mode-btn ${settings.mode === 'game' ? 'active' : ''}" data-mode="game" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--background-secondary, #2b2d31); color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
-                                🎮 Oyun Algılama
-                            </button>
-                            <button type="button" class="dm-cat-mode-btn ${settings.mode === 'afk' ? 'active' : ''}" data-mode="afk" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--background-secondary, #2b2d31); color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
-                                🌙 AFK / Boşta
+                            <button type="button" class="dm-cat-btn dm-auto-status-btn" data-enabled="false" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: ${!selectedEnabled ? '#ed4245' : 'var(--background-secondary-alt, #1e1f22)'}; color: #fff; font-weight: 700; transition: all 0.2s;">
+                                <span>⏸️ Kapalı (Devre Dışı)</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Custom Message Input -->
+                    <!-- Mode Select (2 Sleek Cards) -->
                     <div class="dm-cat-setting-row">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <label class="dm-cat-setting-label">Özel Yanıt Mesajınız</label>
-                            <span style="font-size: 11px; color: #57f287;">{game} etiketi desteklenir</span>
+                        <label class="dm-cat-setting-label">Yanıt Modu</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <!-- Custom Message Card -->
+                            <div class="dm-auto-mode-card" data-mode="custom" style="display: flex; flex-direction: column; gap: 4px; padding: 12px; background: ${selectedMode === 'custom' ? 'rgba(88, 101, 242, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedMode === 'custom' ? 'var(--brand-500, #5865f2)' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <span style="font-size: 16px;">📝</span>
+                                    <span style="font-size: 13px; font-weight: 700; color: #fff;">Özel Mesaj</span>
+                                </div>
+                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Kişilere kendi yazdığın sabit mesajı gönderir.</div>
+                            </div>
+
+                            <!-- Game Mode Card -->
+                            <div class="dm-auto-mode-card" data-mode="game" style="display: flex; flex-direction: column; gap: 4px; padding: 12px; background: ${selectedMode === 'game' ? 'rgba(87, 242, 135, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedMode === 'game' ? '#57f287' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <span style="font-size: 16px;">🎮</span>
+                                    <span style="font-size: 13px; font-weight: 700; color: #fff;">Oyun Algılama</span>
+                                </div>
+                                <div style="font-size: 11px; color: var(--text-muted, #949ba4);">Oynadığın oyunu dinamik olarak mesaja yerleştirir.</div>
+                            </div>
                         </div>
-                        <textarea class="dm-cat-modal-input" id="dmAutoRespCustomMsg" rows="3" style="width: 100%; resize: vertical; min-height: 60px; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 8px 10px;" placeholder="Örn: Şu an bilgisayar başında değilim, daha sonra döneceğim.">${this.escapeHtml(settings.customMessage || '')}</textarea>
                     </div>
 
-                    <!-- Game Message Input -->
-                    <div class="dm-cat-setting-row" id="dmAutoRespGameRow">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <label class="dm-cat-setting-label">Oyun Oynarken Gönderilecek Mesaj</label>
-                            <span style="font-size: 11px; color: var(--text-muted, #949ba4);">${activeGame ? `🎮 Algılanan Oyun: <b style="color:#57f287;">${this.escapeHtml(activeGame)}</b>` : '🎮 Oyun algılanmadı'}</span>
-                        </div>
-                        <textarea class="dm-cat-modal-input" id="dmAutoRespGameMsg" rows="2" style="width: 100%; resize: vertical; min-height: 50px; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 8px 10px;" placeholder="Örn: Şu an {game} oynuyorum, maç bitince döneceğim!">${this.escapeHtml(settings.gameMessage || '')}</textarea>
+                    <!-- Custom Message Section (Only shown when mode === 'custom') -->
+                    <div class="dm-cat-setting-row" id="dmAutoCustomSection" style="display: ${selectedMode === 'custom' ? 'flex' : 'none'}; flex-direction: column;">
+                        <label class="dm-cat-setting-label">Özel Yanıt Mesajınız</label>
+                        <textarea class="dm-cat-modal-input" id="dmAutoRespCustomMsg" rows="3" style="width: 100%; resize: vertical; min-height: 70px; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 8px 10px;" placeholder="Örn: Şu an bilgisayar başında değilim, daha sonra döneceğim.">${this.escapeHtml(settings.customMessage || '')}</textarea>
                     </div>
 
-                    <!-- Cooldown and Triggers -->
-                    <div style="display: flex; gap: 12px;">
-                        <div class="dm-cat-setting-row" style="flex: 1;">
-                            <label class="dm-cat-setting-label">Spam Önleme (Dakika)</label>
-                            <input type="number" class="dm-cat-modal-input" id="dmAutoRespCooldown" min="1" max="120" value="${settings.cooldownMinutes || 10}" />
-                            <div style="font-size: 11px; color: var(--text-muted, #949ba4); margin-top: 4px;">Aynı kişiye tekrar yanıt vermeden önceki süre.</div>
+                    <!-- Game Mode Section (Only shown when mode === 'game') -->
+                    <div id="dmAutoGameSection" style="display: ${selectedMode === 'game' ? 'flex' : 'none'}; flex-direction: column; gap: 12px;">
+                        <!-- Override Game Name Input -->
+                        <div class="dm-cat-setting-row">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label class="dm-cat-setting-label">Algılanan / Gösterilecek Oyun</label>
+                                <span style="font-size: 11px; color: #57f287;">${liveDetectedGame ? `Discord Algıladı: ${this.escapeHtml(liveDetectedGame)}` : 'Discord\'da oyun açık değil'}</span>
+                            </div>
+                            <input type="text" class="dm-cat-modal-input" id="dmAutoRespCustomGame" value="${this.escapeHtml(customGameName || liveDetectedGame || '')}" placeholder="Örn: Valorant, CS2, GTA VI, LoL..." />
+                            <div style="font-size: 11px; color: var(--text-muted, #949ba4); margin-top: 3px;">İstediğin oyunu elle yazabilir veya boş bırakıp Discord'un algılamasını kullanabilirsin.</div>
                         </div>
-                        <div class="dm-cat-setting-row" style="flex: 1;">
-                            <label class="dm-cat-setting-label">Tetiklenme Koşulu</label>
-                            <select class="dm-cat-select" id="dmAutoRespTrigger">
-                                <option value="all" ${settings.triggerStatus === 'all' ? 'selected' : ''}>Her Zaman Yanıtla</option>
-                                <option value="dnd_only" ${settings.triggerStatus === 'dnd_only' ? 'selected' : ''}>Sadece DND (Rahatsız Etmeyin)</option>
-                                <option value="idle_or_dnd" ${settings.triggerStatus === 'idle_or_dnd' ? 'selected' : ''}>Boşta veya DND İken</option>
-                            </select>
-                            <div style="font-size: 11px; color: var(--text-muted, #949ba4); margin-top: 4px;">Hangi Discord durumunda çalışacağını seçin.</div>
+
+                        <!-- Game Message Input -->
+                        <div class="dm-cat-setting-row">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <label class="dm-cat-setting-label">Oyun Yanıt Mesajı Şablonu</label>
+                                <span style="font-size: 11px; color: var(--brand-500, #5865f2);">{game} etiketi oyun adıyla değişir</span>
+                            </div>
+                            <textarea class="dm-cat-modal-input" id="dmAutoRespGameMsg" rows="3" style="width: 100%; resize: vertical; min-height: 70px; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 8px 10px;" placeholder="Örn: Şu an {game} oynuyorum, maç bitince döneceğim!">${this.escapeHtml(settings.gameMessage || '')}</textarea>
                         </div>
+                    </div>
+
+                    <!-- Cooldown Row -->
+                    <div class="dm-cat-setting-row">
+                        <label class="dm-cat-setting-label">Spam Önleme Bekleme Süresi (Dakika)</label>
+                        <input type="number" class="dm-cat-modal-input" id="dmAutoRespCooldown" min="1" max="120" value="${settings.cooldownMinutes || 10}" />
+                        <div style="font-size: 11px; color: var(--text-muted, #949ba4); margin-top: 4px;">Aynı kişiye arka arkaya mesaj atmamak için bekleme süresi.</div>
                     </div>
                 </div>
 
-                <div class="dm-cat-modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="dm-cat-modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08);">
                     <button class="dm-cat-btn dm-cat-btn-cancel" id="dmAutoRespTest" style="background: rgba(255,255,255,0.08); color: #dbdee1;">🧪 Mesajı Test Et</button>
                     <div style="display: flex; gap: 8px;">
-                        <button class="dm-cat-btn dm-cat-btn-cancel" id="dmAutoRespCancel">Vazgeç</button>
-                        <button class="dm-cat-btn dm-cat-btn-primary" id="dmAutoRespSave" style="background: #57f287; color: #000; font-weight: 700;">Kaydet & Uygula</button>
+                        <button class="dm-cat-btn dm-cat-btn-cancel" id="dmAutoRespCancel">İptal</button>
+                        <button class="dm-cat-btn dm-cat-btn-primary" id="dmAutoRespSave" style="background: #57f287; color: #000; font-weight: 700; padding: 8px 20px;">Kaydet</button>
                     </div>
                 </div>
             </div>
         `;
 
-        let selectedMode = settings.mode || 'custom';
-        backdrop.querySelectorAll('.dm-cat-mode-btn').forEach(btn => {
+        // Status Button Toggles
+        const statusBtns = backdrop.querySelectorAll('.dm-auto-status-btn');
+        statusBtns.forEach(btn => {
             btn.onclick = () => {
-                backdrop.querySelectorAll('.dm-cat-mode-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                selectedMode = btn.dataset.mode;
+                selectedEnabled = btn.dataset.enabled === 'true';
+                statusBtns.forEach(b => {
+                    const isAct = b.dataset.enabled === String(selectedEnabled);
+                    if (isAct) {
+                        b.style.background = selectedEnabled ? '#57f287' : '#ed4245';
+                        b.style.color = selectedEnabled ? '#000' : '#fff';
+                    } else {
+                        b.style.background = 'var(--background-secondary-alt, #1e1f22)';
+                        b.style.color = '#fff';
+                    }
+                });
             };
         });
 
+        // Mode Card Selection with Dynamic Section Switching
+        const customSection = backdrop.querySelector('#dmAutoCustomSection');
+        const gameSection = backdrop.querySelector('#dmAutoGameSection');
+        const modeCards = backdrop.querySelectorAll('.dm-auto-mode-card');
+
+        modeCards.forEach(card => {
+            card.onclick = () => {
+                selectedMode = card.dataset.mode;
+                modeCards.forEach(c => {
+                    const isCur = c.dataset.mode === selectedMode;
+                    if (c.dataset.mode === 'custom') {
+                        c.style.background = isCur ? 'rgba(88, 101, 242, 0.15)' : 'var(--background-secondary-alt, #1e1f22)';
+                        c.style.borderColor = isCur ? 'var(--brand-500, #5865f2)' : 'rgba(255,255,255,0.08)';
+                    } else {
+                        c.style.background = isCur ? 'rgba(87, 242, 135, 0.15)' : 'var(--background-secondary-alt, #1e1f22)';
+                        c.style.borderColor = isCur ? '#57f287' : 'rgba(255,255,255,0.08)';
+                    }
+                });
+
+                if (selectedMode === 'custom') {
+                    customSection.style.display = 'flex';
+                    gameSection.style.display = 'none';
+                } else {
+                    customSection.style.display = 'none';
+                    gameSection.style.display = 'flex';
+                }
+            };
+        });
+
+        // Test Button
         backdrop.querySelector('#dmAutoRespTest').onclick = () => {
             const customVal = backdrop.querySelector('#dmAutoRespCustomMsg').value;
             const gameVal = backdrop.querySelector('#dmAutoRespGameMsg').value;
-            const curGame = this.getCurrentPlayingGame() || "Valorant";
+            const customGameVal = backdrop.querySelector('#dmAutoRespCustomGame').value.trim();
+            const curGame = customGameVal || liveDetectedGame || "Valorant";
             let preview = selectedMode === 'game' ? gameVal.replace(/{game}/gi, curGame) : customVal.replace(/{game}/gi, curGame);
             this.showToast(`🤖 Önizleme: "${preview}"`, "info");
         };
 
         backdrop.querySelector('#dmAutoRespCancel').onclick = () => this.closeModal();
 
+        // Save Button
         backdrop.querySelector('#dmAutoRespSave').onclick = () => {
-            const enabled = backdrop.querySelector('#dmAutoRespToggle').checked;
             const customMessage = backdrop.querySelector('#dmAutoRespCustomMsg').value;
             const gameMessage = backdrop.querySelector('#dmAutoRespGameMsg').value;
+            const customGameName = backdrop.querySelector('#dmAutoRespCustomGame').value.trim();
             const cooldownMinutes = parseInt(backdrop.querySelector('#dmAutoRespCooldown').value, 10) || 10;
-            const triggerStatus = backdrop.querySelector('#dmAutoRespTrigger').value;
 
             this.autoResponderSettings = {
-                enabled,
+                enabled: selectedEnabled,
                 mode: selectedMode,
                 customMessage,
                 gameMessage,
+                customGameName,
                 cooldownMinutes,
-                triggerStatus,
                 onlyDMs: true
             };
 
@@ -3822,12 +3867,12 @@ module.exports = class KeyWare {
             // Update Header button style if visible
             const autoBtn = document.querySelector('.dm-cat-autoresponder-btn');
             if (autoBtn) {
-                if (enabled) autoBtn.classList.add('active');
+                if (selectedEnabled) autoBtn.classList.add('active');
                 else autoBtn.classList.remove('active');
-                autoBtn.title = `Akıllı Otomatik Yanıtlayıcı (${enabled ? 'AÇIK' : 'KAPALI'})`;
+                autoBtn.title = `Akıllı Otomatik Yanıtlayıcı (${selectedEnabled ? 'AÇIK' : 'KAPALI'})`;
             }
 
-            this.showToast(enabled ? "🤖 Otomatik Yanıtlayıcı Aktif Edildi!" : "🤖 Otomatik Yanıtlayıcı Kapatıldı", enabled ? "success" : "info");
+            this.showToast(selectedEnabled ? "🤖 Otomatik Yanıtlayıcı Aktif Edildi!" : "🤖 Otomatik Yanıtlayıcı Kapatıldı", selectedEnabled ? "success" : "info");
         };
 
         backdrop.onclick = (e) => { if (e.target === backdrop) this.closeModal(); };
