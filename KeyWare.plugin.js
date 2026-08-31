@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.5.0
+ * @version 6.5.1
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -3086,7 +3086,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.5.0";
+            const currentVersion = "6.5.1";
             const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
 
             const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
@@ -3172,7 +3172,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.5.0";
+        const currentVersion = "6.5.1";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3191,7 +3191,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.5.0</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.5.1</div>
                         </div>
                     </div>
                 </div>
@@ -4722,11 +4722,30 @@ class ShimejiPet {
 
         const natW = img.naturalWidth;
         const natH = img.naturalHeight;
-        const scale = Math.min(256 / natW, 256 / natH);
-        const drawW = natW * scale;
-        const drawH = natH * scale;
-        const drawX = (256 - drawW) / 2;
-        const drawY = 256 - drawH;
+
+        let drawW, drawH, drawX, drawY;
+
+        // Sabit ölçekleme: Kare değişimlerinde karakterin büyüyüp küçülmesini engeller
+        if (this.charName === 'fluttershy') {
+            const unitScale = 256 / 512;
+            drawW = natW * unitScale;
+            drawH = natH * unitScale;
+            drawX = (256 - drawW) / 2;
+            drawY = 256 - drawH;
+        } else if (this.charName === 'husk') {
+            const unitScale = 256 / 128;
+            drawW = natW * unitScale;
+            drawH = natH * unitScale;
+            drawX = (256 - drawW) / 2;
+            drawY = 256 - drawH;
+        } else {
+            // Dante & Vergil için sabit 270px referans oranı
+            const unitScale = 256 / 270;
+            drawW = natW * unitScale;
+            drawH = natH * unitScale;
+            drawX = (256 - drawW) / 2;
+            drawY = 256 - drawH;
+        }
 
         this.ctx.drawImage(img, drawX, drawY, drawW, drawH);
         this.ctx.restore();
