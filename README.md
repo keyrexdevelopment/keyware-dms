@@ -4,14 +4,14 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/ENGINE-BETTERDISCORD-0a0c10?style=for-the-badge&logo=discord&logoColor=white" alt="Engine" />
-  <img src="https://img.shields.io/badge/VERSION-6.9.0-0a0c10?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/VERSION-7.5.0-0a0c10?style=for-the-badge" alt="Version" />
   <img src="https://img.shields.io/badge/ARCHITECTURE-REACT%20SAFE-0a0c10?style=for-the-badge" alt="Architecture" />
   <img src="https://img.shields.io/badge/LICENSE-MIT-0a0c10?style=for-the-badge" alt="License" />
 </p>
 
 <p align="center">
   <b>High-performance, modular Direct Messages extension for BetterDiscord.</b><br>
-  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, Dante & Vergil Shimeji desktop pets, LinkShield anti-phishing guard, and smart customizable auto-responder.</sub>
+  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, 21 Shimeji desktop pets across 9 universes, LinkShield anti-phishing guard, and smart customizable auto-responder.</sub>
 </p>
 
 <p align="center">
@@ -43,17 +43,20 @@
 - **Granular Sound Binding:** Assign custom local `.mp3` files, soundboard sounds, or direct HTTP audio streams to individual users or group chats.
 - **Base64 Inline Decoder:** Native conversion of local files to Base64 data URIs to bypass strict client file protocol restrictions.
 
-#### `[03]` Shimeji Desktop Mascots Engine (5 Universes • 9 Mascots)
-- **Interactive Screen Pets (Grouped by 5 Universes):** 
-  - ⚔️ **Devil May Cry Evreni:** Dante & Vergil
-  - 🎙️ **Hazbin Hotel Evreni:** Alastor (Radio Demon), Husk & Vox (TV Demon)
-  - 🕷️ **Marvel Evreni:** Spider-Man (Örümcek Adam)
-  - 🍕 **Five Nights at Freddy's Evreni:** Foxy (Pirate Fox)
-  - 🦄 **My Little Pony & Pibby Evreni:** Fluttershy & Twilight Glitch
-- **Real-Time Physics & Animations:** Mouse cursor tracking, screen climbing, dragging & tossing physics with customizable scale and aura glow effects.
-- **Mouse Cursor Tracking:** Karakterler fare imlecinizin peşinden koşar, yanınıza gelir ve oturur.
-- **Drag & Toss Physics:** Grab pets with left-click, swing them around, and throw them with momentum and bounce collisions.
-- **Modes & Scaling:** Fareyi Takip Et, Serbest Gezinti, Sakin Otur modları ve dinamik boyut ölçekleme.
+#### `[03]` Shimeji Desktop Mascots Engine (9 Universes • 21 Mascots)
+- **Interactive Screen Pets (Grouped by 9 Universes):** 
+  - ⚔️ **Devil May Cry Evreni (Capcom):** Dante & Vergil
+  - 🎙️ **Hazbin Hotel Evreni (A24 / SpindleHorse):** Alastor (Radio Demon), Vox (TV Overlord), Husk (Casino Cat), Angel Dust (Spider Star), Lucifer Morningstar (King of Hell), Adam (Exorcist Leader), Vaggie (Exorcist Angel), Valentino (Overlord of Lust), Velvette (Overlord of Fashion)
+  - 🎪 **The Amazing Digital Circus Evreni (GLITCH):** Pomni (Digital Jester) & Kinger (Paranoid Chess King)
+  - 🦄 **My Little Pony & Pibby Evreni (Hasbro):** Fluttershy (Kind Pegasus), Rainbow Dash (Sonic Rainboom), Twilight Sparkle (Pibby Glitch)
+  - 🕷️ **Marvel Evreni:** Spider-Man (Peter Parker / Dost Canlısı Komşunuz)
+  - 🍕 **Five Nights at Freddy's Evreni (ScottGames):** Foxy (Pirate Fox)
+  - 🥊 **League of Legends Evreni (Riot Games):** Sett (The Boss / Yeraltı Dövüşçüsü)
+  - 🍪 **Cookie Run Kingdom Evreni (Devsisters):** Shadow Milk Cookie (Gölge Sütlü Kurabiye)
+  - 📺 **Deltarune & Toby Fox Evreni:** Tenna (Katot Işınlı Şovmen)
+- **Real-Time Physics & Animations:** Mouse cursor tracking, screen climbing, dragging & tossing physics with momentum bounce, customizable scale and aura glow effects.
+- **Signature Special Animations:** Her karakterin kendine has imza hareketleri (Alastor radyo yayını & gölge dokunaçları, Vox elektrik glitch & reklam kartı, Lucifer lastik ördek, Adam altın gitar rock solosu, Sett Showstopper yumruk güç gösterisi, Pomni panik dönmesi, Kinger paranoya kale sarsıntısı, Rainbow Dash kanat çırpma & Sonic Rainboom, Tenna CRT statik parazit vb.).
+- **Modes & Scaling:** Fareyi Takip Et, Serbest Gezinti, Sakin Otur modları ve dinamik boyut ölçekleme (0.3x – 1.5x).
 
 #### `[04]` Visual Shaders & Atmospheric Engine
 - **Hardware-Accelerated Presets:**
