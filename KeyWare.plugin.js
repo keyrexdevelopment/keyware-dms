@@ -5475,6 +5475,12 @@ class ShimejiPet {
         this.canvas.width = 256;
         this.canvas.height = 256;
         this.ctx = this.canvas.getContext('2d');
+        this.canvas.style.pointerEvents = 'none';
+        this.canvas.style.position = 'absolute';
+        this.canvas.style.bottom = '0';
+        this.canvas.style.left = '50%';
+        this.canvas.style.transform = 'translateX(-50%)';
+        this.element.style.overflow = 'visible';
         this.element.appendChild(this.canvas);
 
         this.images = {};
@@ -5532,8 +5538,25 @@ class ShimejiPet {
     update(dt) {
         const timeStep = Math.min(dt / 16.666, 3.0);
         const scale = this.manager.shimejiSettings.scale || 0.65;
-        const width = 256 * scale;
-        const height = 256 * scale;
+        
+        let baseW = 150;
+        let baseH = 160;
+        if (this.charName === 'vox') {
+            baseW = 110;
+            baseH = 140;
+        } else if (this.charName === 'husk') {
+            baseW = 120;
+            baseH = 145;
+        } else if (this.charName === 'fluttershy' || this.charName === 'twilight') {
+            baseW = 130;
+            baseH = 140;
+        } else {
+            baseW = 130;
+            baseH = 160;
+        }
+
+        const width = baseW * scale;
+        const height = baseH * scale;
         const floorY = window.innerHeight - height - 4;
         const speed = (this.manager.shimejiSettings.speed || 3.0) * timeStep;
         const mode = this.manager.shimejiSettings.mode || 'follow';
@@ -5923,12 +5946,32 @@ class ShimejiPet {
     updateStyle() {
         const scale = this.manager.shimejiSettings.scale || 0.65;
         const glow = this.manager.shimejiSettings.glowColor || (this.charName === 'vox' ? '#00d2d3' : '#e23636');
-        const w = 256 * scale;
-        const h = 256 * scale;
-        this.element.style.width = w + 'px';
-        this.element.style.height = h + 'px';
-        this.canvas.style.width = w + 'px';
-        this.canvas.style.height = h + 'px';
+        
+        // Karakter bazlı sıkılaştırılmış gerçekçi Hitbox boyutları (Kullanıcının Discord pencerelerine tıklamasını engellemez)
+        let baseW = 150;
+        let baseH = 160;
+        if (this.charName === 'vox') {
+            baseW = 110;
+            baseH = 140;
+        } else if (this.charName === 'husk') {
+            baseW = 120;
+            baseH = 145;
+        } else if (this.charName === 'fluttershy' || this.charName === 'twilight') {
+            baseW = 130;
+            baseH = 140;
+        } else {
+            baseW = 130;
+            baseH = 160;
+        }
+
+        const hitW = baseW * scale;
+        const hitH = baseH * scale;
+        const canvasSize = 256 * scale;
+
+        this.element.style.width = hitW + 'px';
+        this.element.style.height = hitH + 'px';
+        this.canvas.style.width = canvasSize + 'px';
+        this.canvas.style.height = canvasSize + 'px';
 
         // VOX ÖZEL ELEKTRİK & GLITCH (Yapay ışık/parıltı yok, tamamen orijinal doğal spritelar ve gölge)
         if (this.charName === 'vox' && this.specialAction === 'ELECTRIC_GLITCH') {
