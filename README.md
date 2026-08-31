@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/ENGINE-BETTERDISCORD-0a0c10?style=for-the-badge&logo=discord&logoColor=white" alt="Engine" />
-  <img src="https://img.shields.io/badge/VERSION-6.4.0-0a0c10?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/VERSION-6.4.1-0a0c10?style=for-the-badge" alt="Version" />
   <img src="https://img.shields.io/badge/ARCHITECTURE-REACT%20SAFE-0a0c10?style=for-the-badge" alt="Architecture" />
   <img src="https://img.shields.io/badge/LICENSE-MIT-0a0c10?style=for-the-badge" alt="License" />
 </p>
