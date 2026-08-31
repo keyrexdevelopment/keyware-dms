@@ -4,14 +4,14 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/ENGINE-BETTERDISCORD-0a0c10?style=for-the-badge&logo=discord&logoColor=white" alt="Engine" />
-  <img src="https://img.shields.io/badge/VERSION-6.7.3-0a0c10?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/VERSION-6.8.0-0a0c10?style=for-the-badge" alt="Version" />
   <img src="https://img.shields.io/badge/ARCHITECTURE-REACT%20SAFE-0a0c10?style=for-the-badge" alt="Architecture" />
   <img src="https://img.shields.io/badge/LICENSE-MIT-0a0c10?style=for-the-badge" alt="License" />
 </p>
 
 <p align="center">
   <b>High-performance, modular Direct Messages extension for BetterDiscord.</b><br>
-  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, Dante & Vergil Shimeji desktop pets, and granular UI shaders.</sub>
+  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, Dante & Vergil Shimeji desktop pets, LinkShield anti-phishing guard, and smart customizable auto-responder.</sub>
 </p>
 
 <p align="center">
@@ -62,6 +62,15 @@
 - **Host OS Font Integration:** Type any font name installed on your Windows system to render immediately with zero network latency.
 - **Embedded Web Fonts:** Integrated Google Web Fonts suite including *Orbitron, Poppins, Montserrat, Cinzel, Righteous, Permanent Marker, and Press Start 2P*.
 - **Left Indicator Accents:** Customizable left-border status indicators with per-category accent colors.
+
+#### `[06]` LinkShield Anti-Phishing Guard
+- **Real-Time Malicious URL Interception:** Automatically identifies typo-squatted fake Discord/Nitro domains (`dlscord.com`, `discorcl.gift`, `discord-nitro-free.com`), fake Steam phishing links (`steamcommunlty.com`), and IP Logger/Grabbers (`grabify.link`, `iplogger.org`).
+- **Pre-Click Intercept & Security Shield Modal:** Halts immediate browser execution and displays an emergency red cyber-shield modal preventing account compromise and token theft.
+
+#### `[07]` Smart Customizable Auto-Responder Engine
+- **One-Click Quick Toggle:** Toggle active/inactive instantly via the dedicated robot button `🤖` on the direct messages header.
+- **Game Detection (`{game}` Placeholder):** Dynamically detects the game you're playing (via `ActivityStore`) and embeds the game title automatically into your response.
+- **Granular Dispatch Controls:** Configurable anti-spam cooldown intervals (1–120 mins), status filters (DND/Idle only), and custom text templates.
 
 ---
 

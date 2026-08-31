@@ -1,8 +1,8 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.7.3
- * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
+ * @version 6.8.0
+ * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, LinkShield sahte link kalkanı ve Akıllı Otomatik Yanıtlayıcı içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
  * @website https://github.com/keyrexdevelopment/keyware-dms
@@ -22,6 +22,26 @@ module.exports = class KeyWare {
         this.isRendering = false;
         this.suppressDiscordSound = false;
         this.suppressTimeout = null;
+
+        // Auto-Responder State
+        this.autoResponderSettings = {
+            enabled: false,
+            mode: 'custom', // 'custom' | 'game' | 'afk'
+            customMessage: 'Şu an bilgisayar başında değilim, daha sonra döneceğim.',
+            gameMessage: 'Şu an {game} oynuyorum, bitince sana yazacağım!',
+            cooldownMinutes: 10,
+            triggerStatus: 'all', // 'all' | 'dnd_only' | 'idle_or_dnd'
+            onlyDMs: true
+        };
+        this.autoResponderCooldowns = {};
+
+        // LinkShield Anti-Phishing Guard State
+        this.linkShieldSettings = {
+            enabled: true,
+            blockFakeDiscord: true,
+            blockIpLoggers: true,
+            warnDownloads: true
+        };
 
         // Shimeji Desktop Mascot State (Dante)
         this.shimejiSettings = {
@@ -154,12 +174,24 @@ module.exports = class KeyWare {
             this.shimejiSettings.enabled = true;
             this.shimejiSettings.character = 'dante';
         }
+
+        const savedAutoResp = BdApi.Data.load(this.pluginName, "autoResponder");
+        if (savedAutoResp && typeof savedAutoResp === 'object') {
+            this.autoResponderSettings = Object.assign(this.autoResponderSettings, savedAutoResp);
+        }
+
+        const savedLinkShield = BdApi.Data.load(this.pluginName, "linkShield");
+        if (savedLinkShield && typeof savedLinkShield === 'object') {
+            this.linkShieldSettings = Object.assign(this.linkShieldSettings, savedLinkShield);
+        }
     }
 
     saveSettings() {
         BdApi.Data.save(this.pluginName, "categories", this.categories);
         BdApi.Data.save(this.pluginName, "customSounds", this.customSounds);
         BdApi.Data.save(this.pluginName, "shimeji", this.shimejiSettings);
+        BdApi.Data.save(this.pluginName, "autoResponder", this.autoResponderSettings);
+        BdApi.Data.save(this.pluginName, "linkShield", this.linkShieldSettings);
     }
 
     getDispatcher() {
@@ -498,8 +530,6 @@ module.exports = class KeyWare {
 
     onMessageCreate(e) {
         try {
-            if (this.suppressDiscordSound) return;
-
             if (!e) return;
             const msg = e.message || e;
             const channelId = String(e.channelId || msg.channel_id || msg.channelId || "");
@@ -509,19 +539,25 @@ module.exports = class KeyWare {
             const currentUserId = UserStore?.getCurrentUser?.()?.id;
             if (authorId && currentUserId && String(authorId) === String(currentUserId)) return;
 
-            const soundData = this.hasCustomSound(channelId, authorId);
-            if (soundData && soundData.url) {
-                this.suppressDiscordSound = true;
-                if (this.suppressTimeout) clearTimeout(this.suppressTimeout);
-                this.suppressTimeout = setTimeout(() => {
-                    this.suppressDiscordSound = false;
-                    this.suppressTimeout = null;
-                }, 600);
+            // 1. Custom Sound Interception
+            if (!this.suppressDiscordSound) {
+                const soundData = this.hasCustomSound(channelId, authorId);
+                if (soundData && soundData.url) {
+                    this.suppressDiscordSound = true;
+                    if (this.suppressTimeout) clearTimeout(this.suppressTimeout);
+                    this.suppressTimeout = setTimeout(() => {
+                        this.suppressDiscordSound = false;
+                        this.suppressTimeout = null;
+                    }, 600);
 
-                this.playCustomSound(soundData);
+                    this.playCustomSound(soundData);
+                }
             }
+
+            // 2. Auto-Responder Execution
+            this.handleAutoResponse(channelId, authorId, msg);
         } catch (err) {
-            console.error("[DMCategories] onMessageCreate error:", err);
+            console.error("[KeyWare] onMessageCreate error:", err);
         }
     }
 
@@ -1399,6 +1435,98 @@ module.exports = class KeyWare {
                 color: var(--brand-500, #5865f2) !important;
             }
 
+            .dm-cat-autoresponder-btn {
+                cursor: pointer !important;
+                color: var(--interactive-normal, #b5bac1) !important;
+                padding: 2px 4px;
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                transition: color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+                margin-left: 2px;
+                pointer-events: auto !important;
+                position: relative;
+                z-index: 10;
+            }
+            .dm-cat-autoresponder-btn:hover {
+                color: #ffffff !important;
+                background-color: var(--background-modifier-hover, rgba(78, 80, 88, 0.16));
+                transform: scale(1.1);
+            }
+            .dm-cat-autoresponder-btn.active {
+                color: #57f287 !important;
+            }
+            .dm-cat-autoresponder-btn.active::after {
+                content: '';
+                position: absolute;
+                bottom: 2px;
+                right: 2px;
+                width: 5px;
+                height: 5px;
+                background-color: #57f287;
+                border-radius: 50%;
+                box-shadow: 0 0 6px #57f287;
+            }
+
+            .dm-cat-switch {
+                position: relative;
+                display: inline-block;
+                width: 44px;
+                height: 24px;
+            }
+            .dm-cat-switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+            .dm-cat-slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-color: #4e5058;
+                transition: .3s;
+                border-radius: 24px;
+            }
+            .dm-cat-slider:before {
+                position: absolute;
+                content: "";
+                height: 18px;
+                width: 18px;
+                left: 3px;
+                bottom: 3px;
+                background-color: white;
+                transition: .3s;
+                border-radius: 50%;
+            }
+            .dm-cat-switch input:checked + .dm-cat-slider {
+                background-color: #57f287;
+            }
+            .dm-cat-switch input:checked + .dm-cat-slider:before {
+                transform: translateX(20px);
+                background-color: #000;
+            }
+
+            .dm-cat-mode-btn.active {
+                border-color: #57f287 !important;
+                background: rgba(87, 242, 135, 0.15) !important;
+                color: #57f287 !important;
+            }
+
+            @keyframes dmCatShieldShake {
+                0% { transform: scale(0.95) rotate(0deg); }
+                20% { transform: scale(1.02) rotate(-1deg); }
+                40% { transform: scale(0.98) rotate(1deg); }
+                60% { transform: scale(1.01) rotate(-0.5deg); }
+                80% { transform: scale(0.99) rotate(0.5deg); }
+                100% { transform: scale(1) rotate(0deg); }
+            }
+
+            @keyframes dmCatPulse {
+                0%, 100% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.15); opacity: 0.85; }
+            }
+
             .dm-cat-shimeji-card {
                 background: var(--background-secondary, #2b2d31);
                 border: 2px solid rgba(255, 255, 255, 0.08);
@@ -1562,6 +1690,26 @@ module.exports = class KeyWare {
                 this.openShimejiModal();
             });
             targetContainer.appendChild(shimejiBtn);
+        }
+
+        // Auto-Responder Button
+        if (!header.querySelector('.dm-cat-autoresponder-btn')) {
+            const autoRespBtn = document.createElement('div');
+            autoRespBtn.className = `dm-cat-autoresponder-btn ${this.autoResponderSettings?.enabled ? 'active' : ''}`;
+            autoRespBtn.title = `Akıllı Otomatik Yanıtlayıcı (${this.autoResponderSettings?.enabled ? 'AÇIK' : 'KAPALI'})`;
+            autoRespBtn.setAttribute('role', 'button');
+            autoRespBtn.setAttribute('aria-label', 'Akıllı Otomatik Yanıtlayıcı');
+            autoRespBtn.innerHTML = `
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.38-1 1.72V7h4a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3h4V5.72c-.6-.34-1-.98-1-1.72a2 2 0 0 1 2-2zm-4 9a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm8 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-6 5h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2z"/>
+                </svg>
+            `;
+            autoRespBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.openAutoResponderModal();
+            });
+            targetContainer.appendChild(autoRespBtn);
         }
 
         // Category Add Button
@@ -3094,7 +3242,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.7.3";
+            const currentVersion = "6.8.0";
             let remoteVersion = null;
             let remoteContent = null;
 
@@ -3225,8 +3373,469 @@ module.exports = class KeyWare {
         }
     }
 
+
+    // ==========================================
+    // KEYWARE LINKSHIELD & AUTO-RESPONDER MODULES
+    // ==========================================
+
+    getMessageActions() {
+        try {
+            return BdApi.Webpack.getByKeys("sendMessage", "receiveMessage")
+                || BdApi.Webpack.getByKeys("sendMessage", "editMessage")
+                || BdApi.Webpack.getModule(m => m?.sendMessage && typeof m.sendMessage === 'function')
+                || BdApi.Webpack.getModule(m => m?.default?.sendMessage)?.default;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    sendChatMessage(channelId, content) {
+        if (!channelId || !content) return false;
+        try {
+            const messageActions = this.getMessageActions();
+            if (messageActions && typeof messageActions.sendMessage === 'function') {
+                messageActions.sendMessage(channelId, {
+                    content: String(content),
+                    tts: false,
+                    invalidEmojis: [],
+                    validNonShortcutEmojis: []
+                });
+                return true;
+            }
+        } catch (e) {
+            console.error("[KeyWare] sendChatMessage error:", e);
+        }
+        return false;
+    }
+
+    getCurrentPlayingGame() {
+        try {
+            const UserStore = BdApi.Webpack.getStore("UserStore") || BdApi.Webpack.getModule(m => m?.getCurrentUser);
+            const currentUserId = UserStore?.getCurrentUser?.()?.id;
+            if (!currentUserId) return null;
+
+            const ActivityStore = BdApi.Webpack.getStore("ActivityStore")
+                || BdApi.Webpack.getByKeys("getActivities", "getPrimaryActivity")
+                || BdApi.Webpack.getModule(m => m?.getActivities);
+
+            if (ActivityStore) {
+                if (typeof ActivityStore.getPrimaryActivity === 'function') {
+                    const act = ActivityStore.getPrimaryActivity(currentUserId);
+                    if (act && (act.type === 0 || act.name)) return act.name;
+                }
+                if (typeof ActivityStore.getActivities === 'function') {
+                    const list = ActivityStore.getActivities(currentUserId) || [];
+                    const game = list.find(a => a.type === 0 || a.application_id);
+                    if (game && game.name) return game.name;
+                    if (list.length > 0 && list[0]?.name) return list[0].name;
+                }
+            }
+        } catch (e) {
+            console.warn("[KeyWare] getCurrentPlayingGame error:", e);
+        }
+        return null;
+    }
+
+    getCurrentUserStatus() {
+        try {
+            const UserStore = BdApi.Webpack.getStore("UserStore") || BdApi.Webpack.getModule(m => m?.getCurrentUser);
+            const currentUserId = UserStore?.getCurrentUser?.()?.id;
+            if (!currentUserId) return "online";
+
+            const StatusStore = BdApi.Webpack.getStore("PresenceStore")
+                || BdApi.Webpack.getStore("UserStatusStore")
+                || BdApi.Webpack.getByKeys("getStatus", "getState")
+                || BdApi.Webpack.getModule(m => m?.getStatus);
+
+            if (StatusStore && typeof StatusStore.getStatus === 'function') {
+                return StatusStore.getStatus(currentUserId) || "online";
+            }
+        } catch (e) {
+            console.warn("[KeyWare] getCurrentUserStatus error:", e);
+        }
+        return "online";
+    }
+
+    checkUrlSafety(urlString) {
+        if (!urlString || typeof urlString !== 'string') return { isSafe: true };
+
+        try {
+            let urlObj;
+            try {
+                urlObj = new URL(urlString);
+            } catch (e) {
+                if (!urlString.startsWith('http://') && !urlString.startsWith('https://')) {
+                    urlObj = new URL('https://' + urlString);
+                } else {
+                    return { isSafe: true };
+                }
+            }
+
+            const hostname = urlObj.hostname.toLowerCase();
+            const pathname = urlObj.pathname.toLowerCase();
+
+            // 1. Official Discord & Verified Safe Domains
+            const safeDiscordDomains = [
+                'discord.com', 'discord.gg', 'discordapp.com', 'discord.media',
+                'discord.gift', 'discordstatus.com', 'discord.co', 'discord.design',
+                'discord.dev', 'watchanimeattheoffice.net'
+            ];
+
+            const isExactSafeDomain = safeDiscordDomains.some(d => hostname === d || hostname.endsWith('.' + d));
+            if (isExactSafeDomain) {
+                return { isSafe: true, reason: 'official_discord' };
+            }
+
+            const globalSafeDomains = [
+                'steamcommunity.com', 'steampowered.com', 'store.steampowered.com',
+                'youtube.com', 'youtu.be', 'twitch.tv', 'twitter.com', 'x.com',
+                'github.com', 'gitlab.com', 'spotify.com', 'google.com', 'google.com.tr',
+                'reddit.com', 'tenor.com', 'giphy.com', 'imgur.com', 'wikipedia.org',
+                'betterdiscord.app', 'vencord.dev', 'raw.githubusercontent.com'
+            ];
+            if (globalSafeDomains.some(d => hostname === d || hostname.endsWith('.' + d))) {
+                return { isSafe: true, reason: 'trusted_global' };
+            }
+
+            // 2. IP Grabbers & Known Loggers
+            const ipGrabberPatterns = [
+                'grabify.link', 'iplogger.org', 'iplogger.com', 'iplogger.ru', '2no.co',
+                'yip.su', 'iplis.ru', '02ip.ru', 'ezstat.ru', 'curiouscat.qa',
+                'blasze.tk', 'linktograb.com', 'whatstheirip.com', 'ps3cfw.com',
+                'ip-tracker.org', 'blasze.com', 'spying.me'
+            ];
+            if (ipGrabberPatterns.some(p => hostname === p || hostname.includes(p))) {
+                return {
+                    isSafe: false,
+                    riskLevel: 'CRITICAL',
+                    type: 'IP_GRABBER',
+                    description: 'Bu bağlantı IP adresinizi, coğrafi konumunuzu ve cihaz verilerinizi toplayan bir IP Logger / Grabber tuzağıdır!',
+                    matchedHost: hostname
+                };
+            }
+
+            // 3. Fake Discord & Phishing Typosquatting
+            const fakeDiscordKeywords = ['dlscord', 'discorcl', 'discrod', 'disccord', 'discorde', 'discocrd', 'd1scord', 'disscord', 'discoord', 'discort'];
+            for (const kw of fakeDiscordKeywords) {
+                if (hostname.includes(kw)) {
+                    return {
+                        isSafe: false,
+                        riskLevel: 'CRITICAL',
+                        type: 'FAKE_DISCORD',
+                        description: `Bu bağlantı Discord sitesini taklit eden SAHTE bir Phishing (Hesap Çalma) sitesidir! ("${kw}")`,
+                        matchedHost: hostname
+                    };
+                }
+            }
+
+            const phishingCombos = [
+                /discord[-_.]?(nitro|gift|drop|promo|airdrop|steam|free|app|giveaway)/i,
+                /(nitro|free|steam)[-_.]?discord/i,
+                /steam(communlty|commnunity|comunty|communitv|cornmunity|conmunity)/i,
+                /steam[-_.]?(gift|trade|promo|drop|wallet)/i,
+                /roblox[-_.]?(nitro|gift|free|promo)/i
+            ];
+            for (const regex of phishingCombos) {
+                if (regex.test(hostname)) {
+                    return {
+                        isSafe: false,
+                        riskLevel: 'CRITICAL',
+                        type: 'PHISHING_SCAM',
+                        description: 'Bu bağlantı sahte Nitro / Steam / Hediye tuzağıdır ve hesabınızı ele geçirmek için tasarlanmıştır!',
+                        matchedHost: hostname
+                    };
+                }
+            }
+
+            // 4. Dangerous Executable Download Links
+            const dangerousExtensions = ['.scr', '.exe', '.bat', '.cmd', '.vbs', '.pif', '.jar', '.msi', '.ps1', '.iso'];
+            for (const ext of dangerousExtensions) {
+                if (pathname.endsWith(ext)) {
+                    return {
+                        isSafe: false,
+                        riskLevel: 'HIGH',
+                        type: 'DANGEROUS_DOWNLOAD',
+                        description: `Bu bağlantı doğrudan çalıştırılabilir bir dosya (${ext.toUpperCase()}) indirmektedir. Bilgisayarınıza virüs veya token-grabber bulaşabilir!`,
+                        matchedHost: hostname
+                    };
+                }
+            }
+
+            return { isSafe: true };
+        } catch (e) {
+            return { isSafe: true };
+        }
+    }
+
+    handleAutoResponse(channelId, authorId, msg) {
+        try {
+            if (!this.autoResponderSettings || !this.autoResponderSettings.enabled) return;
+            if (!channelId || !authorId) return;
+
+            // Ignore bots
+            if (msg.author?.bot) return;
+
+            // Check if DM channel
+            if (this.autoResponderSettings.onlyDMs !== false) {
+                const ChannelStore = BdApi.Webpack.getStore("ChannelStore") || BdApi.Webpack.getModule(m => m?.getChannel);
+                const channel = ChannelStore?.getChannel?.(channelId);
+                if (channel && channel.type !== 1 && channel.type !== 3 && channel.guild_id) {
+                    return;
+                }
+            }
+
+            // Check status restriction
+            const currentStatus = this.getCurrentUserStatus();
+            const trigger = this.autoResponderSettings.triggerStatus || 'all';
+            if (trigger === 'dnd_only' && currentStatus !== 'dnd') return;
+            if (trigger === 'idle_or_dnd' && currentStatus !== 'idle' && currentStatus !== 'dnd') return;
+
+            // Cooldown check
+            const now = Date.now();
+            const cooldownMs = (Number(this.autoResponderSettings.cooldownMinutes) || 10) * 60 * 1000;
+            const lastSent = this.autoResponderCooldowns[authorId] || 0;
+            if (now - lastSent < cooldownMs) {
+                return;
+            }
+
+            // Determine message content
+            const activeGame = this.getCurrentPlayingGame();
+            let replyText = "";
+
+            if (this.autoResponderSettings.mode === 'game' || (activeGame && this.autoResponderSettings.mode !== 'custom')) {
+                const template = this.autoResponderSettings.gameMessage || "Şu an {game} oynuyorum, bitince sana yazacağım!";
+                replyText = template.replace(/{game}/gi, activeGame || "oyun");
+            } else {
+                replyText = this.autoResponderSettings.customMessage || "Şu an bilgisayar başında değilim, daha sonra döneceğim.";
+                if (activeGame) {
+                    replyText = replyText.replace(/{game}/gi, activeGame);
+                }
+            }
+
+            if (!replyText || !replyText.trim()) return;
+
+            setTimeout(() => {
+                const sent = this.sendChatMessage(channelId, replyText);
+                if (sent) {
+                    this.autoResponderCooldowns[authorId] = Date.now();
+                    const authorName = msg.author?.username || msg.author?.global_name || "Kullanıcı";
+                    this.showToast(`🤖 [${authorName}] için otomatik yanıt gönderildi`, "success");
+                }
+            }, 800);
+        } catch (e) {
+            console.error("[KeyWare] handleAutoResponse error:", e);
+        }
+    }
+
+    openLinkShieldWarningModal(url, safetyData) {
+        this.closeModal();
+        const backdrop = document.createElement('div');
+        backdrop.className = 'dm-cat-modal-backdrop';
+        backdrop.innerHTML = `
+            <div class="dm-cat-modal-box" style="width: 520px; border: 2px solid #ed4245; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9), 0 0 30px rgba(237, 66, 69, 0.4); animation: dmCatShieldShake 0.3s ease;">
+                <div class="dm-cat-modal-header" style="background: linear-gradient(135deg, rgba(237, 66, 69, 0.3), rgba(0,0,0,0)); border-bottom: 1px solid rgba(237, 66, 69, 0.3);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 24px; animation: dmCatPulse 1.2s infinite;">🛑</span>
+                        <div>
+                            <div style="font-size: 16px; font-weight: 800; color: #ff5c5c; letter-spacing: 0.5px;">KEYWARE LINKSHIELD // GÜVENLİK ENGELİ</div>
+                            <div style="font-size: 11px; color: #ffffff; opacity: 0.8; font-weight: 600;">Tehlikeli / Sahte Bağlantı Tespit Edildi</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dm-cat-modal-body" style="padding: 20px; gap: 14px;">
+                    <div style="background: rgba(237, 66, 69, 0.12); border: 1px solid rgba(237, 66, 69, 0.3); border-radius: 8px; padding: 12px; display: flex; gap: 12px; align-items: flex-start;">
+                        <span style="font-size: 20px; line-height: 1;">⚠️</span>
+                        <div style="font-size: 13px; color: #dbdee1; line-height: 1.45;">
+                            <strong style="color: #ff7b7b;">${this.escapeHtml(safetyData.type || 'GÜVENLİK UYARISI')}:</strong><br>
+                            ${this.escapeHtml(safetyData.description || 'Bu bağlantı şüpheli veya zararlı olarak işaretlenmiştir.')}
+                        </div>
+                    </div>
+
+                    <div class="dm-cat-setting-row">
+                        <label class="dm-cat-setting-label" style="color: #ff7b7b;">Engellenen Hedef Bağlantı (URL):</label>
+                        <div style="background: #111214; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); font-family: monospace; font-size: 12px; color: #fee75c; word-break: break-all; user-select: all;">
+                            ${this.escapeHtml(url)}
+                        </div>
+                    </div>
+
+                    <div style="font-size: 12px; color: var(--text-muted, #949ba4); line-height: 1.4;">
+                        Hesap güvenliğiniz için bu siteye gitmeniz tavsiye edilmez. Sahte siteler şifrenizi, Discord token'ınızı veya kredi kartı bilgilerinizi çalabilir.
+                    </div>
+                </div>
+
+                <div class="dm-cat-modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+                    <button class="dm-cat-btn dm-cat-btn-cancel" id="dmShieldCopyUrl" style="background: rgba(255,255,255,0.08); font-size: 12px;">📋 URL'yi Kopyala</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="dm-cat-btn dm-cat-btn-primary" id="dmShieldSafeClose" style="background: #57f287; color: #000; font-weight: 700; padding: 8px 20px;">🛡️ Güvenle Kapat (Önerilen)</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        backdrop.querySelector('#dmShieldSafeClose').onclick = () => this.closeModal();
+        backdrop.querySelector('#dmShieldCopyUrl').onclick = () => {
+            try {
+                navigator.clipboard.writeText(url);
+                this.showToast("URL panoya kopyalandı", "info");
+            } catch (err) {}
+        };
+        backdrop.onclick = (e) => { if (e.target === backdrop) this.closeModal(); };
+
+        document.body.appendChild(backdrop);
+    }
+
+    openAutoResponderModal() {
+        this.closeModal();
+        const settings = this.autoResponderSettings;
+        const activeGame = this.getCurrentPlayingGame();
+
+        const backdrop = document.createElement('div');
+        backdrop.className = 'dm-cat-modal-backdrop';
+        backdrop.innerHTML = `
+            <div class="dm-cat-modal-box" style="width: 540px; border: 1px solid rgba(87, 242, 135, 0.35); box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 24px rgba(87, 242, 135, 0.15);">
+                <div class="dm-cat-modal-header" style="background: linear-gradient(135deg, rgba(87, 242, 135, 0.15), rgba(0,0,0,0));">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 22px;">🤖</span>
+                        <div>
+                            <div style="font-size: 16px; font-weight: 700; color: #fff;">Akıllı Otomatik Yanıtlayıcı (Auto-Responder)</div>
+                            <div style="font-size: 12px; color: #57f287; font-weight: 600;">KeyWare Akıllı DM Yanıt Sistemi</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dm-cat-modal-body" style="padding: 20px; gap: 16px; max-height: 480px; overflow-y: auto;">
+                    <!-- Enable/Disable Switch -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: var(--background-secondary, #2b2d31); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                        <div>
+                            <div style="font-size: 14px; font-weight: 600; color: #fff;">Otomatik Yanıtlayıcı Durumu</div>
+                            <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Gelen direkt mesajlara otomatik yanıt gönderilmesini kontrol eder.</div>
+                        </div>
+                        <label class="dm-cat-switch">
+                            <input type="checkbox" id="dmAutoRespToggle" ${settings.enabled ? 'checked' : ''}>
+                            <span class="dm-cat-slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- Mode Select -->
+                    <div class="dm-cat-setting-row">
+                        <label class="dm-cat-setting-label">Yanıt Çalışma Modu</label>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="dm-cat-mode-btn ${settings.mode === 'custom' ? 'active' : ''}" data-mode="custom" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--background-secondary, #2b2d31); color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                                📝 Özel Mesaj
+                            </button>
+                            <button type="button" class="dm-cat-mode-btn ${settings.mode === 'game' ? 'active' : ''}" data-mode="game" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--background-secondary, #2b2d31); color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                                🎮 Oyun Algılama
+                            </button>
+                            <button type="button" class="dm-cat-mode-btn ${settings.mode === 'afk' ? 'active' : ''}" data-mode="afk" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--background-secondary, #2b2d31); color: #fff; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;">
+                                🌙 AFK / Boşta
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Custom Message Input -->
+                    <div class="dm-cat-setting-row">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label class="dm-cat-setting-label">Özel Yanıt Mesajınız</label>
+                            <span style="font-size: 11px; color: #57f287;">{game} etiketi desteklenir</span>
+                        </div>
+                        <textarea class="dm-cat-modal-input" id="dmAutoRespCustomMsg" rows="3" style="width: 100%; resize: vertical; min-height: 60px; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 8px 10px;" placeholder="Örn: Şu an bilgisayar başında değilim, daha sonra döneceğim.">${this.escapeHtml(settings.customMessage || '')}</textarea>
+                    </div>
+
+                    <!-- Game Message Input -->
+                    <div class="dm-cat-setting-row" id="dmAutoRespGameRow">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label class="dm-cat-setting-label">Oyun Oynarken Gönderilecek Mesaj</label>
+                            <span style="font-size: 11px; color: var(--text-muted, #949ba4);">${activeGame ? `🎮 Algılanan Oyun: <b style="color:#57f287;">${this.escapeHtml(activeGame)}</b>` : '🎮 Oyun algılanmadı'}</span>
+                        </div>
+                        <textarea class="dm-cat-modal-input" id="dmAutoRespGameMsg" rows="2" style="width: 100%; resize: vertical; min-height: 50px; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 8px 10px;" placeholder="Örn: Şu an {game} oynuyorum, maç bitince döneceğim!">${this.escapeHtml(settings.gameMessage || '')}</textarea>
+                    </div>
+
+                    <!-- Cooldown and Triggers -->
+                    <div style="display: flex; gap: 12px;">
+                        <div class="dm-cat-setting-row" style="flex: 1;">
+                            <label class="dm-cat-setting-label">Spam Önleme (Dakika)</label>
+                            <input type="number" class="dm-cat-modal-input" id="dmAutoRespCooldown" min="1" max="120" value="${settings.cooldownMinutes || 10}" />
+                            <div style="font-size: 11px; color: var(--text-muted, #949ba4); margin-top: 4px;">Aynı kişiye tekrar yanıt vermeden önceki süre.</div>
+                        </div>
+                        <div class="dm-cat-setting-row" style="flex: 1;">
+                            <label class="dm-cat-setting-label">Tetiklenme Koşulu</label>
+                            <select class="dm-cat-select" id="dmAutoRespTrigger">
+                                <option value="all" ${settings.triggerStatus === 'all' ? 'selected' : ''}>Her Zaman Yanıtla</option>
+                                <option value="dnd_only" ${settings.triggerStatus === 'dnd_only' ? 'selected' : ''}>Sadece DND (Rahatsız Etmeyin)</option>
+                                <option value="idle_or_dnd" ${settings.triggerStatus === 'idle_or_dnd' ? 'selected' : ''}>Boşta veya DND İken</option>
+                            </select>
+                            <div style="font-size: 11px; color: var(--text-muted, #949ba4); margin-top: 4px;">Hangi Discord durumunda çalışacağını seçin.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dm-cat-modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+                    <button class="dm-cat-btn dm-cat-btn-cancel" id="dmAutoRespTest" style="background: rgba(255,255,255,0.08); color: #dbdee1;">🧪 Mesajı Test Et</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="dm-cat-btn dm-cat-btn-cancel" id="dmAutoRespCancel">Vazgeç</button>
+                        <button class="dm-cat-btn dm-cat-btn-primary" id="dmAutoRespSave" style="background: #57f287; color: #000; font-weight: 700;">Kaydet & Uygula</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        let selectedMode = settings.mode || 'custom';
+        backdrop.querySelectorAll('.dm-cat-mode-btn').forEach(btn => {
+            btn.onclick = () => {
+                backdrop.querySelectorAll('.dm-cat-mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedMode = btn.dataset.mode;
+            };
+        });
+
+        backdrop.querySelector('#dmAutoRespTest').onclick = () => {
+            const customVal = backdrop.querySelector('#dmAutoRespCustomMsg').value;
+            const gameVal = backdrop.querySelector('#dmAutoRespGameMsg').value;
+            const curGame = this.getCurrentPlayingGame() || "Valorant";
+            let preview = selectedMode === 'game' ? gameVal.replace(/{game}/gi, curGame) : customVal.replace(/{game}/gi, curGame);
+            this.showToast(`🤖 Önizleme: "${preview}"`, "info");
+        };
+
+        backdrop.querySelector('#dmAutoRespCancel').onclick = () => this.closeModal();
+
+        backdrop.querySelector('#dmAutoRespSave').onclick = () => {
+            const enabled = backdrop.querySelector('#dmAutoRespToggle').checked;
+            const customMessage = backdrop.querySelector('#dmAutoRespCustomMsg').value;
+            const gameMessage = backdrop.querySelector('#dmAutoRespGameMsg').value;
+            const cooldownMinutes = parseInt(backdrop.querySelector('#dmAutoRespCooldown').value, 10) || 10;
+            const triggerStatus = backdrop.querySelector('#dmAutoRespTrigger').value;
+
+            this.autoResponderSettings = {
+                enabled,
+                mode: selectedMode,
+                customMessage,
+                gameMessage,
+                cooldownMinutes,
+                triggerStatus,
+                onlyDMs: true
+            };
+
+            this.saveSettings();
+            this.closeModal();
+
+            // Update Header button style if visible
+            const autoBtn = document.querySelector('.dm-cat-autoresponder-btn');
+            if (autoBtn) {
+                if (enabled) autoBtn.classList.add('active');
+                else autoBtn.classList.remove('active');
+                autoBtn.title = `Akıllı Otomatik Yanıtlayıcı (${enabled ? 'AÇIK' : 'KAPALI'})`;
+            }
+
+            this.showToast(enabled ? "🤖 Otomatik Yanıtlayıcı Aktif Edildi!" : "🤖 Otomatik Yanıtlayıcı Kapatıldı", enabled ? "success" : "info");
+        };
+
+        backdrop.onclick = (e) => { if (e.target === backdrop) this.closeModal(); };
+        document.body.appendChild(backdrop);
+    }
+
     checkChangelog() {
-        const currentVersion = "6.7.3";
+        const currentVersion = "6.8.0";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3255,10 +3864,17 @@ module.exports = class KeyWare {
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 10px; background: var(--background-secondary, #2b2d31); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
                         <div style="display: flex; gap: 10px; align-items: flex-start;">
-                            <span style="font-size: 18px; line-height: 1;">⚔️</span>
+                            <span style="font-size: 18px; line-height: 1;">🛡️</span>
                             <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Dante Shimeji Yenilendi & Geliştirildi</div>
-                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Tüm görseller bağımsız olarak eklentiye gömüldü, ters yürüme hatası düzeltildi, sağ tık ve ayarlara hızlı boyutlandırma (%30 - %100) eklendi!</div>
+                                <div style="font-size: 13px; font-weight: 600; color: #57f287;">KeyWare LinkShield Anti-Phishing Kalkanı</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Sahte Nitro (d1scord.gift), sahte Steam ve IP Grabber linkleri otomatik tespit edilir ve tıklamalar engellenerek güvenlik uyarısı verilir!</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; line-height: 1;">🤖</span>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #5865f2;">Akıllı Otomatik Yanıtlayıcı (Auto-Responder)</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">DM başlığındaki robot butonundan açıp kapatılabilen, oyun algılama ({game}), özel metin ve spam önleme süreli akıllı DM yanıtlayıcı!</div>
                             </div>
                         </div>
                         <div style="display: flex; gap: 10px; align-items: flex-start;">
@@ -3546,6 +4162,24 @@ module.exports = class KeyWare {
     handleClick(e) {
         if (!e.target.closest('.dm-cat-context-menu')) {
             this.closeContextMenu();
+        }
+
+        // LinkShield Click Protection Interceptor
+        if (this.linkShieldSettings?.enabled !== false) {
+            const linkEl = e.target.closest('a[href]');
+            if (linkEl) {
+                const href = linkEl.getAttribute('href');
+                if (href && (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//'))) {
+                    const safety = this.checkUrlSafety(href);
+                    if (!safety.isSafe) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                        this.openLinkShieldWarningModal(href, safety);
+                        return false;
+                    }
+                }
+            }
         }
     }
 
