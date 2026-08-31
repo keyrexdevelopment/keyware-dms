@@ -5907,21 +5907,18 @@ class ShimejiPet {
         this.canvas.style.width = w + 'px';
         this.canvas.style.height = h + 'px';
 
-        // VOX ÖZEL ELEKTRİK & GLITCH EFEKTLERİ
+        // VOX ÖZEL ELEKTRİK & GLITCH (Yapay ışık/parıltı yok, tamamen orijinal doğal spritelar ve gölge)
         if (this.charName === 'vox' && this.specialAction === 'ELECTRIC_GLITCH') {
-            const jitterX = (Math.random() * 8 - 4);
-            const jitterY = (Math.random() * 6 - 3);
-            const skew = (Math.random() * 12 - 6);
-            this.element.style.transform = 'translate3d(' + Math.round(this.x + jitterX) + 'px, ' + Math.round(this.y + jitterY) + 'px, 0) skewX(' + skew.toFixed(1) + 'deg)';
-            const sparkColor = Math.random() > 0.4 ? '#00d2d3' : '#5865f2';
-            this.canvas.style.filter = `drop-shadow(0 0 16px ${sparkColor}) drop-shadow(0 0 32px #00d2d3) brightness(1.35) contrast(1.25)`;
+            const jitterX = (Math.random() * 4 - 2);
+            const jitterY = (Math.random() * 2 - 1);
+            this.element.style.transform = 'translate3d(' + Math.round(this.x + jitterX) + 'px, ' + Math.round(this.y + jitterY) + 'px, 0)';
+            this.canvas.style.filter = 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45))';
             return;
         }
 
         if (this.charName === 'vox' && this.specialAction === 'SPIN_HEAD') {
-            const jitterX = (Math.random() * 3 - 1.5);
-            this.element.style.transform = 'translate3d(' + Math.round(this.x + jitterX) + 'px, ' + Math.round(this.y) + 'px, 0)';
-            this.canvas.style.filter = 'drop-shadow(0 0 12px #00d2d3) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5))';
+            this.element.style.transform = 'translate3d(' + Math.round(this.x) + 'px, ' + Math.round(this.y) + 'px, 0)';
+            this.canvas.style.filter = 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45))';
             return;
         }
 
