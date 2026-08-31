@@ -5539,20 +5539,20 @@ class ShimejiPet {
         const timeStep = Math.min(dt / 16.666, 3.0);
         const scale = this.manager.shimejiSettings.scale || 0.65;
         
-        let baseW = 150;
-        let baseH = 160;
+        let baseW = 180;
+        let baseH = 190;
         if (this.charName === 'vox') {
-            baseW = 110;
-            baseH = 140;
+            baseW = 160;
+            baseH = 175;
         } else if (this.charName === 'husk') {
-            baseW = 120;
-            baseH = 145;
+            baseW = 170;
+            baseH = 175;
         } else if (this.charName === 'fluttershy' || this.charName === 'twilight') {
-            baseW = 130;
-            baseH = 140;
+            baseW = 175;
+            baseH = 175;
         } else {
-            baseW = 130;
-            baseH = 160;
+            baseW = 175;
+            baseH = 190;
         }
 
         const width = baseW * scale;
@@ -5948,20 +5948,20 @@ class ShimejiPet {
         const glow = this.manager.shimejiSettings.glowColor || (this.charName === 'vox' ? '#00d2d3' : '#e23636');
         
         // Karakter bazlı sıkılaştırılmış gerçekçi Hitbox boyutları (Kullanıcının Discord pencerelerine tıklamasını engellemez)
-        let baseW = 150;
-        let baseH = 160;
+        let baseW = 180;
+        let baseH = 190;
         if (this.charName === 'vox') {
-            baseW = 110;
-            baseH = 140;
+            baseW = 160;
+            baseH = 175;
         } else if (this.charName === 'husk') {
-            baseW = 120;
-            baseH = 145;
+            baseW = 170;
+            baseH = 175;
         } else if (this.charName === 'fluttershy' || this.charName === 'twilight') {
-            baseW = 130;
-            baseH = 140;
+            baseW = 175;
+            baseH = 175;
         } else {
-            baseW = 130;
-            baseH = 160;
+            baseW = 175;
+            baseH = 190;
         }
 
         const hitW = baseW * scale;
