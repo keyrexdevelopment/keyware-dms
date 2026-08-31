@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.2.1
+ * @version 6.2.2
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -1365,20 +1365,15 @@ module.exports = class KeyWare {
                 cursor: grab !important;
                 user-select: none !important;
                 will-change: transform !important;
-                filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
-                transition: filter 0.2s ease;
                 z-index: 999999 !important;
-            }
-            .dm-cat-shimeji:hover {
-                filter: drop-shadow(0 6px 14px rgba(88, 101, 242, 0.7)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
             }
             .dm-cat-shimeji.dragging {
                 cursor: grabbing !important;
-                filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.7)) scale(1.06);
             }
             .dm-cat-shimeji canvas {
                 display: block !important;
                 pointer-events: none !important;
+                transition: filter 0.18s ease;
             }
 
             .dm-cat-shimeji-btn {
@@ -3091,7 +3086,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.2.1";
+            const currentVersion = "6.2.2";
             const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
 
             const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
@@ -3177,7 +3172,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.2.1";
+        const currentVersion = "6.2.2";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3196,7 +3191,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.2.1</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.2.2</div>
                         </div>
                     </div>
                 </div>
@@ -4445,15 +4440,16 @@ class ShimejiPet {
         this.canvas.style.height = h + 'px';
         this.element.style.transform = 'translate3d(' + Math.round(this.x) + 'px, ' + Math.round(this.y) + 'px, 0)';
 
-        // Canlı, parlak ve kesintisiz aura filtresi
+        // YALNIZCA FARE İLE TUTULDUĞUNDA VEYA ÜZERİNE GELİNDİĞİNDE AURA ÇIKAR:
         if (glow === 'none' || !glow) {
-            this.canvas.style.filter = 'drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45))';
+            this.canvas.style.filter = 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45))';
         } else if (this.isDragged) {
-            this.canvas.style.filter = `drop-shadow(0 0 12px ${glow}) drop-shadow(0 0 26px ${glow}) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6))`;
+            this.canvas.style.filter = `drop-shadow(0 0 12px ${glow}) drop-shadow(0 0 26px ${glow}) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6))`;
         } else if (this.isHovered) {
-            this.canvas.style.filter = `drop-shadow(0 0 10px ${glow}) drop-shadow(0 0 20px ${glow}) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5))`;
+            this.canvas.style.filter = `drop-shadow(0 0 10px ${glow}) drop-shadow(0 0 20px ${glow}) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5))`;
         } else {
-            this.canvas.style.filter = `drop-shadow(0 0 6px ${glow}) drop-shadow(0 0 14px ${glow}) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45))`;
+            // Fare üzerinde değilken aura kapalıdır (sadece doğal temiz gölge)
+            this.canvas.style.filter = 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45))';
         }
     }
 
