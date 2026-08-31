@@ -43,10 +43,11 @@
 - **Granular Sound Binding:** Assign custom local `.mp3` files, soundboard sounds, or direct HTTP audio streams to individual users or group chats.
 - **Base64 Inline Decoder:** Native conversion of local files to Base64 data URIs to bypass strict client file protocol restrictions.
 
-#### `[03]` Shimeji Desktop Mascots Engine (4 Universes • 8 Mascots)
-- **Interactive Screen Pets (Grouped by 4 Universes):** 
+#### `[03]` Shimeji Desktop Mascots Engine (5 Universes • 9 Mascots)
+- **Interactive Screen Pets (Grouped by 5 Universes):** 
   - ⚔️ **Devil May Cry Evreni:** Dante & Vergil
   - 🎙️ **Hazbin Hotel Evreni:** Alastor (Radio Demon), Husk & Vox (TV Demon)
+  - 🕷️ **Marvel Evreni:** Spider-Man (Örümcek Adam)
   - 🍕 **Five Nights at Freddy's Evreni:** Foxy (Pirate Fox)
   - 🦄 **My Little Pony & Pibby Evreni:** Fluttershy & Twilight Glitch
 - **Real-Time Physics & Animations:** Mouse cursor tracking, screen climbing, dragging & tossing physics with customizable scale and aura glow effects.
