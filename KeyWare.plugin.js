@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.8.0
+ * @version 6.9.0
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante, Vergil, Alastor, Husk, Vox, Spider-Man, Foxy, Fluttershy & Twilight Shimeji evcil hayvanları, LinkShield sahte link kalkanı ve Akıllı Otomatik Yanıtlayıcı içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -11,6 +11,7 @@
 module.exports = class KeyWare {
     constructor() {
         this.pluginName = "KeyWare";
+        this.version = "6.9.0";
         this.categories = [];
         this.customSounds = {};
         this.observer = null;
@@ -3240,9 +3241,19 @@ module.exports = class KeyWare {
         }
     }
 
+    getVersion() {
+        try {
+            if (typeof BdApi !== 'undefined' && BdApi.Plugins && typeof BdApi.Plugins.get === 'function') {
+                const meta = BdApi.Plugins.get(this.pluginName);
+                if (meta && meta.version) return meta.version;
+            }
+        } catch (e) {}
+        return this.version || "6.9.0";
+    }
+
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.8.0";
+            const currentVersion = this.getVersion();
             let remoteVersion = null;
             let remoteContent = null;
 
@@ -4053,7 +4064,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.8.0";
+        const currentVersion = this.getVersion();
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -4066,47 +4077,54 @@ module.exports = class KeyWare {
         const backdrop = document.createElement('div');
         backdrop.className = 'dm-cat-modal-backdrop';
         backdrop.innerHTML = `
-            <div class="dm-cat-modal-box" style="width: 520px; border: 1px solid rgba(88, 101, 242, 0.4); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(88, 101, 242, 0.2);">
+            <div class="dm-cat-modal-box" style="width: 530px; border: 1px solid rgba(88, 101, 242, 0.4); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(88, 101, 242, 0.2);">
                 <div class="dm-cat-modal-header" style="background: linear-gradient(135deg, rgba(88, 101, 242, 0.2), rgba(0,0,0,0));">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.7.3</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.9.0 (5 Evren • 9 Shimeji Maskotu)</div>
                         </div>
                     </div>
                 </div>
-                <div class="dm-cat-modal-body" style="padding: 20px; gap: 16px;">
+                <div class="dm-cat-modal-body" style="padding: 20px; gap: 14px;">
                     <div style="font-size: 13px; color: var(--text-normal, #dbdee1); line-height: 1.5;">
-                        KeyWare Direkt Mesajlar eklentisi yeni özelliklerle güncellendi. İşte bu sürümdeki yenilikler:
+                        KeyWare eklentisi yeni evrenler, efsanevi Shimeji maskotları ve gelişmiş sistemlerle güncellendi:
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 10px; background: var(--background-secondary, #2b2d31); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="display: flex; flex-direction: column; gap: 10px; background: var(--background-secondary, #2b2d31); padding: 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); max-height: 280px; overflow-y: auto;">
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; line-height: 1;">🕷️</span>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #e23636;">Marvel Comics: Spider-Man Eklendi</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Ağ atma, sallanma ve sürünme animasyonlarıyla Örümcek Adam masaüstünüze geldi!</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; line-height: 1;">🎙️</span>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #f23f43;">Hazbin Hotel & FNAF: Alastor & Foxy Eklendi</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Radyo İblisi Alastor (özel asasıyla) ve Freddy'nin Korsan Tilkisi Foxy aramıza katıldı!</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; line-height: 1;">⚡</span>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #5865f2;">Hazbin Hotel: Vox (TV Demon) & Kart Animasyonları</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Elektrik kıvılcımları, ekran parazitleri ve kart fırlatma hareketleri eklendi.</div>
+                            </div>
+                        </div>
                         <div style="display: flex; gap: 10px; align-items: flex-start;">
                             <span style="font-size: 18px; line-height: 1;">🛡️</span>
                             <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #57f287;">KeyWare LinkShield Anti-Phishing Kalkanı</div>
-                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Sahte Nitro (d1scord.gift), sahte Steam ve IP Grabber linkleri otomatik tespit edilir ve tıklamalar engellenerek güvenlik uyarısı verilir!</div>
+                                <div style="font-size: 13px; font-weight: 600; color: #57f287;">LinkShield Anti-Phishing Kalkanı & Akıllı Auto-Responder</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Sahte link koruması, canlı oyun algılama ({game}) ve spam korumalı akıllı yanıtlayıcı!</div>
                             </div>
                         </div>
                         <div style="display: flex; gap: 10px; align-items: flex-start;">
-                            <span style="font-size: 18px; line-height: 1;">🤖</span>
+                            <span style="font-size: 18px; line-height: 1;">🎯</span>
                             <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #5865f2;">Akıllı Otomatik Yanıtlayıcı (Auto-Responder)</div>
-                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">DM başlığındaki robot butonundan açıp kapatılabilen, oyun algılama ({game}), özel metin ve spam önleme süreli akıllı DM yanıtlayıcı!</div>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 10px; align-items: flex-start;">
-                            <span style="font-size: 18px; line-height: 1;">🔄</span>
-                            <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Dahili Otomatik Güncelleyici (Auto-Updater)</div>
-                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Artık yeni sürümler çıktığında Discord'unuz anında algılar ve tek tıkla otomatik olarak güncellenir.</div>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 10px; align-items: flex-start;">
-                            <span style="font-size: 18px; line-height: 1;">🔊</span>
-                            <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Discord Sunucu Soundboard Desteği</div>
-                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Üye olduğunuz tüm sunuculardaki ses tahtası seslerini kişiye özel bildirim sesi olarak atayabilirsiniz.</div>
+                                <div style="font-size: 13px; font-weight: 600; color: #fff;">Gelişmiş Tıklama & Poz Kararlılığı</div>
+                                <div style="font-size: 12px; color: var(--text-muted, #949ba4);">Karakter tutma ve tıklama alanları %35 genişletildi, dinlenme ve kart tutma süreleri uzatıldı.</div>
                             </div>
                         </div>
                     </div>
