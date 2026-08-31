@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.2.0
+ * @version 6.2.1
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -3091,7 +3091,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.2.0";
+            const currentVersion = "6.2.1";
             const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
 
             const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
@@ -3177,7 +3177,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.2.0";
+        const currentVersion = "6.2.1";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3196,7 +3196,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.2.0</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.2.1</div>
                         </div>
                     </div>
                 </div>
@@ -3733,7 +3733,7 @@ module.exports = class KeyWare {
 
         let lastTime = performance.now();
         const loop = (now) => {
-            const dt = Math.min(now - lastTime, 64);
+            const dt = Math.max(1, Math.min(now - lastTime, 100));
             lastTime = now;
 
             this.shimejis.forEach(p => p.update(dt));
@@ -3774,7 +3774,7 @@ module.exports = class KeyWare {
                 </div>
 
                 <div class="dm-cat-modal-body" style="padding: 16px 20px; gap: 14px; overflow-y: auto;">
-                    <!-- Status Toggle (No Emojis) -->
+                    <!-- Status Toggle -->
                     <div class="dm-cat-setting-row">
                         <label class="dm-cat-setting-label">Dante Durumu</label>
                         <div style="display: flex; gap: 8px;">
@@ -3787,7 +3787,7 @@ module.exports = class KeyWare {
                         </div>
                     </div>
 
-                    <!-- Behavior Mode (No Emojis) -->
+                    <!-- Behavior Mode -->
                     <div class="dm-cat-setting-row">
                         <label class="dm-cat-setting-label">Davranış Modu</label>
                         <div style="display: flex; gap: 8px;">
@@ -3855,19 +3855,19 @@ module.exports = class KeyWare {
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                             <label class="dm-cat-setting-label" style="margin-bottom: 0;">Vurgu & Işıma Rengi (Aura)</label>
                             <div style="display: flex; align-items: center; gap: 6px;">
-                                <div id="dmShimejiGlowPreview" style="width: 14px; height: 14px; border-radius: 50%; background: ${selectedGlowColor === 'none' ? 'transparent' : selectedGlowColor}; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 0 8px ${selectedGlowColor === 'none' ? 'transparent' : selectedGlowColor};"></div>
-                                <span id="dmShimejiGlowName" style="font-size: 12px; color: var(--text-muted, #949ba4);">${selectedGlowColor === 'none' ? 'Kapalı' : selectedGlowColor}</span>
+                                <div id="dmShimejiGlowPreview" style="width: 14px; height: 14px; border-radius: 50%; background: ${selectedGlowColor === 'none' ? 'transparent' : selectedGlowColor}; border: 1px solid rgba(255,255,255,0.4); box-shadow: ${selectedGlowColor === 'none' ? 'none' : '0 0 10px ' + selectedGlowColor};"></div>
+                                <span id="dmShimejiGlowName" style="font-size: 12px; color: var(--text-muted, #949ba4); font-weight: 600;">${selectedGlowColor === 'none' ? 'Kapalı' : selectedGlowColor}</span>
                             </div>
                         </div>
                         <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#e23636' ? 'active' : ''}" data-color="#e23636" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #e23636;">Kırmızı</button>
-                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#5865f2' ? 'active' : ''}" data-color="#5865f2" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #5865f2;">Mavi</button>
-                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#9b59b6' ? 'active' : ''}" data-color="#9b59b6" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #9b59b6;">Mor</button>
-                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#f1c40f' ? 'active' : ''}" data-color="#f1c40f" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #f1c40f;">Altın</button>
-                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#2ecc71' ? 'active' : ''}" data-color="#2ecc71" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #2ecc71;">Yeşil</button>
-                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#ffffff' ? 'active' : ''}" data-color="#ffffff" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0; border-left: 3px solid #ffffff;">Beyaz</button>
-                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === 'none' ? 'active' : ''}" data-color="none" style="flex: 1; min-width: 60px; font-size: 11px; padding: 4px 0;">Yok</button>
-                            <input type="color" id="dmShimejiGlowCustom" value="${selectedGlowColor.startsWith('#') ? selectedGlowColor : '#e23636'}" title="Özel Renk Seç" style="width: 30px; height: 26px; border: none; border-radius: 4px; background: transparent; cursor: pointer;" />
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#e23636' ? 'active' : ''}" data-color="#e23636" style="flex: 1; min-width: 60px; font-size: 11px; padding: 5px 0; border-left: 3px solid #e23636;">Kırmızı</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#5865f2' ? 'active' : ''}" data-color="#5865f2" style="flex: 1; min-width: 60px; font-size: 11px; padding: 5px 0; border-left: 3px solid #5865f2;">Mavi</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#9b59b6' ? 'active' : ''}" data-color="#9b59b6" style="flex: 1; min-width: 60px; font-size: 11px; padding: 5px 0; border-left: 3px solid #9b59b6;">Mor</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#f1c40f' ? 'active' : ''}" data-color="#f1c40f" style="flex: 1; min-width: 60px; font-size: 11px; padding: 5px 0; border-left: 3px solid #f1c40f;">Altın</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#2ecc71' ? 'active' : ''}" data-color="#2ecc71" style="flex: 1; min-width: 60px; font-size: 11px; padding: 5px 0; border-left: 3px solid #2ecc71;">Yeşil</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === '#ffffff' ? 'active' : ''}" data-color="#ffffff" style="flex: 1; min-width: 60px; font-size: 11px; padding: 5px 0; border-left: 3px solid #ffffff;">Beyaz</button>
+                            <button type="button" class="dm-cat-btn dm-glow-btn ${selectedGlowColor === 'none' ? 'active' : ''}" data-color="none" style="flex: 1; min-width: 60px; font-size: 11px; padding: 5px 0;">Yok</button>
+                            <input type="color" id="dmShimejiGlowCustom" value="${selectedGlowColor.startsWith('#') ? selectedGlowColor : '#e23636'}" title="Özel Renk Seç" style="width: 32px; height: 28px; border: none; border-radius: 4px; background: transparent; cursor: pointer;" />
                         </div>
                     </div>
                 </div>
@@ -3908,6 +3908,10 @@ module.exports = class KeyWare {
         scaleInput.oninput = () => {
             selectedScale = parseFloat(scaleInput.value);
             scaleText.textContent = Math.round(selectedScale * 100) + '%';
+            this.shimejis.forEach(p => {
+                p.manager.shimejiSettings.scale = selectedScale;
+                p.updateStyle();
+            });
         };
 
         backdrop.querySelectorAll('.dm-scale-preset').forEach(pBtn => {
@@ -3915,6 +3919,10 @@ module.exports = class KeyWare {
                 selectedScale = parseFloat(pBtn.dataset.val);
                 scaleInput.value = selectedScale;
                 scaleText.textContent = Math.round(selectedScale * 100) + '%';
+                this.shimejis.forEach(p => {
+                    p.manager.shimejiSettings.scale = selectedScale;
+                    p.updateStyle();
+                });
             };
         });
 
@@ -3930,6 +3938,9 @@ module.exports = class KeyWare {
         gravityInput.oninput = () => {
             selectedGravity = parseFloat(gravityInput.value);
             gravityText.textContent = selectedGravity.toFixed(1) + 'x';
+            this.shimejis.forEach(p => {
+                p.manager.shimejiSettings.gravity = selectedGravity;
+            });
         };
 
         backdrop.querySelectorAll('.dm-gravity-preset').forEach(gBtn => {
@@ -3937,6 +3948,9 @@ module.exports = class KeyWare {
                 selectedGravity = parseFloat(gBtn.dataset.val);
                 gravityInput.value = selectedGravity;
                 gravityText.textContent = selectedGravity.toFixed(1) + 'x';
+                this.shimejis.forEach(p => {
+                    p.manager.shimejiSettings.gravity = selectedGravity;
+                });
             };
         });
 
@@ -3947,10 +3961,15 @@ module.exports = class KeyWare {
         const updateGlowUI = (color) => {
             selectedGlowColor = color;
             glowPreview.style.background = color === 'none' ? 'transparent' : color;
-            glowPreview.style.boxShadow = color === 'none' ? 'none' : `0 0 8px ${color}`;
+            glowPreview.style.boxShadow = color === 'none' ? 'none' : `0 0 10px ${color}`;
             glowName.textContent = color === 'none' ? 'Kapalı' : color;
             backdrop.querySelectorAll('.dm-glow-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.color === color);
+            });
+            // Canlı önizleme: Ekranda Dante'nin aurasını anında güncelle
+            this.shimejis.forEach(p => {
+                p.manager.shimejiSettings.glowColor = color;
+                p.updateStyle();
             });
         };
 
@@ -3982,8 +4001,18 @@ module.exports = class KeyWare {
             this.closeModal();
         };
 
-        backdrop.querySelector('#dmShimejiCancel').onclick = () => this.closeModal();
-        backdrop.onclick = (e) => { if (e.target === backdrop) this.closeModal(); };
+        backdrop.querySelector('#dmShimejiCancel').onclick = () => {
+            this.loadSettings();
+            this.shimejis.forEach(p => p.updateStyle());
+            this.closeModal();
+        };
+        backdrop.onclick = (e) => {
+            if (e.target === backdrop) {
+                this.loadSettings();
+                this.shimejis.forEach(p => p.updateStyle());
+                this.closeModal();
+            }
+        };
 
         document.body.appendChild(backdrop);
     }
@@ -3993,7 +4022,6 @@ module.exports = class KeyWare {
         const menu = document.createElement('div');
         menu.className = 'dm-cat-context-menu';
         
-        // Offset so menu is not directly under Dante
         const posX = Math.max(10, Math.min(x + 15, window.innerWidth - 220));
         const posY = Math.max(10, Math.min(y - 80, window.innerHeight - 300));
         menu.style.left = posX + 'px';
@@ -4116,11 +4144,16 @@ class ShimejiPet {
         this.animTimer = 0;
         this.idleVariant = 'idle1';
         this.isDragged = false;
+        this.isHovered = false;
         this.dragStartX = 0;
         this.dragStartY = 0;
         this.lastDragMouseX = undefined;
         this.dragHistory = [];
         this.currentFrameKey = 'idle1';
+
+        this.lastDrawnFrameKey = null;
+        this.lastDrawnFacing = null;
+        this.lastDrawnScale = null;
 
         this.element = document.createElement('div');
         this.element.className = 'dm-cat-shimeji';
@@ -4138,7 +4171,10 @@ class ShimejiPet {
             const img = new Image();
             img.src = danteSprites[k];
             img.onload = () => {
-                if (this.currentFrameKey === k) this.draw();
+                if (this.currentFrameKey === k) {
+                    this.lastDrawnFrameKey = null;
+                    this.draw();
+                }
             };
             this.images[k] = img;
         });
@@ -4160,7 +4196,18 @@ class ShimejiPet {
                 this.lastDragMouseX = e.clientX;
                 this.dragHistory = [{ x: e.clientX, y: e.clientY, t: Date.now() }];
                 this.element.classList.add('dragging');
+                this.updateStyle();
             }
+        });
+
+        this.element.addEventListener('mouseenter', () => {
+            this.isHovered = true;
+            this.updateStyle();
+        });
+
+        this.element.addEventListener('mouseleave', () => {
+            this.isHovered = false;
+            this.updateStyle();
         });
 
         this.element.addEventListener('contextmenu', (e) => {
@@ -4171,14 +4218,15 @@ class ShimejiPet {
     }
 
     update(dt) {
+        const timeStep = Math.min(dt / 16.666, 3.0); // Normalize to 60fps
         const scale = this.manager.shimejiSettings.scale || 0.65;
         const width = 256 * scale;
         const height = 256 * scale;
         const floorY = window.innerHeight - height - 4;
-        const speed = (this.manager.shimejiSettings.speed || 3.0) * (dt / 16);
+        const speed = (this.manager.shimejiSettings.speed || 3.0) * timeStep;
         const mode = this.manager.shimejiSettings.mode || 'follow';
 
-        // 1. FARE İLE TUTULMA / SÜRÜKLEME (DRAGGED) - Götürülen yöne bakar
+        // 1. FARE İLE TUTULMA / SÜRÜKLEME (DRAGGED) - Götürülen yöne anında bakar
         if (this.isDragged) {
             const curMouseX = this.manager.mouseX;
             const curMouseY = this.manager.mouseY;
@@ -4207,13 +4255,13 @@ class ShimejiPet {
             this.lastDragMouseX = undefined;
         }
 
-        // 2. DÜŞME & FIRLATILMA FİZİĞİ (FALLING & GRAVITY) - Ayarlanabilir düşme hızı
+        // 2. DÜŞME & FIRLATILMA FİZİĞİ (FALLING & GRAVITY) - FPS'ten bağımsız pürüzsüz fizik
         if (this.state === 'FALLING') {
             const gravitySetting = this.manager.shimejiSettings.gravity !== undefined ? this.manager.shimejiSettings.gravity : 0.6;
-            const gravity = gravitySetting * (dt / 16);
+            const gravity = gravitySetting * timeStep;
             this.vy += gravity;
-            this.x += this.vx;
-            this.y += this.vy;
+            this.x += this.vx * timeStep;
+            this.y += this.vy * timeStep;
             this.currentFrameKey = 'fall';
             if (Math.abs(this.vx) > 0.5) {
                 this.facing = this.vx > 0 ? 1 : -1;
@@ -4227,7 +4275,7 @@ class ShimejiPet {
                 this.vx = -this.vx * 0.6;
             }
 
-            this.vx *= 0.98;
+            this.vx *= Math.pow(0.98, timeStep);
 
             if (this.y >= floorY) {
                 this.y = floorY;
@@ -4262,7 +4310,6 @@ class ShimejiPet {
             this.y = floorY;
 
             if (dist > 50) {
-                // Sağa gidiyorsa facing = 1, Sola gidiyorsa facing = -1
                 if (diffX > 0) {
                     this.facing = 1;
                     this.state = 'WALK_RIGHT';
@@ -4278,7 +4325,6 @@ class ShimejiPet {
                 const stepIndex = Math.floor((this.animTimer / 140) % walkCycle.length);
                 this.currentFrameKey = walkCycle[stepIndex];
             } else {
-                // Fareye ulaştı: Dur ve bekle
                 this.facing = this.manager.mouseX > (this.x + width / 2) ? 1 : -1;
                 this.state = 'IDLE';
 
@@ -4351,14 +4397,24 @@ class ShimejiPet {
     }
 
     draw() {
-        const img = this.images[this.currentFrameKey] || this.images.idle1;
+        const frameKey = this.currentFrameKey || 'idle1';
+        const facing = this.facing || -1;
+        const img = this.images[frameKey] || this.images.idle1;
         if (!img || !img.complete || !img.naturalWidth) return;
+
+        // Performans optimizasyonu: Eğer frame ve yön değişmediyse canvas'ı tekrar çizme
+        if (this.lastDrawnFrameKey === frameKey && this.lastDrawnFacing === facing) {
+            return;
+        }
+
+        this.lastDrawnFrameKey = frameKey;
+        this.lastDrawnFacing = facing;
 
         this.ctx.clearRect(0, 0, 256, 256);
         this.ctx.save();
         
         // Sprite'lar varsayılan olarak SOLA bakar. Sağa bakarken (facing === 1) yatay flip yapılır:
-        if (this.facing === 1) {
+        if (facing === 1) {
             this.ctx.translate(256, 0);
             this.ctx.scale(-1, 1);
         }
@@ -4389,12 +4445,15 @@ class ShimejiPet {
         this.canvas.style.height = h + 'px';
         this.element.style.transform = 'translate3d(' + Math.round(this.x) + 'px, ' + Math.round(this.y) + 'px, 0)';
 
+        // Canlı, parlak ve kesintisiz aura filtresi
         if (glow === 'none' || !glow) {
-            this.element.style.setProperty('--dm-shimeji-hover-filter', 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6))');
-            this.element.style.setProperty('--dm-shimeji-drag-filter', 'drop-shadow(0 10px 22px rgba(0, 0, 0, 0.7))');
+            this.canvas.style.filter = 'drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45))';
+        } else if (this.isDragged) {
+            this.canvas.style.filter = `drop-shadow(0 0 12px ${glow}) drop-shadow(0 0 26px ${glow}) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6))`;
+        } else if (this.isHovered) {
+            this.canvas.style.filter = `drop-shadow(0 0 10px ${glow}) drop-shadow(0 0 20px ${glow}) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5))`;
         } else {
-            this.element.style.setProperty('--dm-shimeji-hover-filter', `drop-shadow(0 6px 18px ${glow}) drop-shadow(0 0 10px rgba(255, 255, 255, 0.35))`);
-            this.element.style.setProperty('--dm-shimeji-drag-filter', `drop-shadow(0 14px 28px ${glow})`);
+            this.canvas.style.filter = `drop-shadow(0 0 6px ${glow}) drop-shadow(0 0 14px ${glow}) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45))`;
         }
     }
 
@@ -4404,5 +4463,6 @@ class ShimejiPet {
         this.state = 'FALLING';
         this.vx = Math.max(-25, Math.min(25, throwVx || 0));
         this.vy = Math.max(-25, Math.min(25, throwVy || 0));
+        this.updateStyle();
     }
 }
