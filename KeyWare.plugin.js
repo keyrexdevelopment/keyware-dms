@@ -5912,7 +5912,7 @@ class ShimejiPet {
                 this.vx = 0;
                 this.state = 'IDLE';
                 this.currentFrameKey = 'idle1';
-                this.stateTimer = 1000;
+                this.stateTimer = 1500;
             }
 
             this.updateStyle();
@@ -5928,62 +5928,85 @@ class ShimejiPet {
 
             if (this.charName === 'vox') {
                 if (this.specialAction === 'SHOW_CARD') {
-                    const cardFrames = ['shime38', 'shime39', 'shime40', 'shime41', 'shime39', 'shime41'];
-                    const cIdx = Math.floor((this.animTimer / 180) % cardFrames.length);
-                    this.currentFrameKey = cardFrames[cIdx];
+                    // Kart Çıkarır ve uzun süre elinde tutup gösterir (Hemen kaybolmaz)
+                    if (this.animTimer < 350) {
+                        this.currentFrameKey = 'shime38';
+                    } else if (this.animTimer < 700) {
+                        this.currentFrameKey = 'shime39';
+                    } else if (this.animTimer < 1050) {
+                        this.currentFrameKey = 'shime40';
+                    } else {
+                        // Kartı elinde sabit ve net şekilde tutar
+                        this.currentFrameKey = (Math.floor(this.animTimer / 2000) % 2 === 0) ? 'shime41' : 'shime39';
+                    }
                 } else if (this.specialAction === 'THROW_CARD') {
-                    const throwFrames = ['shime34', 'shime35', 'shime36', 'shime37', 'shime37'];
-                    const tIdx = Math.floor((this.animTimer / 150) % throwFrames.length);
-                    this.currentFrameKey = throwFrames[tIdx];
+                    if (this.animTimer < 400) {
+                        this.currentFrameKey = 'shime34';
+                    } else if (this.animTimer < 800) {
+                        this.currentFrameKey = 'shime35';
+                    } else if (this.animTimer < 1300) {
+                        this.currentFrameKey = 'shime36';
+                    } else {
+                        this.currentFrameKey = 'shime37';
+                    }
                 } else if (this.specialAction === 'ELECTRIC_GLITCH') {
                     const glitchFrames = ['shime42', 'shime43', 'shime44', 'shime45', 'shime46', 'shime42', 'shime45', 'shime44'];
-                    const gIdx = Math.floor((this.animTimer / 75) % glitchFrames.length);
+                    const gIdx = Math.floor((this.animTimer / 90) % glitchFrames.length);
                     this.currentFrameKey = glitchFrames[gIdx];
                 } else if (this.specialAction === 'SPIN_HEAD') {
                     const spinFrames = ['shime26', 'shime15', 'shime27', 'shime16', 'shime28', 'shime17', 'shime29', 'shime11'];
-                    const sIdx = Math.floor((this.animTimer / 85) % spinFrames.length);
+                    const sIdx = Math.floor((this.animTimer / 100) % spinFrames.length);
                     this.currentFrameKey = spinFrames[sIdx];
                 }
             } else if (this.charName === 'spiderman') {
                 if (this.specialAction === 'WEB_SWING') {
-                    const webFrames = ['shime38', 'shime39', 'shime40', 'shime41', 'shime40', 'shime39'];
-                    const wIdx = Math.floor((this.animTimer / 130) % webFrames.length);
-                    this.currentFrameKey = webFrames[wIdx];
+                    if (this.animTimer < 400) {
+                        this.currentFrameKey = 'shime38';
+                    } else if (this.animTimer < 800) {
+                        this.currentFrameKey = 'shime39';
+                    } else {
+                        this.currentFrameKey = (Math.floor(this.animTimer / 1800) % 2 === 0) ? 'shime41' : 'shime40';
+                    }
                 } else if (this.specialAction === 'SPIDER_CROUCH') {
-                    const crouchFrames = ['shime20', 'shime21', 'shime26', 'shime20', 'shime21'];
-                    const cIdx = Math.floor((this.animTimer / 140) % crouchFrames.length);
-                    this.currentFrameKey = crouchFrames[cIdx];
+                    this.currentFrameKey = (this.animTimer < 500) ? 'shime20' : (this.animTimer < 1000) ? 'shime21' : 'shime26';
                 }
             } else if (this.charName === 'alastor') {
                 if (this.specialAction === 'SHADOW_TENTACLES') {
                     const shadowFrames = ['shime42', 'shime43', 'shime44', 'shime45', 'shime46', 'shime44', 'shime45'];
-                    const sIdx = Math.floor((this.animTimer / 100) % shadowFrames.length);
+                    const sIdx = Math.floor((this.animTimer / 120) % shadowFrames.length);
                     this.currentFrameKey = shadowFrames[sIdx];
                 } else if (this.specialAction === 'RADIO_BROADCAST') {
-                    const micFrames = ['shime38', 'shime39', 'shime40', 'shime41', 'shime39'];
-                    const mIdx = Math.floor((this.animTimer / 150) % micFrames.length);
-                    this.currentFrameKey = micFrames[mIdx];
+                    // Mikrofonu elinde tutup radyo yayını yapar (uzun sürer)
+                    if (this.animTimer < 400) {
+                        this.currentFrameKey = 'shime38';
+                    } else if (this.animTimer < 800) {
+                        this.currentFrameKey = 'shime39';
+                    } else {
+                        this.currentFrameKey = (Math.floor(this.animTimer / 2000) % 2 === 0) ? 'shime41' : 'shime40';
+                    }
                 } else if (this.specialAction === 'SPIN_CANE') {
                     const caneFrames = ['shime26', 'shime15', 'shime27', 'shime16', 'shime28', 'shime17', 'shime29', 'shime11'];
-                    const cIdx = Math.floor((this.animTimer / 90) % caneFrames.length);
+                    const cIdx = Math.floor((this.animTimer / 100) % caneFrames.length);
                     this.currentFrameKey = caneFrames[cIdx];
                 }
             } else if (this.charName === 'foxy') {
                 if (this.specialAction === 'JUMPSCARE_CREEP') {
-                    const creepFrames = ['shime20', 'shime21', 'shime26', 'shime20', 'shime21'];
-                    const crIdx = Math.floor((this.animTimer / 140) % creepFrames.length);
-                    this.currentFrameKey = creepFrames[crIdx];
+                    this.currentFrameKey = (this.animTimer < 600) ? 'shime20' : (this.animTimer < 1200) ? 'shime21' : 'shime26';
                 } else if (this.specialAction === 'HOOK_SWING') {
-                    const hookFrames = ['shime34', 'shime35', 'shime36', 'shime37', 'shime37'];
-                    const hIdx = Math.floor((this.animTimer / 130) % hookFrames.length);
-                    this.currentFrameKey = hookFrames[hIdx];
+                    if (this.animTimer < 400) {
+                        this.currentFrameKey = 'shime34';
+                    } else if (this.animTimer < 800) {
+                        this.currentFrameKey = 'shime35';
+                    } else {
+                        this.currentFrameKey = (Math.floor(this.animTimer / 1500) % 2 === 0) ? 'shime37' : 'shime36';
+                    }
                 }
             }
 
             if (this.specialTimer <= 0) {
                 this.specialAction = null;
                 this.idleVariant = 'idle1';
-                this.stateTimer = Math.random() * 3000 + 2000;
+                this.stateTimer = Math.random() * 4000 + 3500;
             }
 
             this.updateStyle();
@@ -6000,72 +6023,80 @@ class ShimejiPet {
             if (this.charName === 'vox') {
                 this.stateTimer -= dt;
                 if (this.stateTimer <= 0) {
-                    this.stateTimer = Math.random() * 4000 + 2500;
+                    this.stateTimer = Math.random() * 7000 + 5000; // 5-12 saniye oturur
                     const r = Math.random();
-                    if (r < 0.22) {
+                    if (r < 0.30) {
                         this.specialAction = 'SHOW_CARD';
-                        this.specialTimer = Math.random() * 1800 + 1200;
-                    } else if (r < 0.44) {
+                        this.animTimer = 0;
+                        this.specialTimer = Math.random() * 3000 + 4500; // 4.5 - 7.5 saniye kart tutar!
+                    } else if (r < 0.55) {
                         this.specialAction = 'ELECTRIC_GLITCH';
-                        this.specialTimer = Math.random() * 1400 + 900;
-                    } else if (r < 0.66) {
+                        this.animTimer = 0;
+                        this.specialTimer = Math.random() * 1500 + 1200;
+                    } else if (r < 0.75) {
                         this.specialAction = 'SPIN_HEAD';
-                        this.specialTimer = Math.random() * 1200 + 800;
+                        this.animTimer = 0;
+                        this.specialTimer = Math.random() * 1500 + 1000;
                     }
                 }
                 this.animTimer += dt;
-                this.currentFrameKey = (Math.floor(this.animTimer / 3000) % 2 === 1) ? 'shime31' : 'sit';
+                this.currentFrameKey = (Math.floor(this.animTimer / 5000) % 2 === 1) ? 'shime31' : 'sit';
             } else if (this.charName === 'spiderman') {
                 this.stateTimer -= dt;
                 if (this.stateTimer <= 0) {
-                    this.stateTimer = Math.random() * 4000 + 2500;
+                    this.stateTimer = Math.random() * 7000 + 5000;
                     const r = Math.random();
                     if (r < 0.35) {
                         this.specialAction = 'SPIDER_CROUCH';
-                        this.specialTimer = Math.random() * 1800 + 1200;
+                        this.animTimer = 0;
+                        this.specialTimer = Math.random() * 3000 + 4000;
                     } else if (r < 0.70) {
                         this.specialAction = 'WEB_SWING';
-                        this.specialTimer = Math.random() * 1600 + 1000;
+                        this.animTimer = 0;
+                        this.specialTimer = Math.random() * 3000 + 3500;
                     }
                 }
                 this.animTimer += dt;
-                this.currentFrameKey = (Math.floor(this.animTimer / 3000) % 2 === 1) ? 'shime31' : 'sit';
+                this.currentFrameKey = (Math.floor(this.animTimer / 5000) % 2 === 1) ? 'shime31' : 'sit';
             } else if (this.charName === 'alastor') {
                 this.stateTimer -= dt;
                 if (this.stateTimer <= 0) {
-                    this.stateTimer = Math.random() * 4000 + 2500;
+                    this.stateTimer = Math.random() * 7000 + 5000;
                     const r = Math.random();
-                    if (r < 0.33) {
+                    if (r < 0.35) {
                         this.specialAction = 'RADIO_BROADCAST';
-                        this.specialTimer = Math.random() * 1800 + 1200;
-                    } else if (r < 0.66) {
+                        this.animTimer = 0;
+                        this.specialTimer = Math.random() * 3000 + 4500;
+                    } else if (r < 0.65) {
                         this.specialAction = 'SHADOW_TENTACLES';
-                        this.specialTimer = Math.random() * 1600 + 1000;
+                        this.animTimer = 0;
+                        this.specialTimer = Math.random() * 2000 + 1500;
                     }
                 }
                 this.animTimer += dt;
-                this.currentFrameKey = (Math.floor(this.animTimer / 3000) % 2 === 1) ? 'shime31' : 'sit';
+                this.currentFrameKey = (Math.floor(this.animTimer / 5000) % 2 === 1) ? 'shime31' : 'sit';
             } else if (this.charName === 'foxy') {
                 this.stateTimer -= dt;
                 if (this.stateTimer <= 0) {
-                    this.stateTimer = Math.random() * 4000 + 2500;
+                    this.stateTimer = Math.random() * 7000 + 5000;
                     const r = Math.random();
-                    if (r < 0.35) {
+                    if (r < 0.40) {
                         this.specialAction = 'HOOK_SWING';
-                        this.specialTimer = Math.random() * 1600 + 1100;
+                        this.animTimer = 0;
+                        this.specialTimer = Math.random() * 2500 + 3000;
                     }
                 }
                 this.animTimer += dt;
-                this.currentFrameKey = (Math.floor(this.animTimer / 2800) % 2 === 1) ? 'shime31' : 'sit';
+                this.currentFrameKey = (Math.floor(this.animTimer / 5000) % 2 === 1) ? 'shime31' : 'sit';
             } else if (this.charName === 'husk') {
                 this.animTimer += dt;
-                this.currentFrameKey = (Math.floor(this.animTimer / 2500) % 2 === 1) ? 'drink' : 'sit';
+                this.currentFrameKey = (Math.floor(this.animTimer / 6000) % 2 === 1) ? 'drink' : 'sit';
             } else if (this.charName === 'fluttershy') {
                 this.animTimer += dt;
-                this.currentFrameKey = (Math.floor(this.animTimer / 3500) % 2 === 1) ? 'sit2' : 'sit';
+                this.currentFrameKey = (Math.floor(this.animTimer / 6000) % 2 === 1) ? 'sit2' : 'sit';
             } else if (this.charName === 'twilight') {
                 this.animTimer += dt;
-                this.currentFrameKey = (Math.floor(this.animTimer / 3000) % 2 === 1) ? 'sit2' : 'sit';
+                this.currentFrameKey = (Math.floor(this.animTimer / 6000) % 2 === 1) ? 'sit2' : 'sit';
             } else {
                 this.currentFrameKey = 'sit';
             }
@@ -6115,75 +6146,88 @@ class ShimejiPet {
 
                 this.stateTimer -= dt;
                 if (this.stateTimer <= 0) {
-                    this.stateTimer = Math.random() * 3500 + 2500;
+                    // Durduğunda uzun ve sakin durur (5-10 saniye)
+                    this.stateTimer = Math.random() * 5000 + 5000;
                     const r = Math.random();
                     if (this.charName === 'vox') {
-                        if (r < 0.22) {
+                        if (r < 0.25) {
                             this.idleVariant = 'idle1';
-                        } else if (r < 0.38) {
+                        } else if (r < 0.50) {
                             this.idleVariant = 'sit';
-                        } else if (r < 0.58) {
+                        } else if (r < 0.72) {
+                            // 🃏 VOX KARTI ELİNDE 5-8 SANİYE TUTAR
                             this.specialAction = 'SHOW_CARD';
-                            this.specialTimer = Math.random() * 2000 + 1400;
-                        } else if (r < 0.76) {
+                            this.animTimer = 0;
+                            this.specialTimer = Math.random() * 3000 + 4500;
+                        } else if (r < 0.88) {
+                            // ⚡ VOX ELEKTRİKLENME
                             this.specialAction = 'ELECTRIC_GLITCH';
-                            this.specialTimer = Math.random() * 1500 + 1000;
-                        } else if (r < 0.90) {
-                            this.specialAction = 'SPIN_HEAD';
-                            this.specialTimer = Math.random() * 1200 + 800;
+                            this.animTimer = 0;
+                            this.specialTimer = Math.random() * 1500 + 1200;
                         } else {
-                            this.idleVariant = 'shime31';
+                            // 🔄 VOX TV KAFA DÖNDÜRME
+                            this.specialAction = 'SPIN_HEAD';
+                            this.animTimer = 0;
+                            this.specialTimer = Math.random() * 1500 + 1000;
                         }
                     } else if (this.charName === 'spiderman') {
                         if (r < 0.30) {
                             this.idleVariant = 'idle1';
-                        } else if (r < 0.50) {
+                        } else if (r < 0.55) {
                             this.idleVariant = 'sit';
-                        } else if (r < 0.75) {
+                        } else if (r < 0.78) {
                             this.specialAction = 'SPIDER_CROUCH';
-                            this.specialTimer = Math.random() * 1800 + 1200;
+                            this.animTimer = 0;
+                            this.specialTimer = Math.random() * 3000 + 4000;
                         } else {
                             this.specialAction = 'WEB_SWING';
-                            this.specialTimer = Math.random() * 1600 + 1000;
+                            this.animTimer = 0;
+                            this.specialTimer = Math.random() * 3000 + 3500;
                         }
                     } else if (this.charName === 'alastor') {
                         if (r < 0.28) {
                             this.idleVariant = 'idle1';
-                        } else if (r < 0.46) {
+                        } else if (r < 0.50) {
                             this.idleVariant = 'sit';
-                        } else if (r < 0.68) {
+                        } else if (r < 0.75) {
+                            // 🎙️ ALASTOR RADYO YAYININI 5-8 SANİYE TUTAR
                             this.specialAction = 'RADIO_BROADCAST';
-                            this.specialTimer = Math.random() * 2000 + 1400;
-                        } else if (r < 0.86) {
+                            this.animTimer = 0;
+                            this.specialTimer = Math.random() * 3000 + 4500;
+                        } else if (r < 0.88) {
                             this.specialAction = 'SHADOW_TENTACLES';
-                            this.specialTimer = Math.random() * 1600 + 1000;
+                            this.animTimer = 0;
+                            this.specialTimer = Math.random() * 2000 + 1500;
                         } else {
                             this.specialAction = 'SPIN_CANE';
-                            this.specialTimer = Math.random() * 1300 + 900;
+                            this.animTimer = 0;
+                            this.specialTimer = Math.random() * 1500 + 1000;
                         }
                     } else if (this.charName === 'foxy') {
                         if (r < 0.30) {
                             this.idleVariant = 'idle1';
-                        } else if (r < 0.50) {
+                        } else if (r < 0.55) {
                             this.idleVariant = 'sit';
-                        } else if (r < 0.75) {
+                        } else if (r < 0.78) {
                             this.specialAction = 'JUMPSCARE_CREEP';
-                            this.specialTimer = Math.random() * 1800 + 1200;
+                            this.animTimer = 0;
+                            this.specialTimer = Math.random() * 3000 + 3500;
                         } else {
                             this.specialAction = 'HOOK_SWING';
-                            this.specialTimer = Math.random() * 1500 + 1000;
+                            this.animTimer = 0;
+                            this.specialTimer = Math.random() * 2500 + 3000;
                         }
                     } else if (this.charName === 'fluttershy') {
-                        this.idleVariant = (r < 0.60) ? 'idle1' : 'sit2';
+                        this.idleVariant = (r < 0.50) ? 'idle1' : 'sit2';
                     } else if (this.charName === 'twilight') {
                         this.idleVariant = 'idle1';
                     } else if (this.charName === 'husk') {
-                        if (r < 0.45) this.idleVariant = 'idle1';
-                        else if (r < 0.75) this.idleVariant = 'sit';
+                        if (r < 0.40) this.idleVariant = 'idle1';
+                        else if (r < 0.70) this.idleVariant = 'sit';
                         else if (r < 0.90) this.idleVariant = 'drink';
                         else this.idleVariant = 'idle3';
                     } else {
-                        if (r < 0.60) this.idleVariant = 'idle1';
+                        if (r < 0.50) this.idleVariant = 'idle1';
                         else this.idleVariant = 'sit';
                     }
                 }
@@ -6199,29 +6243,33 @@ class ShimejiPet {
         this.stateTimer -= dt;
         if (this.stateTimer <= 0) {
             const rand = Math.random();
-            if (this.charName === 'vox' && rand < 0.22) {
+            if (this.charName === 'vox' && rand < 0.25) {
                 this.specialAction = Math.random() > 0.5 ? 'SHOW_CARD' : 'THROW_CARD';
-                this.specialTimer = Math.random() * 1800 + 1200;
+                this.animTimer = 0;
+                this.specialTimer = Math.random() * 3000 + 4500; // Uzun süre kart tutar
             } else if (this.charName === 'spiderman' && rand < 0.25) {
                 this.specialAction = Math.random() > 0.5 ? 'SPIDER_CROUCH' : 'WEB_SWING';
-                this.specialTimer = Math.random() * 1800 + 1200;
+                this.animTimer = 0;
+                this.specialTimer = Math.random() * 3000 + 4000;
             } else if (this.charName === 'alastor' && rand < 0.25) {
                 this.specialAction = Math.random() > 0.5 ? 'RADIO_BROADCAST' : 'SHADOW_TENTACLES';
-                this.specialTimer = Math.random() * 1800 + 1200;
+                this.animTimer = 0;
+                this.specialTimer = Math.random() * 3000 + 4500;
             } else if (this.charName === 'foxy' && rand < 0.28) {
                 this.specialAction = Math.random() > 0.5 ? 'JUMPSCARE_CREEP' : 'HOOK_SWING';
-                this.specialTimer = Math.random() * 1700 + 1100;
-            } else if (rand < 0.54) {
+                this.animTimer = 0;
+                this.specialTimer = Math.random() * 2500 + 3500;
+            } else if (rand < 0.50) {
                 this.state = 'WALK_RIGHT';
                 this.facing = 1;
-                this.stateTimer = Math.random() * 3500 + 2000;
-            } else if (rand < 0.74) {
+                this.stateTimer = Math.random() * 4000 + 2500;
+            } else if (rand < 0.72) {
                 this.state = 'WALK_LEFT';
                 this.facing = -1;
-                this.stateTimer = Math.random() * 3500 + 2000;
-            } else if (rand < 0.88) {
+                this.stateTimer = Math.random() * 4000 + 2500;
+            } else if (rand < 0.85) {
                 this.state = 'IDLE';
-                this.stateTimer = Math.random() * 3000 + 2000;
+                this.stateTimer = Math.random() * 5000 + 4000;
                 this.idleVariant = 'idle1';
             } else {
                 this.state = 'SIT';
@@ -6236,7 +6284,7 @@ class ShimejiPet {
                 } else {
                     this.currentFrameKey = 'sit';
                 }
-                this.stateTimer = Math.random() * 5000 + 3000;
+                this.stateTimer = Math.random() * 7000 + 6000; // 6-13 saniye oturup dinlenir
             }
         }
 
