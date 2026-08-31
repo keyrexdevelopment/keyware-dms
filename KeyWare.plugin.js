@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.5.2
+ * @version 6.6.0
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -3084,24 +3084,58 @@ module.exports = class KeyWare {
         document.body.appendChild(backdrop);
     }
 
+    showToast(msg, type = "info") {
+        if (BdApi.UI && typeof BdApi.UI.showToast === 'function') {
+            BdApi.UI.showToast(msg, { type });
+        } else if (typeof BdApi.showToast === 'function') {
+            BdApi.showToast(msg, { type });
+        }
+    }
+
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.5.2";
-            const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
+            const currentVersion = "6.6.0";
+            let remoteVersion = null;
+            let remoteContent = null;
 
-            const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
-            if (!response.ok) {
-                if (manual && BdApi.UI && typeof BdApi.UI.showToast === 'function') {
-                    BdApi.UI.showToast("Güncelleme sunucusuna ulaşılamadı.", { type: "error" });
+            // 1. GitHub API ile son commit SHA'sını al (Fastly/Raw CDN önbelleğini 0 saniyede deler)
+            try {
+                const apiRes = await fetch("https://api.github.com/repos/keyrexdevelopment/keyware-dms/commits/main", {
+                    headers: { 'User-Agent': 'KeyWare-BetterDiscord' }
+                });
+                if (apiRes.ok) {
+                    const apiData = await apiRes.json();
+                    if (apiData && apiData.sha) {
+                        const directUrl = `https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/${apiData.sha}/KeyWare.plugin.js`;
+                        const rawRes = await fetch(directUrl);
+                        if (rawRes.ok) {
+                            remoteContent = await rawRes.text();
+                            const match = remoteContent.match(/@version\s+([0-9.]+)/i);
+                            if (match && match[1]) remoteVersion = match[1];
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn("[KeyWare] GitHub API check fallback:", e);
+            }
+
+            // 2. Eğer API ulaşılamazsa standart URL'e dön
+            if (!remoteVersion || !remoteContent) {
+                const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
+                const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
+                if (response.ok) {
+                    remoteContent = await response.text();
+                    const match = remoteContent.match(/@version\s+([0-9.]+)/i);
+                    if (match && match[1]) remoteVersion = match[1];
+                }
+            }
+
+            if (!remoteVersion || !remoteContent) {
+                if (manual) {
+                    this.showToast("Güncelleme sunucusuna ulaşılamadı.", "error");
                 }
                 return;
             }
-
-            const remoteContent = await response.text();
-            const match = remoteContent.match(/@version\s+([0-9.]+)/i);
-            if (!match || !match[1]) return;
-
-            const remoteVersion = match[1];
 
             const isNewer = (remote, current) => {
                 const rParts = remote.split('.').map(Number);
@@ -3133,14 +3167,10 @@ module.exports = class KeyWare {
 
                         fs.writeFileSync(targetFile, remoteContent, 'utf8');
 
-                        if (BdApi.UI && typeof BdApi.UI.showToast === 'function') {
-                            BdApi.UI.showToast(`KeyWare v${remoteVersion} başarıyla güncellendi!`, { type: "success" });
-                        }
+                        this.showToast(`KeyWare v${remoteVersion} başarıyla güncellendi!`, "success");
                     } catch (err) {
                         console.error("[KeyWare] Update write error:", err);
-                        if (BdApi.UI && typeof BdApi.UI.showToast === 'function') {
-                            BdApi.UI.showToast("KeyWare güncellenirken bir hata oluştu.", { type: "error" });
-                        }
+                        this.showToast("KeyWare güncellenirken bir hata oluştu.", "error");
                     }
                 };
 
@@ -3160,11 +3190,35 @@ module.exports = class KeyWare {
                             ]
                         }
                     );
+                } else if (typeof BdApi.showNotice === 'function') {
+                    BdApi.showNotice(
+                        `KeyWare için yeni bir güncelleme mevcut (v${remoteVersion})!`,
+                        {
+                            type: "info",
+                            buttons: [
+                                {
+                                    label: "Şimdi Güncelle",
+                                    onClick: (closeNotice) => {
+                                        updatePlugin();
+                                        if (typeof closeNotice === 'function') closeNotice();
+                                    }
+                                }
+                            ]
+                        }
+                    );
+                } else if (BdApi.UI && typeof BdApi.UI.showConfirmationModal === 'function') {
+                    BdApi.UI.showConfirmationModal(
+                        "KeyWare Güncellemesi Mevcut",
+                        `KeyWare için yeni bir sürüm yayınlandı (v${remoteVersion}). Şimdi otomatik olarak güncellemek ister misiniz?`,
+                        {
+                            confirmText: "Şimdi Güncelle",
+                            cancelText: "Daha Sonra",
+                            onConfirm: updatePlugin
+                        }
+                    );
                 }
             } else if (manual) {
-                if (BdApi.UI && typeof BdApi.UI.showToast === 'function') {
-                    BdApi.UI.showToast(`KeyWare zaten güncel (v${currentVersion})`, { type: "info" });
-                }
+                this.showToast(`KeyWare zaten güncel (v${currentVersion})`, "info");
             }
         } catch (e) {
             console.warn("[KeyWare] Update check failed:", e);
@@ -3172,7 +3226,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.5.2";
+        const currentVersion = "6.6.0";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3191,7 +3245,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.5.2</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.6.0</div>
                         </div>
                     </div>
                 </div>
