@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "name": "twilight sparkle pibby",
+  "nameSlug": "twilight-sparkle-pibby",
+  "category": "uma Twilight e foi grite",
+  "categorySlug": "uma-twilight-e-foi-grite",
+  "description": "",
+  "bundleVersion": 1,
+  "minAppVersion": 94,
+  "levels": 5,
+  "origin": "LOCAL",
+  "animationSchema": {
+    "path": "animation.json",
+    "schemaId": "pc_import_v1",
+    "version": 1
+  },
+  "sprites": {
+    "type": "SEQUENCE",
+    "basePath": "sprites/",
+    "filePattern": "%04d.webp",
+    "spriteCount": 45,
+    "size": [
+      512,
+      512
+    ]
+  },
+  "preview": {
+    "thumbnail": "thumbnail.webp"
+  },
+  "author": {
+    "name": "Local Creator"
+  },
+  "license": {
+    "type": "CUSTOM",
+    "text": "Exported from Shimeji",
+    "attribution": "Local Creator"
+  }
+}

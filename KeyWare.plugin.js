@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.5.1
+ * @version 6.5.2
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -3086,7 +3086,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.5.1";
+            const currentVersion = "6.5.2";
             const updateUrl = "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js";
 
             const response = await fetch(`${updateUrl}?_t=${Date.now()}`);
@@ -3172,7 +3172,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.5.1";
+        const currentVersion = "6.5.2";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3191,7 +3191,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.5.1</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.5.2</div>
                         </div>
                     </div>
                 </div>
@@ -4607,14 +4607,13 @@ class ShimejiPet {
                     this.stateTimer = Math.random() * 3500 + 2500;
                     const r = Math.random();
                     if (this.charName === 'fluttershy') {
-                        if (r < 0.40) this.idleVariant = 'idle1';
-                        else if (r < 0.65) this.idleVariant = 'sit';
-                        else if (r < 0.85) this.idleVariant = 'sleep';
+                        if (r < 0.50) this.idleVariant = 'idle1';
+                        else if (r < 0.80) this.idleVariant = 'sit';
                         else this.idleVariant = 'wave1';
                     } else if (this.charName === 'husk') {
                         if (r < 0.45) this.idleVariant = 'idle1';
-                        else if (r < 0.70) this.idleVariant = 'sit';
-                        else if (r < 0.85) this.idleVariant = 'drink';
+                        else if (r < 0.75) this.idleVariant = 'sit';
+                        else if (r < 0.90) this.idleVariant = 'drink';
                         else this.idleVariant = 'idle3';
                     } else {
                         if (r < 0.60) this.idleVariant = 'idle1';
@@ -4648,7 +4647,7 @@ class ShimejiPet {
             } else {
                 this.state = 'SIT';
                 if (this.charName === 'fluttershy') {
-                    this.currentFrameKey = Math.random() > 0.5 ? 'sleep' : 'sit';
+                    this.currentFrameKey = Math.random() > 0.5 ? 'sit2' : 'sit';
                 } else if (this.charName === 'husk') {
                     this.currentFrameKey = Math.random() > 0.5 ? 'drink' : 'sit';
                 } else {
@@ -4688,7 +4687,7 @@ class ShimejiPet {
             this.currentFrameKey = this.idleVariant;
         } else if (this.state === 'SIT') {
             this.y = floorY;
-            this.currentFrameKey = this.currentFrameKey === 'drink' ? 'drink' : this.currentFrameKey === 'sleep' ? 'sleep' : 'sit';
+            this.currentFrameKey = this.currentFrameKey === 'drink' ? 'drink' : this.currentFrameKey === 'sit2' ? 'sit2' : 'sit';
         }
 
         this.updateStyle();
