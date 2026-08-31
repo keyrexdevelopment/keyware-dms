@@ -43,8 +43,12 @@
 - **Granular Sound Binding:** Assign custom local `.mp3` files, soundboard sounds, or direct HTTP audio streams to individual users or group chats.
 - **Base64 Inline Decoder:** Native conversion of local files to Base64 data URIs to bypass strict client file protocol restrictions.
 
-#### `[03]` Shimeji Desktop Mascots Engine (Dante & Vergil)
-- **Interactive Screen Pets:** Spawn Dante and Vergil directly inside your Discord window with real-time sprite animation and physics.
+#### `[03]` Shimeji Desktop Mascots Engine (3 Universes • 6 Mascots)
+- **Interactive Screen Pets (Grouped by Universe):** 
+  - ⚔️ **Devil May Cry Evreni:** Dante & Vergil
+  - 🎙️ **Hazbin Hotel Evreni:** Husk & Vox (TV Demon)
+  - 🦄 **My Little Pony & Pibby Evreni:** Fluttershy & Twilight Glitch
+- **Real-Time Physics & Animations:** Mouse cursor tracking, screen climbing, dragging & tossing physics with customizable scale and aura glow effects.
 - **Mouse Cursor Tracking:** Karakterler fare imlecinizin peşinden koşar, yanınıza gelir ve oturur.
 - **Drag & Toss Physics:** Grab pets with left-click, swing them around, and throw them with momentum and bounce collisions.
 - **Modes & Scaling:** Fareyi Takip Et, Serbest Gezinti, Sakin Otur modları ve dinamik boyut ölçekleme.
