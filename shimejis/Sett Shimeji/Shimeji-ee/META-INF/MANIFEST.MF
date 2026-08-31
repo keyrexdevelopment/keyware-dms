@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.9.7
+Created-By: 1.8.0_111-b14 (Oracle Corporation)
+Main-Class: com.group_finity.mascot.Main
+Class-Path: ./ img/ conf/ ./lib/jna.jar ./lib/examples.jar ./lib/Absol
+ uteLayout.jar ./lib/nimrodlf.jar
+

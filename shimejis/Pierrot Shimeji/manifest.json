@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "name": "Pierrot..",
+  "nameSlug": "pierrot",
+  "category": "personaje",
+  "categorySlug": "personaje",
+  "description": "El personaje más obsesionado de the freak circus el te ama perdidamente y estará en tu pantalla todo el tiempo observándote",
+  "bundleVersion": 1,
+  "minAppVersion": 94,
+  "levels": 4,
+  "origin": "LOCAL",
+  "animationSchema": {
+    "path": "animation.json",
+    "schemaId": "legacy_default_v1",
+    "version": 1
+  },
+  "sprites": {
+    "type": "SEQUENCE",
+    "basePath": "sprites/",
+    "filePattern": "%04d.webp",
+    "spriteCount": 63,
+    "size": [
+      512,
+      512
+    ]
+  },
+  "preview": {
+    "thumbnail": "thumbnail.webp"
+  },
+  "author": {
+    "name": "Local Creator"
+  },
+  "license": {
+    "type": "CUSTOM",
+    "text": "Exported from Shimeji",
+    "attribution": "Local Creator"
+  }
+}
