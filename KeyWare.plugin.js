@@ -5460,6 +5460,8 @@ class ShimejiPet {
         this.lastDragMouseX = undefined;
         this.dragHistory = [];
         this.currentFrameKey = 'idle1';
+        this.specialAction = null;
+        this.specialTimer = 0;
 
         this.lastDrawnFrameKey = null;
         this.lastDrawnFacing = null;
@@ -5536,8 +5538,9 @@ class ShimejiPet {
         const speed = (this.manager.shimejiSettings.speed || 3.0) * timeStep;
         const mode = this.manager.shimejiSettings.mode || 'follow';
 
-        // 1. FARE İLE TUTULMA / SÜRÜKLEME (DRAGGED) - Götürülen yöne anında bakar
+        // 1. FARE İLE TUTULMA / SÜRÜKLEME (DRAGGED)
         if (this.isDragged) {
+            this.specialAction = null;
             const curMouseX = (typeof this.manager.mouseX === 'number' && !isNaN(this.manager.mouseX)) ? this.manager.mouseX : (window.innerWidth / 2);
             const curMouseY = (typeof this.manager.mouseY === 'number' && !isNaN(this.manager.mouseY)) ? this.manager.mouseY : (window.innerHeight / 2);
 
@@ -5578,8 +5581,9 @@ class ShimejiPet {
             this.lastDragMouseX = undefined;
         }
 
-        // 2. DÜŞME & FIRLATILMA FİZİĞİ (FALLING & GRAVITY) - FPS'ten bağımsız pürüzsüz fizik
+        // 2. DÜŞME & FIRLATILMA FİZİĞİ (FALLING & GRAVITY)
         if (this.state === 'FALLING') {
+            this.specialAction = null;
             const gravitySetting = this.manager.shimejiSettings.gravity !== undefined ? this.manager.shimejiSettings.gravity : 0.6;
             const gravity = gravitySetting * timeStep;
             this.vy += gravity;
@@ -5614,13 +5618,55 @@ class ShimejiPet {
             return;
         }
 
+        // VOX ÖZEL ANİMASYONLARI (Elektrik Kıvılcımları & Glitch / TV Kafa Döndürme)
+        if (this.charName === 'vox' && this.specialAction) {
+            this.specialTimer -= dt;
+            this.animTimer += dt;
+            this.y = floorY;
+
+            if (this.specialAction === 'ELECTRIC_GLITCH') {
+                const glitchFrames = ['shime42', 'shime43', 'shime44', 'shime45', 'shime46', 'shime42', 'shime45', 'shime44'];
+                const gIdx = Math.floor((this.animTimer / 75) % glitchFrames.length);
+                this.currentFrameKey = glitchFrames[gIdx];
+            } else if (this.specialAction === 'SPIN_HEAD') {
+                const spinFrames = ['shime26', 'shime15', 'shime27', 'shime16', 'shime28', 'shime17', 'shime29', 'shime11'];
+                const sIdx = Math.floor((this.animTimer / 85) % spinFrames.length);
+                this.currentFrameKey = spinFrames[sIdx];
+            }
+
+            if (this.specialTimer <= 0) {
+                this.specialAction = null;
+                this.idleVariant = 'idle1';
+                this.stateTimer = Math.random() * 3000 + 2000;
+            }
+
+            this.updateStyle();
+            this.draw();
+            return;
+        }
+
         // 3. OTURMA & DİNLENME MODU (SIT)
         if (mode === 'sit') {
             this.y = floorY;
             const validMX = (typeof this.manager.mouseX === 'number' && !isNaN(this.manager.mouseX)) ? this.manager.mouseX : (window.innerWidth / 2);
             this.facing = validMX > (this.x + width / 2) ? 1 : -1;
             
-            if (this.charName === 'husk') {
+            if (this.charName === 'vox') {
+                this.stateTimer -= dt;
+                if (this.stateTimer <= 0) {
+                    this.stateTimer = Math.random() * 4000 + 2500;
+                    const r = Math.random();
+                    if (r < 0.25) {
+                        this.specialAction = 'ELECTRIC_GLITCH';
+                        this.specialTimer = Math.random() * 1400 + 900;
+                    } else if (r < 0.50) {
+                        this.specialAction = 'SPIN_HEAD';
+                        this.specialTimer = Math.random() * 1200 + 800;
+                    }
+                }
+                this.animTimer += dt;
+                this.currentFrameKey = (Math.floor(this.animTimer / 3000) % 2 === 1) ? 'shime31' : 'sit';
+            } else if (this.charName === 'husk' || this.charName === 'vox') {
                 this.animTimer += dt;
                 this.currentFrameKey = (Math.floor(this.animTimer / 2500) % 2 === 1) ? 'drink' : 'sit';
             } else if (this.charName === 'fluttershy') {
@@ -5673,14 +5719,30 @@ class ShimejiPet {
                 this.currentFrameKey = walkCycle[stepIndex];
             } else {
                 const validMX = (typeof this.manager.mouseX === 'number' && !isNaN(this.manager.mouseX)) ? this.manager.mouseX : (window.innerWidth / 2);
-            this.facing = validMX > (this.x + width / 2) ? 1 : -1;
+                this.facing = validMX > (this.x + width / 2) ? 1 : -1;
                 this.state = 'IDLE';
 
                 this.stateTimer -= dt;
                 if (this.stateTimer <= 0) {
                     this.stateTimer = Math.random() * 3500 + 2500;
                     const r = Math.random();
-                    if (this.charName === 'fluttershy') {
+                    if (this.charName === 'vox') {
+                        if (r < 0.28) {
+                            this.idleVariant = 'idle1';
+                        } else if (r < 0.46) {
+                            this.idleVariant = 'sit';
+                        } else if (r < 0.72) {
+                            // ⚡ VOX ELEKTRİKLENME & GLITCH KIVILCIMI!
+                            this.specialAction = 'ELECTRIC_GLITCH';
+                            this.specialTimer = Math.random() * 1500 + 1000;
+                        } else if (r < 0.88) {
+                            // 🔄 VOX TV KAFA DÖNDÜRME!
+                            this.specialAction = 'SPIN_HEAD';
+                            this.specialTimer = Math.random() * 1200 + 800;
+                        } else {
+                            this.idleVariant = 'shime31';
+                        }
+                    } else if (this.charName === 'fluttershy') {
                         this.idleVariant = (r < 0.60) ? 'idle1' : 'sit2';
                     } else if (this.charName === 'twilight') {
                         this.idleVariant = 'idle1';
@@ -5706,7 +5768,11 @@ class ShimejiPet {
         this.stateTimer -= dt;
         if (this.stateTimer <= 0) {
             const rand = Math.random();
-            if (rand < 0.38) {
+            if (this.charName === 'vox' && rand < 0.25) {
+                // ⚡ Serbest gezintide ara sıra durup elektriklensin!
+                this.specialAction = 'ELECTRIC_GLITCH';
+                this.specialTimer = Math.random() * 1500 + 1000;
+            } else if (rand < 0.38) {
                 this.state = 'WALK_RIGHT';
                 this.facing = 1;
                 this.stateTimer = Math.random() * 3500 + 2000;
@@ -5720,7 +5786,9 @@ class ShimejiPet {
                 this.idleVariant = 'idle1';
             } else {
                 this.state = 'SIT';
-                if (this.charName === 'fluttershy') {
+                if (this.charName === 'vox') {
+                    this.currentFrameKey = Math.random() > 0.5 ? 'shime31' : 'sit';
+                } else if (this.charName === 'fluttershy') {
                     this.currentFrameKey = Math.random() > 0.5 ? 'sit2' : 'sit';
                 } else if (this.charName === 'twilight') {
                     this.currentFrameKey = Math.random() > 0.5 ? 'sit2' : 'sit';
@@ -5765,7 +5833,7 @@ class ShimejiPet {
             this.currentFrameKey = this.idleVariant;
         } else if (this.state === 'SIT') {
             this.y = floorY;
-            this.currentFrameKey = this.currentFrameKey === 'drink' ? 'drink' : this.currentFrameKey === 'sit2' ? 'sit2' : 'sit';
+            this.currentFrameKey = this.currentFrameKey === 'drink' ? 'drink' : this.currentFrameKey === 'sit2' ? 'sit2' : this.currentFrameKey === 'shime31' ? 'shime31' : 'sit';
         }
 
         this.updateStyle();
@@ -5831,13 +5899,32 @@ class ShimejiPet {
 
     updateStyle() {
         const scale = this.manager.shimejiSettings.scale || 0.65;
-        const glow = this.manager.shimejiSettings.glowColor || '#e23636';
+        const glow = this.manager.shimejiSettings.glowColor || (this.charName === 'vox' ? '#00d2d3' : '#e23636');
         const w = 256 * scale;
         const h = 256 * scale;
         this.element.style.width = w + 'px';
         this.element.style.height = h + 'px';
         this.canvas.style.width = w + 'px';
         this.canvas.style.height = h + 'px';
+
+        // VOX ÖZEL ELEKTRİK & GLITCH EFEKTLERİ
+        if (this.charName === 'vox' && this.specialAction === 'ELECTRIC_GLITCH') {
+            const jitterX = (Math.random() * 8 - 4);
+            const jitterY = (Math.random() * 6 - 3);
+            const skew = (Math.random() * 12 - 6);
+            this.element.style.transform = 'translate3d(' + Math.round(this.x + jitterX) + 'px, ' + Math.round(this.y + jitterY) + 'px, 0) skewX(' + skew.toFixed(1) + 'deg)';
+            const sparkColor = Math.random() > 0.4 ? '#00d2d3' : '#5865f2';
+            this.canvas.style.filter = `drop-shadow(0 0 16px ${sparkColor}) drop-shadow(0 0 32px #00d2d3) brightness(1.35) contrast(1.25)`;
+            return;
+        }
+
+        if (this.charName === 'vox' && this.specialAction === 'SPIN_HEAD') {
+            const jitterX = (Math.random() * 3 - 1.5);
+            this.element.style.transform = 'translate3d(' + Math.round(this.x + jitterX) + 'px, ' + Math.round(this.y) + 'px, 0)';
+            this.canvas.style.filter = 'drop-shadow(0 0 12px #00d2d3) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5))';
+            return;
+        }
+
         this.element.style.transform = 'translate3d(' + Math.round(this.x) + 'px, ' + Math.round(this.y) + 'px, 0)';
 
         // YALNIZCA FARE İLE TUTULDUĞUNDA VEYA ÜZERİNE GELİNDİĞİNDE AURA ÇIKAR:
