@@ -5466,7 +5466,7 @@ class ShimejiPet {
         this.lastDrawnFrameKey = null;
         this.lastDrawnFacing = null;
 
-        const displayName = charName === 'vergil' ? 'Vergil' : charName === 'husk' ? 'Husk' : charName === 'fluttershy' ? 'Fluttershy' : charName === 'twilight' ? 'Twilight (Glitch)' : 'Dante';
+        const displayName = charName === 'vergil' ? 'Vergil' : charName === 'husk' ? 'Husk' : charName === 'vox' ? 'Vox' : charName === 'fluttershy' ? 'Fluttershy' : charName === 'twilight' ? 'Twilight (Glitch)' : 'Dante';
         this.element = document.createElement('div');
         this.element.className = 'dm-cat-shimeji';
         this.element.title = `${displayName} Shimeji (Tıkla & Sürükle / Sağ Tıkla)`;
@@ -5618,17 +5618,29 @@ class ShimejiPet {
             return;
         }
 
-        // VOX ÖZEL ANİMASYONLARI (Elektrik Kıvılcımları & Glitch / TV Kafa Döndürme)
+        // VOX ÖZEL ANİMASYONLARI (Kart Çıkarma, Fırlatma, Elektriklenme & TV Kafa Döndürme)
         if (this.charName === 'vox' && this.specialAction) {
             this.specialTimer -= dt;
             this.animTimer += dt;
             this.y = floorY;
 
-            if (this.specialAction === 'ELECTRIC_GLITCH') {
+            if (this.specialAction === 'SHOW_CARD') {
+                // Kart Çıkarma & Gösterme
+                const cardFrames = ['shime38', 'shime39', 'shime40', 'shime41', 'shime39', 'shime41'];
+                const cIdx = Math.floor((this.animTimer / 180) % cardFrames.length);
+                this.currentFrameKey = cardFrames[cIdx];
+            } else if (this.specialAction === 'THROW_CARD') {
+                // Kart Fırlatma
+                const throwFrames = ['shime34', 'shime35', 'shime36', 'shime37', 'shime37'];
+                const tIdx = Math.floor((this.animTimer / 150) % throwFrames.length);
+                this.currentFrameKey = throwFrames[tIdx];
+            } else if (this.specialAction === 'ELECTRIC_GLITCH') {
+                // Elektriklenme
                 const glitchFrames = ['shime42', 'shime43', 'shime44', 'shime45', 'shime46', 'shime42', 'shime45', 'shime44'];
                 const gIdx = Math.floor((this.animTimer / 75) % glitchFrames.length);
                 this.currentFrameKey = glitchFrames[gIdx];
             } else if (this.specialAction === 'SPIN_HEAD') {
+                // TV Kafa Döndürme
                 const spinFrames = ['shime26', 'shime15', 'shime27', 'shime16', 'shime28', 'shime17', 'shime29', 'shime11'];
                 const sIdx = Math.floor((this.animTimer / 85) % spinFrames.length);
                 this.currentFrameKey = spinFrames[sIdx];
@@ -5656,17 +5668,20 @@ class ShimejiPet {
                 if (this.stateTimer <= 0) {
                     this.stateTimer = Math.random() * 4000 + 2500;
                     const r = Math.random();
-                    if (r < 0.25) {
+                    if (r < 0.22) {
+                        this.specialAction = 'SHOW_CARD';
+                        this.specialTimer = Math.random() * 1800 + 1200;
+                    } else if (r < 0.44) {
                         this.specialAction = 'ELECTRIC_GLITCH';
                         this.specialTimer = Math.random() * 1400 + 900;
-                    } else if (r < 0.50) {
+                    } else if (r < 0.66) {
                         this.specialAction = 'SPIN_HEAD';
                         this.specialTimer = Math.random() * 1200 + 800;
                     }
                 }
                 this.animTimer += dt;
                 this.currentFrameKey = (Math.floor(this.animTimer / 3000) % 2 === 1) ? 'shime31' : 'sit';
-            } else if (this.charName === 'husk' || this.charName === 'vox') {
+            } else if (this.charName === 'husk') {
                 this.animTimer += dt;
                 this.currentFrameKey = (Math.floor(this.animTimer / 2500) % 2 === 1) ? 'drink' : 'sit';
             } else if (this.charName === 'fluttershy') {
@@ -5727,15 +5742,19 @@ class ShimejiPet {
                     this.stateTimer = Math.random() * 3500 + 2500;
                     const r = Math.random();
                     if (this.charName === 'vox') {
-                        if (r < 0.28) {
+                        if (r < 0.22) {
                             this.idleVariant = 'idle1';
-                        } else if (r < 0.46) {
+                        } else if (r < 0.38) {
                             this.idleVariant = 'sit';
-                        } else if (r < 0.72) {
-                            // ⚡ VOX ELEKTRİKLENME & GLITCH KIVILCIMI!
+                        } else if (r < 0.58) {
+                            // 🃏 VOX KART ÇIKARMA & GÖSTERME!
+                            this.specialAction = 'SHOW_CARD';
+                            this.specialTimer = Math.random() * 2000 + 1400;
+                        } else if (r < 0.76) {
+                            // ⚡ VOX ELEKTRİKLENME!
                             this.specialAction = 'ELECTRIC_GLITCH';
                             this.specialTimer = Math.random() * 1500 + 1000;
-                        } else if (r < 0.88) {
+                        } else if (r < 0.90) {
                             // 🔄 VOX TV KAFA DÖNDÜRME!
                             this.specialAction = 'SPIN_HEAD';
                             this.specialTimer = Math.random() * 1200 + 800;
@@ -5768,15 +5787,19 @@ class ShimejiPet {
         this.stateTimer -= dt;
         if (this.stateTimer <= 0) {
             const rand = Math.random();
-            if (this.charName === 'vox' && rand < 0.25) {
-                // ⚡ Serbest gezintide ara sıra durup elektriklensin!
+            if (this.charName === 'vox' && rand < 0.22) {
+                // 🃏 Serbest gezintide durup kart çıkarsın veya fırlatsın!
+                this.specialAction = Math.random() > 0.5 ? 'SHOW_CARD' : 'THROW_CARD';
+                this.specialTimer = Math.random() * 1800 + 1200;
+            } else if (this.charName === 'vox' && rand < 0.38) {
+                // ⚡ Serbest gezintide durup elektriklensin!
                 this.specialAction = 'ELECTRIC_GLITCH';
                 this.specialTimer = Math.random() * 1500 + 1000;
-            } else if (rand < 0.38) {
+            } else if (rand < 0.54) {
                 this.state = 'WALK_RIGHT';
                 this.facing = 1;
                 this.stateTimer = Math.random() * 3500 + 2000;
-            } else if (rand < 0.76) {
+            } else if (rand < 0.74) {
                 this.state = 'WALK_LEFT';
                 this.facing = -1;
                 this.stateTimer = Math.random() * 3500 + 2000;
