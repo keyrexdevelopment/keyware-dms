@@ -1,7 +1,7 @@
 /**
  * @name KeyWare
  * @author keyrex
- * @version 6.7.0
+ * @version 6.7.1
  * @description Direkt mesajları kategorilere ayırın, sürükle-bırak ile organize edin. Kişilere özel MP3 ve Soundboard bildirim sesi, Dante & Vergil Shimeji evcil hayvanları, okunmamış mesaj sayacı, özel yazı tipi ve partikül yağmuru içerir.
  * @source https://github.com/keyrexdevelopment/keyware-dms
  * @updateUrl https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js
@@ -3094,7 +3094,7 @@ module.exports = class KeyWare {
 
     async checkForUpdates(manual = false) {
         try {
-            const currentVersion = "6.7.0";
+            const currentVersion = "6.7.1";
             let remoteVersion = null;
             let remoteContent = null;
 
@@ -3226,7 +3226,7 @@ module.exports = class KeyWare {
     }
 
     checkChangelog() {
-        const currentVersion = "6.7.0";
+        const currentVersion = "6.7.1";
         const lastVersion = BdApi.Data.load(this.pluginName, "lastVersion");
         if (lastVersion !== currentVersion) {
             BdApi.Data.save(this.pluginName, "lastVersion", currentVersion);
@@ -3245,7 +3245,7 @@ module.exports = class KeyWare {
                         <span style="font-size: 22px;">🎉</span>
                         <div>
                             <div style="font-size: 16px; font-weight: 700; color: #fff;">KeyWare Güncellendi!</div>
-                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.7.0</div>
+                            <div style="font-size: 12px; color: var(--brand-500, #5865f2); font-weight: 600;">Sürüm v6.7.1</div>
                         </div>
                     </div>
                 </div>
@@ -3996,57 +3996,62 @@ module.exports = class KeyWare {
                         <label class="dm-cat-setting-label">Karakter Seçimi</label>
                         <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;">
                             <!-- Dante Card -->
-                            <div class="dm-shimeji-char-card ${selectedCharacter === 'dante' ? 'active' : ''}" data-char="dante" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 5px; padding: 6px 3px; background: ${selectedCharacter === 'dante' ? 'rgba(226, 54, 54, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedCharacter === 'dante' ? '#e23636' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
-                                <div style="width: 44px; height: 44px; flex-shrink: 0; background: rgba(0,0,0,0.35); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                                    <img src="${danteSitImg}" style="width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));" alt="Dante" />
+                            <div class="dm-shimeji-char-card ${selectedCharacter === 'dante' ? 'active' : ''}" data-char="dante" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 8px 3px; background: ${selectedCharacter === 'dante' ? 'rgba(226, 54, 54, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedCharacter === 'dante' ? '#e23636' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <div style="width: 46px; height: 46px; flex-shrink: 0; background: rgba(0,0,0,0.35); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                                    <img src="${danteSitImg}" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));" alt="Dante" />
                                 </div>
-                                <div style="display: flex; flex-direction: column; gap: 1px;">
-                                    <div style="font-size: 11px; font-weight: 700; color: #fff;">Dante</div>
-                                    <div style="font-size: 9px; color: var(--text-muted, #949ba4);">Avcı</div>
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%;">
+                                    <div style="font-size: 12px; font-weight: 700; color: #fff;">Dante</div>
+                                    <span style="font-size: 8px; padding: 1px 4px; border-radius: 3px; background: #e23636; color: #fff; font-weight: 700; letter-spacing: 0.5px;">DMC</span>
+                                    <div style="font-size: 9px; color: var(--text-muted, #949ba4); margin-top: 1px;">Kırmızı Avcı</div>
                                 </div>
                             </div>
 
                             <!-- Vergil Card -->
-                            <div class="dm-shimeji-char-card ${selectedCharacter === 'vergil' ? 'active' : ''}" data-char="vergil" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 5px; padding: 6px 3px; background: ${selectedCharacter === 'vergil' ? 'rgba(88, 101, 242, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedCharacter === 'vergil' ? '#5865f2' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
-                                <div style="width: 44px; height: 44px; flex-shrink: 0; background: rgba(0,0,0,0.35); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                                    <img src="${vergilSitImg}" style="width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));" alt="Vergil" />
+                            <div class="dm-shimeji-char-card ${selectedCharacter === 'vergil' ? 'active' : ''}" data-char="vergil" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 8px 3px; background: ${selectedCharacter === 'vergil' ? 'rgba(88, 101, 242, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedCharacter === 'vergil' ? '#5865f2' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <div style="width: 46px; height: 46px; flex-shrink: 0; background: rgba(0,0,0,0.35); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                                    <img src="${vergilSitImg}" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));" alt="Vergil" />
                                 </div>
-                                <div style="display: flex; flex-direction: column; gap: 1px;">
-                                    <div style="font-size: 11px; font-weight: 700; color: #fff;">Vergil</div>
-                                    <div style="font-size: 9px; color: var(--text-muted, #949ba4);">Yamato</div>
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%;">
+                                    <div style="font-size: 12px; font-weight: 700; color: #fff;">Vergil</div>
+                                    <span style="font-size: 8px; padding: 1px 4px; border-radius: 3px; background: #5865f2; color: #fff; font-weight: 700; letter-spacing: 0.5px;">DMC</span>
+                                    <div style="font-size: 9px; color: var(--text-muted, #949ba4); margin-top: 1px;">Yamato</div>
                                 </div>
                             </div>
 
                             <!-- Husk Card -->
-                            <div class="dm-shimeji-char-card ${selectedCharacter === 'husk' ? 'active' : ''}" data-char="husk" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 5px; padding: 6px 3px; background: ${selectedCharacter === 'husk' ? 'rgba(231, 76, 60, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedCharacter === 'husk' ? '#e74c3c' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
-                                <div style="width: 44px; height: 44px; flex-shrink: 0; background: rgba(0,0,0,0.35); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                                    <img src="${huskSitImg}" style="width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));" alt="Husk" />
+                            <div class="dm-shimeji-char-card ${selectedCharacter === 'husk' ? 'active' : ''}" data-char="husk" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 8px 3px; background: ${selectedCharacter === 'husk' ? 'rgba(231, 76, 60, 0.15)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedCharacter === 'husk' ? '#e74c3c' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <div style="width: 46px; height: 46px; flex-shrink: 0; background: rgba(0,0,0,0.35); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                                    <img src="${huskSitImg}" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));" alt="Husk" />
                                 </div>
-                                <div style="display: flex; flex-direction: column; gap: 1px;">
-                                    <div style="font-size: 11px; font-weight: 700; color: #fff;">Husk</div>
-                                    <div style="font-size: 9px; color: var(--text-muted, #949ba4);">Kumarcı</div>
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%;">
+                                    <div style="font-size: 12px; font-weight: 700; color: #fff;">Husk</div>
+                                    <span style="font-size: 8px; padding: 1px 4px; border-radius: 3px; background: #e74c3c; color: #fff; font-weight: 700; letter-spacing: 0.5px;">HAZBIN</span>
+                                    <div style="font-size: 9px; color: var(--text-muted, #949ba4); margin-top: 1px;">Kumarcı</div>
                                 </div>
                             </div>
 
                             <!-- Fluttershy Card -->
-                            <div class="dm-shimeji-char-card ${selectedCharacter === 'fluttershy' ? 'active' : ''}" data-char="fluttershy" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 5px; padding: 6px 3px; background: ${selectedCharacter === 'fluttershy' ? 'rgba(255, 182, 193, 0.2)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedCharacter === 'fluttershy' ? '#ff9ff3' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
-                                <div style="width: 44px; height: 44px; flex-shrink: 0; background: rgba(0,0,0,0.35); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                                    <img src="${flutterSitImg}" style="width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));" alt="Fluttershy" />
+                            <div class="dm-shimeji-char-card ${selectedCharacter === 'fluttershy' ? 'active' : ''}" data-char="fluttershy" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 8px 3px; background: ${selectedCharacter === 'fluttershy' ? 'rgba(255, 182, 193, 0.2)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedCharacter === 'fluttershy' ? '#ff9ff3' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <div style="width: 46px; height: 46px; flex-shrink: 0; background: rgba(0,0,0,0.35); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                                    <img src="${flutterSitImg}" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));" alt="Fluttershy" />
                                 </div>
-                                <div style="display: flex; flex-direction: column; gap: 1px;">
-                                    <div style="font-size: 11px; font-weight: 700; color: #fff;">Flutter</div>
-                                    <div style="font-size: 9px; color: var(--text-muted, #949ba4);">Sevimli</div>
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%;">
+                                    <div style="font-size: 12px; font-weight: 700; color: #fff;">Flutter</div>
+                                    <span style="font-size: 8px; padding: 1px 4px; border-radius: 3px; background: #ff9ff3; color: #000; font-weight: 700; letter-spacing: 0.5px;">MLP</span>
+                                    <div style="font-size: 9px; color: var(--text-muted, #949ba4); margin-top: 1px;">Sevimli</div>
                                 </div>
                             </div>
 
                             <!-- Twilight (Pibby Glitch) Card -->
-                            <div class="dm-shimeji-char-card ${selectedCharacter === 'twilight' ? 'active' : ''}" data-char="twilight" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 5px; padding: 6px 3px; background: ${selectedCharacter === 'twilight' ? 'rgba(155, 89, 182, 0.25)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedCharacter === 'twilight' ? '#9b59b6' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
-                                <div style="width: 44px; height: 44px; flex-shrink: 0; background: rgba(0,0,0,0.35); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                                    <img src="${twilightSitImg}" style="width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));" alt="Twilight" />
+                            <div class="dm-shimeji-char-card ${selectedCharacter === 'twilight' ? 'active' : ''}" data-char="twilight" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 8px 3px; background: ${selectedCharacter === 'twilight' ? 'rgba(155, 89, 182, 0.25)' : 'var(--background-secondary-alt, #1e1f22)'}; border: 2px solid ${selectedCharacter === 'twilight' ? '#9b59b6' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                                <div style="width: 46px; height: 46px; flex-shrink: 0; background: rgba(0,0,0,0.35); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                                    <img src="${twilightSitImg}" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));" alt="Twilight" />
                                 </div>
-                                <div style="display: flex; flex-direction: column; gap: 1px;">
-                                    <div style="font-size: 11px; font-weight: 700; color: #fff;">Twilight</div>
-                                    <div style="font-size: 9px; color: #9b59b6; font-weight: 700;">GLITCH</div>
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%;">
+                                    <div style="font-size: 12px; font-weight: 700; color: #fff;">Twilight</div>
+                                    <span style="font-size: 8px; padding: 1px 4px; border-radius: 3px; background: #9b59b6; color: #fff; font-weight: 700; letter-spacing: 0.5px;">PIBBY</span>
+                                    <div style="font-size: 9px; color: #9b59b6; font-weight: 700; margin-top: 1px;">Glitch</div>
                                 </div>
                             </div>
                         </div>
@@ -4703,14 +4708,9 @@ class ShimejiPet {
                     this.stateTimer = Math.random() * 3500 + 2500;
                     const r = Math.random();
                     if (this.charName === 'fluttershy') {
-                        if (r < 0.70) this.idleVariant = 'idle1';
-                        else if (r < 0.90) this.idleVariant = 'sit2';
-                        else this.idleVariant = 'wave1';
+                        this.idleVariant = (r < 0.60) ? 'idle1' : 'sit2';
                     } else if (this.charName === 'twilight') {
-                        if (r < 0.50) this.idleVariant = 'idle1';
-                        else if (r < 0.75) this.idleVariant = 'idle2';
-                        else if (r < 0.90) this.idleVariant = 'glitch1';
-                        else this.idleVariant = 'sit';
+                        this.idleVariant = 'idle1';
                     } else if (this.charName === 'husk') {
                         if (r < 0.45) this.idleVariant = 'idle1';
                         else if (r < 0.75) this.idleVariant = 'sit';
@@ -4744,7 +4744,7 @@ class ShimejiPet {
             } else if (rand < 0.88) {
                 this.state = 'IDLE';
                 this.stateTimer = Math.random() * 3000 + 2000;
-                this.idleVariant = (this.charName === 'twilight' && Math.random() > 0.6) ? 'idle2' : 'idle1';
+                this.idleVariant = 'idle1';
             } else {
                 this.state = 'SIT';
                 if (this.charName === 'fluttershy') {
