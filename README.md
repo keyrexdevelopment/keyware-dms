@@ -4,20 +4,22 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/ENGINE-BETTERDISCORD-0a0c10?style=for-the-badge&logo=discord&logoColor=white" alt="Engine" />
-  <img src="https://img.shields.io/badge/VERSION-7.5.0-0a0c10?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/VERSION-7.6.0-0a0c10?style=for-the-badge" alt="Version" />
   <img src="https://img.shields.io/badge/ARCHITECTURE-REACT%20SAFE-0a0c10?style=for-the-badge" alt="Architecture" />
+  <img src="https://img.shields.io/badge/PHYSICS-MOMENTUM%20TOSS-0a0c10?style=for-the-badge" alt="Physics" />
   <img src="https://img.shields.io/badge/LICENSE-MIT-0a0c10?style=for-the-badge" alt="License" />
 </p>
 
 <p align="center">
-  <b>High-performance, modular Direct Messages extension for BetterDiscord.</b><br>
-  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, 20 Shimeji desktop pets across 10 universes, LinkShield anti-phishing guard, and smart customizable auto-responder.</sub>
+  <b>Enterprise-grade, modular Direct Messages extension and interactive desktop companion engine for BetterDiscord.</b><br>
+  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, 20 Shimeji desktop mascots across 10 universes, momentum toss physics, LinkShield anti-phishing guard, and smart auto-responder.</sub>
 </p>
 
 <p align="center">
   <a href="#overview">Overview</a> •
-  <a href="#key-modules">Modules</a> •
-  <a href="#one-liner-install">Quick Start</a> •
+  <a href="#core-modules">Core Modules</a> •
+  <a href="#shimeji-mascot-roster">Mascot Roster (20 Characters)</a> •
+  <a href="#installation">Installation</a> •
   <a href="#technical-specifications">Specifications</a> •
   <a href="#license">License</a>
 </p>
@@ -26,80 +28,104 @@
 
 ### Overview
 
-**KeyWare** replaces standard Discord direct message lists with an organized, extensible workspace system. Designed from the ground up to prevent React unmount cycles, it operates synchronously within Discord's native event pipeline without introducing layout thrashing or background resource leaks.
+**KeyWare** transforms standard Discord direct message lists into an extensible, high-performance workspace environment. Engineered from the ground up to prevent React unmount cycles, it operates synchronously within Discord's native event pipeline without introducing layout thrashing, background resource leaks, or UI latency.
 
 ---
 
-### Key Modules
+### Core Modules
 
 #### `[01]` Channel Categorization & Sorting Engine
-- **Non-Destructive Ordering:** Organizes conversations through native CSS flexbox indexes (`order`), preserving Discord's internal component state and drag-and-drop contexts.
-- **Tree State Persistence:** Collapse inactive categories while preserving real-time unread message counts and mention notifications.
-- **Dynamic Context Actions:** Right-click any category header for instant renaming, color/shader re-assignment, or channel management.
+- **Non-Destructive Ordering:** Organizes conversations using native CSS flexbox indexes (`order`), preserving Discord's internal component state, virtual lists, and drag-and-drop contexts.
+- **Tree State Persistence:** Collapse inactive categories while preserving real-time unread message counters, mention indicators, and active voice channel states.
+- **Dynamic Context Actions:** Right-click any category header for instant renaming, color/shader re-assignment, and quick channel routing.
 
 #### `[02]` Audio Dispatcher & Per-Target Notification Routing
-- **Pre-Emptive Audio Interception:** Discord's default notification ping is intercepted synchronously at `Dispatcher.dispatch` before playback begins, guaranteeing only your assigned custom sound executes.
-- **Discord Server Soundboard Integration:** Browse, search, preview, and assign soundboard sounds from any server you belong to directly to individual DMs.
-- **Granular Sound Binding:** Assign custom local `.mp3` files, soundboard sounds, or direct HTTP audio streams to individual users or group chats.
-- **Base64 Inline Decoder:** Native conversion of local files to Base64 data URIs to bypass strict client file protocol restrictions.
+- **Pre-Emptive Audio Interception:** Discord's default notification sound is intercepted synchronously at `Dispatcher.dispatch` before playback execution begins, guaranteeing only your assigned custom audio stream executes.
+- **Soundboard Integration:** Seamlessly browse, search, preview, and bind soundboard effects from any mutual server directly to individual direct messages.
+- **Multi-Source Audio Binding:** Assign local `.mp3` files, Discord soundboard sounds, or direct HTTP audio streams per user or group chat.
+- **Base64 Inline Decoder:** Native local file conversion to Base64 data URIs to bypass strict client file protocol restrictions.
 
-#### `[03]` Shimeji Desktop Mascots Engine (10 Universes • 20 Mascots)
-- **Interactive Screen Pets (Grouped by 10 Universes):** 
-  - ⚔️ **Devil May Cry Evreni (Capcom):** Dante (Devil Hunter)
-  - 🎙️ **Hazbin Hotel Evreni (A24 / SpindleHorse):** Alastor (Radio Demon), Vox (TV Overlord), Husk (Casino Cat), Angel Dust (Spider Star), Lucifer Morningstar (King of Hell), Adam (Exorcist Leader), Vaggie (Exorcist Angel), Valentino (Overlord of Lust), Velvette (Overlord of Fashion)
-  - 🎪 **The Amazing Digital Circus Evreni (GLITCH):** Kinger (Paranoid Chess King)
-  - 🎪 **Freaky Circus Evreni:** Pierrot (Freaky Circus Jester)
-  - 🦄 **My Little Pony & Pibby Evreni (Hasbro):** Fluttershy (Kind Pegasus), Rainbow Dash (Sonic Rainboom), Twilight Sparkle (Pibby Glitch)
-  - 🕷️ **Marvel Evreni:** Spider-Man (Peter Parker / Dost Canlısı Komşunuz)
-  - 🍕 **Five Nights at Freddy's Evreni (ScottGames):** Foxy (Pirate Fox)
-  - 🥊 **League of Legends Evreni (Riot Games):** Sett (The Boss / Yeraltı Dövüşçüsü)
-  - 🍪 **Cookie Run Kingdom Evreni (Devsisters):** Shadow Milk Cookie (Gölge Sütlü Kurabiye)
-  - 📺 **Deltarune & Toby Fox Evreni:** Tenna (Katot Işınlı Şovmen)
-- **Real-Time Physics & Animations:** Mouse cursor tracking, screen climbing, dragging & tossing physics with direct landing, customizable scale and aura glow effects.
-- **Signature Special Animations:** Her karakterin kendine has imza hareketleri (Alastor radyo yayını & gölge dokunaçları, Vox elektrik glitch & reklam kartı, Lucifer lastik ördek, Adam altın gitar rock solosu, Sett Showstopper yumruk güç gösterisi, Pierrot panik dönmesi, Kinger paranoya kale sarsıntısı, Rainbow Dash kanat çırpma & Sonic Rainboom, Tenna CRT statik parazit vb.).
-- **Modes & Scaling:** Fareyi Takip Et, Serbest Gezinti, Sakin Otur modları ve dinamik boyut ölçekleme (0.3x – 1.5x).
+#### `[03]` Shimeji Desktop Companions Engine (20 Characters • 10 Universes)
+- **Mathematical Multi-Scale Rendering:** Adaptive canvas scaling ensures high-resolution 512px WebP sprites, 270px HD sprites, and 128px pixel-art sprites fit precisely inside the rendering viewport without head or tail clipping.
+- **Momentum Toss & Gravity Physics:** Real-time velocity tracking captures mouse movement during drag and converts release momentum into parabolic flight physics, wall bounces, and stable floor landings.
+- **Directional Facing Alignment:** Mascots mirror movement vectors immediately on the horizontal axis during dragging and flight without frame desynchronization.
+- **Customizable Aura Lighting:** Select from curated color presets or configure any hex code via the live embedded RGB color picker.
+- **Zero Idle Overhead:** Position caching and dirty-checking render cycles ensure 0% CPU consumption when companions are stationary.
 
 #### `[04]` Visual Shaders & Atmospheric Engine
 - **Hardware-Accelerated Presets:**
-  - `Frosted Glass` (CSS backdrop filter with ambient refraction)
+  - `Frosted Glass` (CSS backdrop-filter with ambient refraction)
   - `Cyberpunk Neon` (Dual-stop high-contrast magenta/violet gradient)
   - `Thermal Fire` (Warm ember gradient with high-frequency border)
   - `Emerald Breeze` (Cool mint gradient)
   - `Gilded Gold` (Subtle metallic brass shimmer)
-- **Particle Rain Engine:** Background particle canvas supporting custom Discord emojis, image links, variable velocity, and density presets.
+- **Particle Rain Engine:** Background particle canvas supporting custom Discord emojis, image links, velocity multipliers, and density presets.
 
 #### `[05]` Typography & Aesthetic Engine
-- **Host OS Font Integration:** Type any font name installed on your Windows system to render immediately with zero network latency.
+- **Host OS Font Integration:** Render any font installed locally on the host operating system with zero network overhead.
 - **Embedded Web Fonts:** Integrated Google Web Fonts suite including *Orbitron, Poppins, Montserrat, Cinzel, Righteous, Permanent Marker, and Press Start 2P*.
-- **Left Indicator Accents:** Customizable left-border status indicators with per-category accent colors.
+- **Left Status Accents:** Customizable left-border status indicators with per-category accent colors.
 
 #### `[06]` LinkShield Anti-Phishing Guard
-- **Real-Time Malicious URL Interception:** Automatically identifies typo-squatted fake Discord/Nitro domains (`dlscord.com`, `discorcl.gift`, `discord-nitro-free.com`), fake Steam phishing links (`steamcommunlty.com`), and IP Logger/Grabbers (`grabify.link`, `iplogger.org`).
-- **Pre-Click Intercept & Security Shield Modal:** Halts immediate browser execution and displays an emergency red cyber-shield modal preventing account compromise and token theft.
+- **Real-Time Malicious URL Interception:** Identifies typo-squatted fake Discord/Nitro domains (`dlscord.com`, `discorcl.gift`, `discord-nitro-free.com`), fraudulent Steam phishing URLs (`steamcommunlty.com`), and IP harvesting grabbers (`grabify.link`, `iplogger.org`).
+- **Pre-Click Intercept Modal:** Blocks immediate browser execution and presents an emergency red security dialog to prevent token theft and credential leaks.
 
-#### `[07]` Smart Customizable Auto-Responder Engine
-- **One-Click Quick Toggle:** Toggle active/inactive instantly via the dedicated robot button `🤖` on the direct messages header.
-- **Game Detection (`{game}` Placeholder):** Dynamically detects the game you're playing (via `ActivityStore`) and embeds the game title automatically into your response.
-- **Granular Dispatch Controls:** Configurable anti-spam cooldown intervals (1–120 mins), status filters (DND/Idle only), and custom text templates.
+#### `[07]` Smart Auto-Responder Engine
+- **Activity Store Hook:** Detects current game activities through Discord's internal `ActivityStore` and dynamically injects the title via the `{game}` placeholder.
+- **Spam Prevention & Cooldown:** Configurable response cooldowns (1–120 minutes), status filters (DND/Idle only), and direct message constraints.
+
+---
+
+### Shimeji Mascot Roster
+
+KeyWare features 20 interactive desktop companions across 10 distinct fictional universes, complete with custom walk cycles, sitting poses, drag behaviors, and signature special abilities:
+
+| Universe | Mascot | Tag | Role / Title | Signature Ability / Interaction |
+| :--- | :--- | :--- | :--- | :--- |
+| **Devil May Cry** `[Capcom]` | **Dante** | `DMC` | Devil Hunter | Ebony & Ivory Stance, Sword Agility, Classic Air Pose |
+| **Hazbin Hotel** `[A24 / SpindleHorse]` | **Alastor** | `RADIO` | Radio Demon | Radio Broadcast, Shadow Tentacles, Cane Spinning |
+| | **Vox** | `TV` | TV Overlord | Broadcast Showcase, Electric Glitch, CRT Glitch Jitter |
+| | **Husk** | `CASINO` | Casino Cat | Casino Card Shuffle, Bar Sitting, Relaxed Lounge |
+| | **Angel Dust** | `STAR` | Spider Star | Flirty Pose, Tommy Gun Spray, Signature Blush |
+| | **Lucifer** | `KING` | King of Hell | Rubber Duck Summon, Golden Apple, Top Hat Flourish |
+| | **Adam** | `GENERAL` | Exorcist Leader | Holy Guitar Shred, Golden Radiance, Smug Taunt |
+| | **Vaggie** | `SPEAR` | Exorcist Angel | Spear Thrust, Combat Ready Stance, Stern Patrol |
+| | **Valentino** | `LUST` | Overlord of Lust | Cigar Smoke Cloud, Heart Sunglasses, Overlord Laugh |
+| | **Velvette** | `FASHION` | Overlord of Fashion | Phone Selfie Pose, Runway Strut, Hair Flip |
+| **The Amazing Digital Circus** `[GLITCH]` | **Kinger** | `CHESS` | Paranoid Chess King | Impenetrable Fortress Paranoia, Insect Fixation, Panic Freeze |
+| **Freaky Circus** `[Freaky Circus]` | **Pierrot** | `JESTER` | Chaotic Circus Jester | Panic Juggling, 360 Spin, Bewildered Gaze |
+| **My Little Pony & Pibby** `[Hasbro]` | **Fluttershy** | `MLP` | Kind Pegasus | 6-Frame Trot Cycle, Gentle Resting, Meadow Stare |
+| | **Rainbow Dash** | `SONIC` | Supersonic Pegasus | Sonic Rainboom Rush, High-Speed Wing Flutter, Cool Salute |
+| | **Twilight Sparkle** | `PIBBY` | Corrupted Virus | Glitched Magic Walk, Void Distortion, Sitting Idle |
+| **Marvel** `[Marvel]` | **Spider-Man** | `SPIDER` | Friendly Neighborhood | Web Swinging, Wall Anchor, Low Crouching Patrol |
+| **Five Nights at Freddy's** `[ScottGames]` | **Foxy** | `FNAF` | Pirate Fox | Pirate Hook Swing, Hallway Creep Stance, Eyepatch Adjust |
+| **League of Legends** `[Riot Games]` | **Sett** | `THE BOSS` | Underground Boss | Showstopper Knuckle Crack, Pit Boss Flex, Lounging Rest |
+| **Cookie Run Kingdom** `[Devsisters]` | **Shadow Milk** | `BEAST` | Cookie of Deceit | Puppet Theater Strings, Blue Flame Juggle, Deceit Waltz |
+| **Deltarune & Toby Fox** `[Toby Fox]` | **Tenna** | `TV SHOW` | CRT Showman Host | CRT TV Broadcast Static, Antenna Pulse, Gameshow Host Pose |
 
 ---
 
 ### Technical Specifications
 
-| Parameter | Specification | Description |
-| :--- | :--- | :--- |
-| **Compatibility** | BetterDiscord v1.0.0+ | Native plugin sandbox API |
-| **Pipeline Hook** | `Dispatcher.dispatch` | Synchronous pre-dispatch audio suppression |
-| **DOM Target** | `nav[aria-label="Direct Messages"]` | Native list container integration |
-| **Storage Engine** | `BdApi.Data` (JSON) | Isolated persistent local storage |
-| **Font Pipeline** | Direct CSS `@import` & GDI Local | Zero-latency font mapping |
-| **Memory Footprint** | `< 2.5 MB` | Zero background polling timers |
+```
+  +-------------------------------------------------------------------+
+  |                        KEYWARE CORE ENGINE                        |
+  +-------------------------------------------------------------------+
+  |  [DOM Injection]         -> nav[aria-label="Direct Messages"]     |
+  |  [Audio Hook]            -> Dispatcher.dispatch (Pre-Dispatch)   |
+  |  [Physics Loop]          -> requestAnimationFrame (Delta-Timed)   |
+  |  [Physics Mode]          -> Momentum Toss + Elastic Wall Bounce  |
+  |  [Data Persistence]      -> BdApi.Data (Isolated JSON Storage)    |
+  |  [Memory Footprint]      -> < 2.5 MB (Zero Polling Timers)        |
+  |  [Idle CPU Usage]        -> 0.0% (Cached Dirty-Checking)          |
+  +-------------------------------------------------------------------+
+```
 
 ---
 
-### One-Liner Install
+### Installation
 
-#### Windows (PowerShell)
+#### Automated Install (Windows PowerShell)
 ```powershell
 iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js" -OutFile "$env:APPDATA\BetterDiscord\plugins\KeyWare.plugin.js"
 ```
@@ -107,24 +133,24 @@ iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWar
 #### Manual Installation
 1. Ensure **[BetterDiscord](https://betterdiscord.app/)** is installed.
 2. Download [`KeyWare.plugin.js`](https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js).
-3. Place the file inside your BetterDiscord plugins directory:
+3. Move the downloaded file into your BetterDiscord plugins folder:
    ```
    %appdata%\BetterDiscord\plugins
    ```
-4. Open Discord Settings ➔ **Plugins** and enable **KeyWare**.
+4. In Discord, navigate to **User Settings > Plugins** and enable **KeyWare**.
 
 ---
 
 ### Automatic Updates
 
-KeyWare utilizes BetterDiscord's native update pipeline. When a new release is pushed to GitHub, an update notification will automatically appear in your Discord client:
+KeyWare integrates with BetterDiscord's native release notification engine. When a new version is pushed to GitHub, an update banner will appear automatically within Discord:
 
 ```
-[ Update Available ] KeyWare v5.8.x ➔ [ Update Now ]
+[ Update Available ] KeyWare v7.6.0 -> [ Update Now ]
 ```
 
 ---
 
-<p align="center">
-  <sub>Distributed under the <b>MIT License</b>. Crafted with precision by <a href="https://github.com/keyrexdevelopment"><b>keyrex</b></a>.</sub>
-</p>
+### License & Credits
+
+Distributed under the **MIT License**. Created with precision by [**keyrex**](https://github.com/keyrexdevelopment).
