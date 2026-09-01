@@ -85,7 +85,7 @@ KeyWare features 20 interactive desktop companions across 10 distinct fictional 
 | **Devil May Cry** `[Capcom]` | **Dante** | `DMC` | Devil Hunter | Ebony & Ivory Stance, Sword Agility, Classic Air Pose |
 | **Hazbin Hotel** `[A24 / SpindleHorse]` | **Alastor** | `RADIO` | Radio Demon | Radio Broadcast, Shadow Tentacles, Cane Spinning |
 | | **Vox** | `TV` | TV Overlord | Broadcast Showcase, Electric Glitch, CRT Glitch Jitter |
-| | **Husk** | `CASINO` | Casino Cat | Casino Card Shuffle, Bar Sitting, Relaxed Lounge |
+| | **Husk** | `CASINO` | Casino Cat | Umbrella Open, Casino Card Shuffle, Bar Drinking |
 | | **Angel Dust** | `STAR` | Spider Star | Flirty Pose, Tommy Gun Spray, Signature Blush |
 | | **Lucifer** | `KING` | King of Hell | Rubber Duck Summon, Golden Apple, Top Hat Flourish |
 | | **Adam** | `GENERAL` | Exorcist Leader | Holy Guitar Shred, Golden Radiance, Smug Taunt |
