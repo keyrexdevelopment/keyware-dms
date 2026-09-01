@@ -4,9 +4,9 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/MOTOR-BETTERDISCORD-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Motor" />
-  <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-v8.0.0-00d2d3?style=for-the-badge" alt="Sürüm" />
+  <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-v9.0.0-00d2d3?style=for-the-badge" alt="Sürüm" />
   <img src="https://img.shields.io/badge/MEN%C5%9EE%C4%B0-T%C3%9CRK%C4%B0YE-e84118?style=for-the-badge" alt="Türkiye" />
-  <img src="https://img.shields.io/badge/MASKOTLAR-20%20KARAKTER%20%E2%80%A2%2010%20EVREN-fbc531?style=for-the-badge" alt="Karakterler" />
+  <img src="https://img.shields.io/badge/MASKOTLAR-27%20KARAKTER%20%E2%80%A2%2014%20EVREN-fbc531?style=for-the-badge" alt="Karakterler" />
   <img src="https://img.shields.io/badge/L%C4%B0SANS-MIT-4cd137?style=for-the-badge" alt="Lisans" />
 </p>
 
@@ -16,7 +16,7 @@
 </h2>
 
 <p align="center">
-  <b>KeyWare</b>, Discord Direkt Mesajlarınızı (DM) kurumsal seviyede organize eden, kişilere özel bildirim sesleri ve Soundboard atayan, 10 farklı popüler evrenden <b>20 etkileşimli Shimeji masaüstü maskotu</b> barındıran, LinkShield anti-oltalama kalkanı ve akıllı otomatik yanıtlayıcı sunan kapsamlı bir BetterDiscord eklentisidir.
+  <b>KeyWare</b>, Discord Direkt Mesajlarınızı (DM) kurumsal seviyede organize eden, kişilere özel bildirim sesleri ve Soundboard atayan, 14 farklı popüler evrenden <b>27 etkileşimli Shimeji masaüstü maskotu</b> barındıran, LinkShield anti-oltalama kalkanı ve akıllı otomatik yanıtlayıcı sunan kapsamlı bir BetterDiscord eklentisidir.
 </p>
 
 <p align="center">
@@ -34,7 +34,7 @@
 
 Standart Discord arayüzü yüzlerce özel mesaj arasında aradığınızı bulmayı zorlaştırır. **KeyWare**, React bileşen yapısını bozmadan ve Discord'un sanal liste motoruna zarar vermeden DM listenizi kategorilere ayırır.
 
-Bununla da kalmayıp masaüstünüzde dolaşan, farenizi takip eden, fırlatılabilen ve orijinal imza animasyonlarını sergileyen **20 adet Shimeji masaüstü maskotunu** Discord içine entegre eder.
+Bununla da kalmayıp masaüstünüzde dolaşan, farenizi takip eden, fırlatılabilen ve orijinal imza animasyonlarını sergileyen **27 adet Shimeji masaüstü maskotunu** (DMC, Hazbin Hotel, TADC, MLP, Freaky Circus, Marvel, FNAF, LoL, Cookie Run, Deltarune/Undertale, ENA, Cuphead, Genshin Impact, JoJo's Bizarre Adventure) Discord içine entegre eder.
 
 > [!TIP]
 > **Sıfır Performans Kaybı:** KeyWare'in animasyon ve render motoru GPU donanım hızlandırmalıdır. Mesajlaşırken veya oyun oynarken CPU kullanımını %0 düzeyinde tutar, FPS düşüşü veya takılma yaşatmaz.
@@ -47,7 +47,7 @@ Bununla da kalmayıp masaüstünüzde dolaşan, farenizi takip eden, fırlatıla
 | :---: | :--- | :--- |
 | **`[01]`** | **DM Kategorilendirme** | Non-destructive CSS Flexbox `order` ile kusursuz kanal sıralama |
 | **`[02]`** | **Özel Bildirim Sesleri** | `Dispatcher` düzeyinde önleyici ses engelleme & Soundboard entegrasyonu |
-| **`[03]`** | **Shimeji Maskotları** | 20 Karakter, 10 Evren, Momentum Fırlatma Fiziği & GPU İzolasyonu |
+| **`[03]`** | **Shimeji Maskotları** | 27 Karakter, 14 Evren, Momentum Fırlatma Fiziği & GPU İzolasyonu |
 | **`[04]`** | **Görsel Shader & Yağmur** | 5 Donanım Hızlandırmalı Shader & Kişiselleştirilebilir Emoji Yağmuru |
 | **`[05]`** | **Tipografi & Fontlar** | Yerel Sistem Fontları + 7 Google Web Font Paketi Entegrasyonu |
 | **`[06]`** | **LinkShield Güvenlik** | Sahte Nitro, Sahte Steam ve IP Grabber URL'lerini Anında Engelleme |
@@ -65,12 +65,12 @@ Bununla da kalmayıp masaüstünüzde dolaşan, farenizi takip eden, fırlatıla
 - **Sunucu Soundboard Entegrasyonu:** Bulunduğunuz tüm sunuculardaki Soundboard seslerini arayın, canlı dinleyin ve doğrudan kişilere özel bildirim sesi olarak atayın.
 - **Yerel Dosya ve Link Desteği:** Bilgisayarınızdaki `.mp3` dosyalarını Base64 kodlamasıyla güvenle bağlayın veya doğrudan ses URL'si girin.
 
-#### `[03]` 🐾 Shimeji Masaüstü Maskotları Motoru (20 Karakter • 10 Evren)
+#### `[03]` 🐾 Shimeji Masaüstü Maskotları Motoru (27 Karakter • 14 Evren)
 - **Akıllı Ölçekleme & Canlı Render:** 512px yüksek çözünürlüklü HD ve piksel çizimli sprite'lar kafaları/kuyrukları kesilmeden orantılı olarak ekrana çizilir.
 - **Momentum & Yerçekimi Fırlatma Fiziği:** Karakteri fareyle tutup havaya fırlattığınızda sürükleme hızınızı algılar; yerçekimiyle parabolik kavis çizer, ekran kenarlarından seker ve zemine iner.
 - **Doğrudan Fareye Göre Yönlenme:** Fareyi sağa çekince sağa, sola çekince sola bakar. Havadayken ve taşınırken yönünü bozmaz.
 - **Özelleştirilebilir RGB Aura Işığı:** Karakterin etrafındaki ışıma (glow) efektini menüdeki hazır renklerden seçebilir veya özel RGB renk paletinden dilediğiniz tonda ayarlayabilirsiniz.
-- **Karaktere Özel İmza Hareketleri:** Her karakterin orijinal serisine ait animasyonları (Alastor radyosu, Vox elektriği, Husk şemsiyesi ve içkisi, Lucifer lastik ördeği, Adam altın gitarı vb.) ayaktayken otomatik sergilenir.
+- **Karaktere Özel İmza Hareketleri:** Her karakterin orijinal serisine ait animasyonları (Alastor radyosu, Vox elektriği, Husk şemsiyesi ve içkisi, Lucifer lastik ördeği, Adam altın gitarı, DIO The World zaman durdurması, Jevil kaotik dönüşü, Flowey dostluk tohumları, Furina baston selamı, Cuphead parmak tabancası vb.) ayaktayken otomatik sergilenir.
 
 #### `[04]` 🎨 Görsel Shader'lar, Atmosfer & Partikül Yağmuru
 - **5 Özel Donanım Hızlandırmalı Shader:**

@@ -1,0 +1,788 @@
+{
+  "schema_id": "legacy_default_v1",
+  "version": 1,
+  "default_animation": "fall",
+  "initial_candidates": [
+    "fall"
+  ],
+  "animations": [
+    {
+      "key": "stand",
+      "type": "GROUND",
+      "subtype": "STAND",
+      "level": 1,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 0,
+          "durationTicks": 30,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "onTimer": []
+      }
+    },
+    {
+      "key": "walk_left",
+      "type": "GROUND",
+      "subtype": "WALK",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "LEFT",
+      "frames": [
+        {
+          "sprite": 1,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 2,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 3,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 4,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        },
+        {
+          "sprite": 5,
+          "durationTicks": 8,
+          "dx": -2,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onTimer": [
+          {
+            "chance": 0.006,
+            "choices": [
+              {
+                "to": "stand",
+                "weight": 1
+              },
+              {
+                "to": "stretch",
+                "weight": 1
+              },
+              {
+                "to": "wave",
+                "weight": 1
+              },
+              {
+                "to": "sleep",
+                "weight": 1
+              },
+              {
+                "to": "look_up",
+                "weight": 1
+              },
+              {
+                "to": "sit",
+                "weight": 1
+              }
+            ],
+            "minTicks": 40,
+            "maxTicks": 440
+          },
+          {
+            "choices": [
+              {
+                "to": "sit",
+                "weight": 1
+              },
+              {
+                "to": "stand",
+                "weight": 1
+              },
+              {
+                "to": "stretch",
+                "weight": 1
+              },
+              {
+                "to": "wave",
+                "weight": 1
+              },
+              {
+                "to": "sleep",
+                "weight": 1
+              },
+              {
+                "to": "look_up",
+                "weight": 1
+              }
+            ],
+            "minTicks": 480,
+            "maxTicks": 480,
+            "chance": 1
+          }
+        ],
+        "maxDurationTicks": 480
+      },
+      "borderTransitions": [
+        {
+          "when": "LEFT",
+          "choices": [
+            {
+              "to": "climb_left",
+              "weight": 1
+            },
+            {
+              "to": "walk_right",
+              "weight": 1,
+              "setFacing": "RIGHT"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "walk_right",
+      "type": "GROUND",
+      "subtype": "WALK",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "RIGHT",
+      "frames": [
+        {
+          "sprite": 1,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 2,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 3,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 4,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        },
+        {
+          "sprite": 5,
+          "durationTicks": 8,
+          "dx": 2,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onTimer": [
+          {
+            "chance": 0.006,
+            "choices": [
+              {
+                "to": "sit",
+                "weight": 1
+              },
+              {
+                "to": "stand",
+                "weight": 1
+              },
+              {
+                "to": "stretch",
+                "weight": 1
+              },
+              {
+                "to": "wave",
+                "weight": 1
+              },
+              {
+                "to": "sleep",
+                "weight": 1
+              },
+              {
+                "to": "look_up",
+                "weight": 1
+              }
+            ],
+            "minTicks": 40,
+            "maxTicks": 440
+          },
+          {
+            "choices": [
+              {
+                "to": "sit",
+                "weight": 1
+              },
+              {
+                "to": "stand",
+                "weight": 1
+              },
+              {
+                "to": "stretch",
+                "weight": 1
+              },
+              {
+                "to": "wave",
+                "weight": 1
+              },
+              {
+                "to": "look_up",
+                "weight": 1
+              },
+              {
+                "to": "sleep",
+                "weight": 1
+              }
+            ],
+            "minTicks": 480,
+            "maxTicks": 480,
+            "chance": 1
+          }
+        ],
+        "maxDurationTicks": 480
+      },
+      "borderTransitions": [
+        {
+          "when": "RIGHT",
+          "choices": [
+            {
+              "to": "climb_right",
+              "weight": 1
+            },
+            {
+              "to": "walk_left",
+              "weight": 1,
+              "setFacing": "LEFT"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "fall",
+      "type": "AIR",
+      "subtype": "FALL",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 6,
+          "durationTicks": 400,
+          "dx": 0,
+          "dy": 10
+        }
+      ],
+      "borderTransitions": [
+        {
+          "when": "BOTTOM",
+          "facing": "ANY",
+          "choices": [
+            {
+              "to": "stand",
+              "weight": 1,
+              "setFacing": "KEEP"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "climb_left",
+      "type": "WALL",
+      "subtype": "CLIMB",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "LEFT",
+      "frames": [
+        {
+          "sprite": 13,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 14,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 15,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 16,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": -1
+        }
+      ],
+      "auto": {
+        "onTimer": [
+          {
+            "choices": [
+              {
+                "to": "fall",
+                "weight": 1,
+                "setFacing": "LEFT"
+              }
+            ],
+            "minTicks": 660,
+            "maxTicks": 660,
+            "chance": 0.2
+          }
+        ]
+      },
+      "borderTransitions": [
+        {
+          "when": "TOP",
+          "choices": [
+            {
+              "to": "fall",
+              "weight": 1,
+              "setFacing": "LEFT"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "climb_right",
+      "type": "WALL",
+      "subtype": "CLIMB",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "RIGHT",
+      "frames": [
+        {
+          "sprite": 13,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 14,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 15,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": -1
+        },
+        {
+          "sprite": 16,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": -1
+        }
+      ],
+      "auto": {
+        "onTimer": [
+          {
+            "choices": [
+              {
+                "to": "fall",
+                "weight": 1,
+                "setFacing": "RIGHT"
+              }
+            ],
+            "minTicks": 660,
+            "maxTicks": 660,
+            "chance": 0.2
+          }
+        ]
+      },
+      "borderTransitions": [
+        {
+          "when": "TOP",
+          "choices": [
+            {
+              "to": "fall",
+              "weight": 1,
+              "setFacing": "RIGHT"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "drag",
+      "type": "USER",
+      "subtype": "DRAG",
+      "level": 1,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 6,
+          "durationTicks": 400,
+          "dx": 0,
+          "dy": 0
+        }
+      ]
+    },
+    {
+      "key": "fling",
+      "type": "USER",
+      "subtype": "FLING",
+      "level": 2,
+      "loop": "LOOP",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 17,
+          "durationTicks": 500,
+          "dx": 0,
+          "dy": 0
+        }
+      ]
+    },
+    {
+      "key": "sit",
+      "type": "GROUND",
+      "subtype": "SIT",
+      "level": 2,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 8,
+          "durationTicks": 600,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onTimer": [
+          {
+            "choices": [
+              {
+                "to": "walk_left",
+                "weight": 1,
+                "setFacing": "LEFT"
+              },
+              {
+                "to": "walk_right",
+                "weight": 1,
+                "setFacing": "RIGHT"
+              }
+            ],
+            "minTicks": 120,
+            "maxTicks": 200,
+            "chance": 1
+          }
+        ],
+        "maxDurationTicks": {
+          "minTicks": 120,
+          "maxTicks": 200
+        }
+      }
+    },
+    {
+      "key": "look_up",
+      "type": "GROUND",
+      "subtype": "LOOK_UP",
+      "level": 2,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 7,
+          "durationTicks": 120,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "onTimer": []
+      }
+    },
+    {
+      "key": "sleep",
+      "type": "GROUND",
+      "subtype": "SIT",
+      "level": 3,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 9,
+          "durationTicks": 1200,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "onTimer": []
+      }
+    },
+    {
+      "key": "stretch",
+      "type": "GROUND",
+      "subtype": "STRETCH",
+      "level": 3,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 10,
+          "durationTicks": 60,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "onTimer": []
+      }
+    },
+    {
+      "key": "wave",
+      "type": "GROUND",
+      "subtype": "HELLO",
+      "level": 3,
+      "loop": "ONESHOT",
+      "direction": "ANY",
+      "frames": [
+        {
+          "sprite": 11,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 12,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 11,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 12,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 11,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": 0
+        },
+        {
+          "sprite": 12,
+          "durationTicks": 10,
+          "dx": 0,
+          "dy": 0
+        }
+      ],
+      "auto": {
+        "onFinish": [
+          {
+            "to": "walk_left",
+            "weight": 1,
+            "setFacing": "LEFT"
+          },
+          {
+            "to": "walk_right",
+            "weight": 1,
+            "setFacing": "RIGHT"
+          }
+        ],
+        "onTimer": []
+      }
+    }
+  ],
+  "events": [
+    {
+      "event": "DRAG_START",
+      "from": "*",
+      "setFacing": "RANDOM",
+      "to": "drag"
+    },
+    {
+      "event": "DRAG_END",
+      "from": "drag",
+      "setFacing": "RANDOM",
+      "to": "fall"
+    },
+    {
+      "event": "FLING_START",
+      "from": "*",
+      "choices": [
+        {
+          "to": "fling",
+          "weight": 1,
+          "setFacing": "EVENT_VELOCITY"
+        }
+      ]
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "when": "LEFT",
+      "to": "climb_left"
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "when": "RIGHT",
+      "to": "climb_right"
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "when": "TOP",
+      "facing": "ANY",
+      "fallback": "fall",
+      "to": "fall"
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "when": "BOTTOM",
+      "facing": "ANY",
+      "setFacing": "KEEP",
+      "fallback": "stand",
+      "to": "stand"
+    },
+    {
+      "event": "FLING_END",
+      "from": "fling",
+      "to": "fall"
+    },
+    {
+      "event": "TAP",
+      "minLevel": 1,
+      "maxLevel": 20,
+      "allowedTypes": [
+        "GROUND"
+      ],
+      "choices": [
+        {
+          "to": "sleep",
+          "weight": 1
+        },
+        {
+          "to": "wave",
+          "weight": 1
+        },
+        {
+          "to": "sit",
+          "weight": 1
+        },
+        {
+          "to": "stand",
+          "weight": 1
+        },
+        {
+          "to": "stretch",
+          "weight": 1
+        },
+        {
+          "to": "look_up",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "minLevel": 1,
+      "maxLevel": 20,
+      "allowedTypes": [
+        "WALL"
+      ],
+      "choices": [
+        {
+          "to": "fall",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "event": "TAP",
+      "minLevel": 1,
+      "maxLevel": 20,
+      "allowedTypes": [
+        "AIR"
+      ],
+      "choices": [
+        {
+          "to": "fall",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

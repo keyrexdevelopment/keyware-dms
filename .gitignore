@@ -1,0 +1,5 @@
+*.log
+*.lck
+Thumbs.db
+.DS_Store
+ESKI SOURCECODE/

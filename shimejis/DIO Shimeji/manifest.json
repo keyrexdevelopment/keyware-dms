@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "name": "DIO",
+  "nameSlug": "dio",
+  "category": "JoJo's Bizarre Adventure",
+  "categorySlug": "jojo-s-bizarre-adventure",
+  "description": "\"ZA WARUDO!\"",
+  "bundleVersion": 1,
+  "minAppVersion": 94,
+  "levels": 3,
+  "origin": "LOCAL",
+  "animationSchema": {
+    "path": "animation.json",
+    "schemaId": "legacy_default_v1",
+    "version": 1
+  },
+  "sprites": {
+    "type": "SEQUENCE",
+    "basePath": "sprites/",
+    "filePattern": "%04d.webp",
+    "spriteCount": 18,
+    "size": [
+      512,
+      512
+    ]
+  },
+  "preview": {
+    "thumbnail": "thumbnail.webp"
+  },
+  "author": {
+    "name": "Local Creator"
+  },
+  "license": {
+    "type": "CUSTOM",
+    "text": "Exported from Shimeji",
+    "attribution": "Local Creator"
+  }
+}

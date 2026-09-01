@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "name": "Bubble",
+  "nameSlug": "bubble",
+  "category": "TADC",
+  "categorySlug": "tadc",
+  "description": "\"Made with all the love I'm legally allowed to give!\"",
+  "bundleVersion": 1,
+  "minAppVersion": 94,
+  "levels": 3,
+  "origin": "LOCAL",
+  "animationSchema": {
+    "path": "animation.json",
+    "schemaId": "default",
+    "version": 1
+  },
+  "sprites": {
+    "type": "SEQUENCE",
+    "basePath": "sprites/",
+    "filePattern": "%04d.webp",
+    "spriteCount": 54,
+    "size": [
+      512,
+      512
+    ]
+  },
+  "preview": {
+    "thumbnail": "thumbnail.webp"
+  },
+  "author": {
+    "name": "Local Creator"
+  },
+  "license": {
+    "type": "CUSTOM",
+    "text": "Exported from Shimeji",
+    "attribution": "Local Creator"
+  }
+}
