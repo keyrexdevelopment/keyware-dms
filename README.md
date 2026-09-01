@@ -16,34 +16,34 @@
 </p>
 
 <p align="center">
-  <a href="#-özellikler">Özellikler</a> •
-  <a href="#-kurulum">Kurulum</a> •
-  <a href="#-sıkça-sorulan-sorular">SSS</a> •
-  <a href="#-lisans">Lisans</a>
+  <a href="#özellikler">Özellikler</a> •
+  <a href="#kurulum">Kurulum</a> •
+  <a href="#sıkça-sorulan-sorular">SSS</a> •
+  <a href="#lisans--geliştirici">Lisans</a>
 </p>
 
 ---
 
-### ✨ Özellikler
+### Özellikler
 
-- 📁 **DM Kategorileri & Organizasyon:** Direkt mesajlarınızı klasörlere ayırın, daraltın ve React yapısını bozmadan sürükleyip bırakarak düzenleyin.
-- 🐾 **30+ Shimeji Maskotu:** DMC, Hazbin Hotel, Undertale, Marvel, LoL ve Genshin gibi 15 evrenden masaüstü maskotları. Gerçekçi momentum fırlatma fiziği ve özel imza animasyonları.
-- 🎵 **Kişiye Özel Bildirim Sesleri:** Belirli kişilere veya gruplara sunucu Soundboard'larından ya da yerel `.mp3` dosyalarından özel zil sesleri atayın.
-- 🎨 **Shader & Temalar:** Frosted Glass, Cyberpunk Neon gibi 5 donanım hızlandırmalı görsel efekt ve özel Google yazı tipleri.
-- 🛡️ **LinkShield Güvenlik Kalkanı:** Sahte Nitro, sahte Steam ve IP toplayıcı tuzak bağlantıları tıklandığı an engelleyen güvenlik sistemi.
-- 🤖 **Akıllı Otomatik Yanıtlayıcı:** O an oynadığınız oyunu `{game}` değişkeni ile algılayan ve spam korumalı yanıt veren akıllı durum motoru.
+- **DM Kategorileri & Organizasyon:** Direkt mesajlarınızı klasörlere ayırın, daraltın ve React yapısını bozmadan sürükleyip bırakarak düzenleyin.
+- **30+ Shimeji Maskotu:** DMC, Hazbin Hotel, Undertale, Marvel, LoL ve Genshin gibi 15 evrenden masaüstü maskotları. Gerçekçi momentum fırlatma fiziği ve özel imza animasyonları.
+- **Kişiye Özel Bildirim Sesleri:** Belirli kişilere veya gruplara sunucu Soundboard'larından ya da yerel `.mp3` dosyalarından özel zil sesleri atayın.
+- **Shader & Temalar:** Frosted Glass, Cyberpunk Neon gibi 5 donanım hızlandırmalı görsel efekt ve özel Google yazı tipleri.
+- **LinkShield Güvenlik Kalkanı:** Sahte Nitro, sahte Steam ve IP toplayıcı tuzak bağlantıları tıklandığı an engelleyen güvenlik sistemi.
+- **Akıllı Otomatik Yanıtlayıcı:** O an oynadığınız oyunu `{game}` değişkeni ile algılayan ve spam korumalı yanıt veren akıllı durum motoru.
 
 ---
 
-### 🚀 Kurulum
+### Kurulum
 
-#### ⚡ Hızlı Kurulum (PowerShell)
+#### Hızlı Kurulum (PowerShell)
 PowerShell terminalini açıp aşağıdaki komutu çalıştırın:
 ```powershell
 iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js" -OutFile "$env:APPDATA\BetterDiscord\plugins\KeyWare.plugin.js"
 ```
 
-#### 🛠️ Manuel Kurulum
+#### Manuel Kurulum
 1. [**KeyWare.plugin.js**](https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js) dosyasını indirin.
 2. Dosyayı BetterDiscord eklenti dizinine taşıyın:
    ```text
@@ -53,7 +53,7 @@ iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWar
 
 ---
 
-### ❓ Sıkça Sorulan Sorular
+### Sıkça Sorulan Sorular
 
 <details>
 <summary><b>Ban riski var mı?</b></summary>
@@ -75,7 +75,7 @@ Maskotları farenizle tutup savurarak fırlatabilir, üzerlerine sağ tıklayara
 
 ---
 
-### 📜 Lisans & Geliştirici
+### Lisans & Geliştirici
 
 Bu proje **MIT** lisansı ile korunmaktadır.
 
@@ -83,5 +83,5 @@ Bu proje **MIT** lisansı ile korunmaktadır.
 - **Depo:** [keyware-dms](https://github.com/keyrexdevelopment/keyware-dms)
 
 <p align="center">
-  <sub>KeyWare DMS • Made with ❤️ in Türkiye</sub>
+  <sub>KeyWare DMS • Made in Türkiye</sub>
 </p>
