@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/MOTOR-BETTERDISCORD-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Motor" />
-  <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-v10.0.1-00d2d3?style=for-the-badge" alt="Sürüm" />
+  <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-v10.0.2-00d2d3?style=for-the-badge" alt="Sürüm" />
   <img src="https://img.shields.io/badge/MEN%C5%9EE%C4%B0-T%C3%9CRK%C4%B0YE-e84118?style=for-the-badge" alt="Türkiye" />
   <img src="https://img.shields.io/badge/MASKOTLAR-30%20KARAKTER%20%E2%80%A2%2015%20EVREN-fbc531?style=for-the-badge" alt="Karakterler" />
   <img src="https://img.shields.io/badge/L%C4%B0SANS-MIT-4cd137?style=for-the-badge" alt="Lisans" />
