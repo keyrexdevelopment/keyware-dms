@@ -11,7 +11,7 @@
 
 <p align="center">
   <b>High-performance, modular Direct Messages extension for BetterDiscord.</b><br>
-  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, 21 Shimeji desktop pets across 9 universes, LinkShield anti-phishing guard, and smart customizable auto-responder.</sub>
+  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, 20 Shimeji desktop pets across 10 universes, LinkShield anti-phishing guard, and smart customizable auto-responder.</sub>
 </p>
 
 <p align="center">
@@ -43,19 +43,20 @@
 - **Granular Sound Binding:** Assign custom local `.mp3` files, soundboard sounds, or direct HTTP audio streams to individual users or group chats.
 - **Base64 Inline Decoder:** Native conversion of local files to Base64 data URIs to bypass strict client file protocol restrictions.
 
-#### `[03]` Shimeji Desktop Mascots Engine (9 Universes • 21 Mascots)
-- **Interactive Screen Pets (Grouped by 9 Universes):** 
-  - ⚔️ **Devil May Cry Evreni (Capcom):** Dante & Vergil
+#### `[03]` Shimeji Desktop Mascots Engine (10 Universes • 20 Mascots)
+- **Interactive Screen Pets (Grouped by 10 Universes):** 
+  - ⚔️ **Devil May Cry Evreni (Capcom):** Dante (Devil Hunter)
   - 🎙️ **Hazbin Hotel Evreni (A24 / SpindleHorse):** Alastor (Radio Demon), Vox (TV Overlord), Husk (Casino Cat), Angel Dust (Spider Star), Lucifer Morningstar (King of Hell), Adam (Exorcist Leader), Vaggie (Exorcist Angel), Valentino (Overlord of Lust), Velvette (Overlord of Fashion)
-  - 🎪 **The Amazing Digital Circus Evreni (GLITCH):** Pomni (Digital Jester) & Kinger (Paranoid Chess King)
+  - 🎪 **The Amazing Digital Circus Evreni (GLITCH):** Kinger (Paranoid Chess King)
+  - 🎪 **Freaky Circus Evreni:** Pierrot (Freaky Circus Jester)
   - 🦄 **My Little Pony & Pibby Evreni (Hasbro):** Fluttershy (Kind Pegasus), Rainbow Dash (Sonic Rainboom), Twilight Sparkle (Pibby Glitch)
   - 🕷️ **Marvel Evreni:** Spider-Man (Peter Parker / Dost Canlısı Komşunuz)
   - 🍕 **Five Nights at Freddy's Evreni (ScottGames):** Foxy (Pirate Fox)
   - 🥊 **League of Legends Evreni (Riot Games):** Sett (The Boss / Yeraltı Dövüşçüsü)
   - 🍪 **Cookie Run Kingdom Evreni (Devsisters):** Shadow Milk Cookie (Gölge Sütlü Kurabiye)
   - 📺 **Deltarune & Toby Fox Evreni:** Tenna (Katot Işınlı Şovmen)
-- **Real-Time Physics & Animations:** Mouse cursor tracking, screen climbing, dragging & tossing physics with momentum bounce, customizable scale and aura glow effects.
-- **Signature Special Animations:** Her karakterin kendine has imza hareketleri (Alastor radyo yayını & gölge dokunaçları, Vox elektrik glitch & reklam kartı, Lucifer lastik ördek, Adam altın gitar rock solosu, Sett Showstopper yumruk güç gösterisi, Pomni panik dönmesi, Kinger paranoya kale sarsıntısı, Rainbow Dash kanat çırpma & Sonic Rainboom, Tenna CRT statik parazit vb.).
+- **Real-Time Physics & Animations:** Mouse cursor tracking, screen climbing, dragging & tossing physics with direct landing, customizable scale and aura glow effects.
+- **Signature Special Animations:** Her karakterin kendine has imza hareketleri (Alastor radyo yayını & gölge dokunaçları, Vox elektrik glitch & reklam kartı, Lucifer lastik ördek, Adam altın gitar rock solosu, Sett Showstopper yumruk güç gösterisi, Pierrot panik dönmesi, Kinger paranoya kale sarsıntısı, Rainbow Dash kanat çırpma & Sonic Rainboom, Tenna CRT statik parazit vb.).
 - **Modes & Scaling:** Fareyi Takip Et, Serbest Gezinti, Sakin Otur modları ve dinamik boyut ölçekleme (0.3x – 1.5x).
 
 #### `[04]` Visual Shaders & Atmospheric Engine
