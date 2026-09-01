@@ -85,7 +85,7 @@ KeyWare features 20 interactive desktop companions across 10 distinct fictional 
 | **Devil May Cry** `[Capcom]` | **Dante** | `DMC` | Devil Hunter | Ebony & Ivory Stance, Sword Agility, Classic Air Pose |
 | **Hazbin Hotel** `[A24 / SpindleHorse]` | **Alastor** | `RADIO` | Radio Demon | Radio Broadcast, Shadow Tentacles, Cane Spinning |
 | | **Vox** | `TV` | TV Overlord | Broadcast Showcase, Electric Glitch, CRT Glitch Jitter |
-| | **Husk** | `CASINO` | Casino Cat | Umbrella Open, Casino Card Shuffle, Bar Drinking |
+| | **Husk** | `CASINO` | Casino Cat | Umbrella Open (shime42-46), Alcohol Drinking Sequence (shime26->28->29->blush), Casino Card Shuffle |
 | | **Angel Dust** | `STAR` | Spider Star | Flirty Pose, Tommy Gun Spray, Signature Blush |
 | | **Lucifer** | `KING` | King of Hell | Rubber Duck Summon, Golden Apple, Top Hat Flourish |
 | | **Adam** | `GENERAL` | Exorcist Leader | Holy Guitar Shred, Golden Radiance, Smug Taunt |
@@ -146,7 +146,7 @@ iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWar
 KeyWare integrates with BetterDiscord's native release notification engine. When a new version is pushed to GitHub, an update banner will appear automatically within Discord:
 
 ```
-[ Update Available ] KeyWare v7.6.0 -> [ Update Now ]
+[ Update Available ] KeyWare v7.7.0 -> [ Update Now ]
 ```
 
 ---
