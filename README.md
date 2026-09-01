@@ -13,7 +13,7 @@
 
 <h3 align="center">
   A Wonderful Plugin Made in Türkiye<br>
-  <sub>Türkiye'de Geliştirilen Gelişmiş BetterDiscord Direkt Mesaj & Masaüstü Maskot Ekosistemi</sub>
+  <sub>Türkiye'de Geliştirilen Gelişmiş BetterDiscord Direkt Mesaj & Masaüstü Maskot Plugini</sub>
 </h3>
 
 <p align="center">
