@@ -3,154 +3,210 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/ENGINE-BETTERDISCORD-0a0c10?style=for-the-badge&logo=discord&logoColor=white" alt="Engine" />
-  <img src="https://img.shields.io/badge/VERSION-7.6.0-0a0c10?style=for-the-badge" alt="Version" />
-  <img src="https://img.shields.io/badge/ARCHITECTURE-REACT%20SAFE-0a0c10?style=for-the-badge" alt="Architecture" />
-  <img src="https://img.shields.io/badge/PHYSICS-MOMENTUM%20TOSS-0a0c10?style=for-the-badge" alt="Physics" />
-  <img src="https://img.shields.io/badge/LICENSE-MIT-0a0c10?style=for-the-badge" alt="License" />
+  <img src="https://img.shields.io/badge/MOTOR-BETTERDISCORD-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Motor" />
+  <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-v7.7.0-00d2d3?style=for-the-badge" alt="Sürüm" />
+  <img src="https://img.shields.io/badge/MEN%C5%9EE%C4%B0-T%C3%9CRK%C4%B0YE%20%F0%9F%87%B9%F0%9F%87%B7-e84118?style=for-the-badge" alt="Türkiye" />
+  <img src="https://img.shields.io/badge/MASKOTLAR-20%20KARAKTER%20%E2%80%A2%2010%20EVREN-fbc531?style=for-the-badge" alt="Karakterler" />
+  <img src="https://img.shields.io/badge/L%C4%B0SANS-MIT-4cd137?style=for-the-badge" alt="Lisans" />
+</p>
+
+<h2 align="center">
+  🇹🇷 A Wonderful Plugin Made in Türkiye 🇹🇷<br>
+  <sub>Türkiye'de Geliştirilen Gelişmiş BetterDiscord Direkt Mesaj & Masaüstü Maskot Ekosistemi</sub>
+</h2>
+
+<p align="center">
+  <b>KeyWare</b>, Discord Direkt Mesajlarınızı (DM) kurumsal seviyede organize eden, kişilere özel bildirim sesleri ve Soundboard atayan, 10 farklı popüler evrenden <b>20 etkileşimli Shimeji masaüstü maskotu</b> barındıran, LinkShield anti-oltalama kalkanı ve akıllı otomatik yanıtlayıcı sunan kapsamlı bir BetterDiscord eklentisidir.
 </p>
 
 <p align="center">
-  <b>Enterprise-grade, modular Direct Messages extension and interactive desktop companion engine for BetterDiscord.</b><br>
-  <sub>Zero-overhead workspace management, deterministic DOM sorting, audio dispatch interception, soundboard routing, 20 Shimeji desktop mascots across 10 universes, momentum toss physics, LinkShield anti-phishing guard, and smart auto-responder.</sub>
-</p>
-
-<p align="center">
-  <a href="#overview">Overview</a> •
-  <a href="#core-modules">Core Modules</a> •
-  <a href="#shimeji-mascot-roster">Mascot Roster (20 Characters)</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#technical-specifications">Specifications</a> •
-  <a href="#license">License</a>
+  <a href="#-genel-bakış">Genel Bakış</a> •
+  <a href="#-temel-modüller">Temel Modüller</a> •
+  <a href="#-shimeji-maskot-kadrosu-20-karakter--10-evren">Maskot Kadrosu (20 Karakter)</a> •
+  <a href="#-kurulum-rehberi">Kurulum</a> •
+  <a href="#-sıkça-sorulan-sorular-sss">Sıkça Sorulan Sorular (SSS)</a> •
+  <a href="#-teknik-özellikler">Teknik Özellikler</a> •
+  <a href="#-lisans">Lisans</a>
 </p>
 
 ---
 
-### Overview
+### 🌟 Genel Bakış
 
-**KeyWare** transforms standard Discord direct message lists into an extensible, high-performance workspace environment. Engineered from the ground up to prevent React unmount cycles, it operates synchronously within Discord's native event pipeline without introducing layout thrashing, background resource leaks, or UI latency.
+Standart Discord arayüzü yüzlerce özel mesaj arasında aradığınızı bulmayı zorlaştırır. **KeyWare**, React bileşen yapısını bozmadan ve Discord'un sanal liste motoruna zarar vermeden DM listenizi kategorilere ayırır.
 
----
+Bununla da kalmayıp masaüstünüzde dolaşan, farenizi takip eden, fırlatılabilen ve orijinal imza animasyonlarını sergileyen **20 adet Shimeji masaüstü maskotunu** Discord içine entegre eder.
 
-### Core Modules
-
-#### `[01]` Channel Categorization & Sorting Engine
-- **Non-Destructive Ordering:** Organizes conversations using native CSS flexbox indexes (`order`), preserving Discord's internal component state, virtual lists, and drag-and-drop contexts.
-- **Tree State Persistence:** Collapse inactive categories while preserving real-time unread message counters, mention indicators, and active voice channel states.
-- **Dynamic Context Actions:** Right-click any category header for instant renaming, color/shader re-assignment, and quick channel routing.
-
-#### `[02]` Audio Dispatcher & Per-Target Notification Routing
-- **Pre-Emptive Audio Interception:** Discord's default notification sound is intercepted synchronously at `Dispatcher.dispatch` before playback execution begins, guaranteeing only your assigned custom audio stream executes.
-- **Soundboard Integration:** Seamlessly browse, search, preview, and bind soundboard effects from any mutual server directly to individual direct messages.
-- **Multi-Source Audio Binding:** Assign local `.mp3` files, Discord soundboard sounds, or direct HTTP audio streams per user or group chat.
-- **Base64 Inline Decoder:** Native local file conversion to Base64 data URIs to bypass strict client file protocol restrictions.
-
-#### `[03]` Shimeji Desktop Companions Engine (20 Characters • 10 Universes)
-- **Mathematical Multi-Scale Rendering:** Adaptive canvas scaling ensures high-resolution 512px WebP sprites, 270px HD sprites, and 128px pixel-art sprites fit precisely inside the rendering viewport without head or tail clipping.
-- **Momentum Toss & Gravity Physics:** Real-time velocity tracking captures mouse movement during drag and converts release momentum into parabolic flight physics, wall bounces, and stable floor landings.
-- **Directional Facing Alignment:** Mascots mirror movement vectors immediately on the horizontal axis during dragging and flight without frame desynchronization.
-- **Customizable Aura Lighting:** Select from curated color presets or configure any hex code via the live embedded RGB color picker.
-- **Zero Idle Overhead:** Position caching and dirty-checking render cycles ensure 0% CPU consumption when companions are stationary.
-
-#### `[04]` Visual Shaders & Atmospheric Engine
-- **Hardware-Accelerated Presets:**
-  - `Frosted Glass` (CSS backdrop-filter with ambient refraction)
-  - `Cyberpunk Neon` (Dual-stop high-contrast magenta/violet gradient)
-  - `Thermal Fire` (Warm ember gradient with high-frequency border)
-  - `Emerald Breeze` (Cool mint gradient)
-  - `Gilded Gold` (Subtle metallic brass shimmer)
-- **Particle Rain Engine:** Background particle canvas supporting custom Discord emojis, image links, velocity multipliers, and density presets.
-
-#### `[05]` Typography & Aesthetic Engine
-- **Host OS Font Integration:** Render any font installed locally on the host operating system with zero network overhead.
-- **Embedded Web Fonts:** Integrated Google Web Fonts suite including *Orbitron, Poppins, Montserrat, Cinzel, Righteous, Permanent Marker, and Press Start 2P*.
-- **Left Status Accents:** Customizable left-border status indicators with per-category accent colors.
-
-#### `[06]` LinkShield Anti-Phishing Guard
-- **Real-Time Malicious URL Interception:** Identifies typo-squatted fake Discord/Nitro domains (`dlscord.com`, `discorcl.gift`, `discord-nitro-free.com`), fraudulent Steam phishing URLs (`steamcommunlty.com`), and IP harvesting grabbers (`grabify.link`, `iplogger.org`).
-- **Pre-Click Intercept Modal:** Blocks immediate browser execution and presents an emergency red security dialog to prevent token theft and credential leaks.
-
-#### `[07]` Smart Auto-Responder Engine
-- **Activity Store Hook:** Detects current game activities through Discord's internal `ActivityStore` and dynamically injects the title via the `{game}` placeholder.
-- **Spam Prevention & Cooldown:** Configurable response cooldowns (1–120 minutes), status filters (DND/Idle only), and direct message constraints.
+> [!TIP]
+> **Sıfır Performans Kaybı:** KeyWare'in animasyon ve render motoru GPU donanım hızlandırmalıdır. Mesajlaşırken veya oyun oynarken CPU kullanımını %0 düzeyinde tutar, FPS düşüşü veya takılma yaşatmaz.
 
 ---
 
-### Shimeji Mascot Roster
+### 🚀 Temel Modüller
 
-KeyWare features 20 interactive desktop companions across 10 distinct fictional universes, complete with custom walk cycles, sitting poses, drag behaviors, and signature special abilities:
+```
+  +-------------------------------------------------------------------------------+
+  |                             KEYWARE MODÜLER MİMARİ                            |
+  +-------------------------------------------------------------------------------+
+  | [01] DM Kategorilendirme  -> Non-destructive CSS Flexbox Order Sıralama       |
+  | [02] Özel Bildirim Sesi   -> Dispatcher Düzeyinde Müdahale & Soundboard Entegre|
+  | [03] Shimeji Maskotları   -> 20 Karakter, 10 Evren, Momentum Fırlatma Fiziği  |
+  | [04] Görsel Shader & Yağmur-> 5 Donanım Hızlandırmalı Shader + Emoji Yağmuru  |
+  | [05] Tipografi & Fontlar  -> Sistem Fontları + 7 Google Web Font Paketi       |
+  | [06] LinkShield Güvenlik  -> Sahte Nitro, Steam ve IP Grabber URL Engelleyici |
+  | [07] Otomatik Yanıtlayıcı -> {game} Değişkenli Akıllı Durum Yanıt Motoru       |
+  +-------------------------------------------------------------------------------+
+```
 
-| Universe | Mascot | Tag | Role / Title | Signature Ability / Interaction |
+#### `[01]` 📁 Direkt Mesaj Kategorilendirme & Düzenleme Motoru
+- **React-Safe Sıralama:** Kanalları silip yeniden oluşturmak yerine saf CSS Flexbox `order` indeksiyle sıralar. Discord'un sürükle-bırak, arama ve bileşen durumlarını %100 korur.
+- **Ağaç Yapısı & Daraltma:** Kategorileri tek tıkla açıp kapatın; okunmamış mesaj sayıları, etiketler ve ses durumu rozetleri görünmeye devam eder.
+- **Hızlı Sağ Tık Yönetimi:** Kategori başlıklarına sağ tıklayarak anında yeniden adlandırın, renk/shader paletini değiştirin veya silin.
+
+#### `[02]` 🎵 Kişiye & Gruba Özel Bildirim Sesleri ve Soundboard Entegrasyonu
+- **Önleyici Ses Engelleme:** Discord'un standart `message1.mp3` bildirim sesi `Dispatcher.dispatch` aşamasında yakalanarak susturulur; yalnızca belirlediğiniz özel ses çalar (çift ses çalma bug'ı yaşanmaz).
+- **Sunucu Soundboard Entegrasyonu:** Bulunduğunuz tüm sunuculardaki Soundboard seslerini arayın, canlı dinleyin ve doğrudan kişilere özel bildirim sesi olarak atayın.
+- **Yerel Dosya ve Link Desteği:** Bilgisayarınızdaki `.mp3` dosyalarını Base64 kodlamasıyla güvenle bağlayın veya doğrudan ses URL'si girin.
+
+#### `[03]` 🐾 Shimeji Masaüstü Maskotları Motoru (20 Karakter • 10 Evren)
+- **Akıllı Ölçekleme & Canlı Render:** 512px yüksek çözünürlüklü HD ve piksel çizimli sprite'lar kafaları/kuyrukları kesilmeden orantılı olarak ekrana çizilir.
+- **Momentum & Yerçekimi Fırlatma Fiziği:** Karakteri fareyle tutup havaya fırlattığınızda sürükleme hızınızı algılar; yerçekimiyle parabolik kavis çizer, ekran kenarlarından seker ve zemine iner.
+- **Doğrudan Fareye Göre Yönlenme:** Fareyi sağa çekince sağa, sola çekince sola bakar. Havadayken ve taşınırken yönünü bozmaz.
+- **Özelleştirilebilir RGB Aura Işığı:** Karakterin etrafındaki ışıma (glow) efektini menüdeki hazır renklerden seçebilir veya özel RGB renk paletinden dilediğiniz tonda ayarlayabilirsiniz.
+- **Karaktere Özel İmza Hareketleri:** Her karakterin orijinal serisine ait animasyonları (Alastor radyosu, Vox elektriği, Husk şemsiyesi ve içkisi, Lucifer lastik ördeği, Adam altın gitarı vb.) ayaktayken otomatik sergilenir.
+
+#### `[04]` 🎨 Görsel Shader'lar, Atmosfer & Partikül Yağmuru
+- **5 Özel Donanım Hızlandırmalı Shader:**
+  - `Frosted Glass` (Buzlu Cam - Arkadaki içeriği kıran modern cam morfizim)
+  - `Cyberpunk Neon` (Canlı mor & eflatun yüksek kontrastlı neon geçiş)
+  - `Thermal Fire` (Ateşli akkor kızıl & turuncu alev gradyanı)
+  - `Emerald Breeze` (Zümrüt yeşili ferah nane tonu)
+  - `Gilded Gold` (Altın metalik pirinç ışıltısı)
+- **Partikül Yağmuru:** DM listenizin arkasında dilediğiniz Discord emojisi veya görseliyle partikül yağdırma efekti.
+
+#### `[05]` 🔤 Tipografi & Özel Yazı Tipleri
+- **Sistem Fontları Desteği:** Bilgisayarınızda yüklü olan herhangi bir fontun adını yazarak kategorilerde kullanın.
+- **Hazır Google Web Fontları:** *Orbitron, Poppins, Montserrat, Cinzel, Righteous, Permanent Marker ve Press Start 2P*.
+
+#### `[06]` 🛡️ LinkShield Anti-Phishing Güvenlik Kalkanı
+- **Anlık Zararlı URL Tespiti:** Yazım hatasıyla taklit edilen sahte Discord/Nitro linklerini (`dlscord.com`, `discorcl.gift`), sahte Steam sitelerini (`steamcommunlty.com`) ve IP grabber tuzaklarını (`grabify.link`, `iplogger.org`) tıklandığı anda yakalar.
+- **Güvenlik Uyarı Paneli:** Tarayıcının açılmasını engelleyerek token çalınmasını ve hesap güvenliği ihlallerini önler.
+
+#### `[07]` 🤖 Akıllı Otomatik Yanıtlayıcı (Smart Auto-Responder)
+- **Oyun/Etkinlik Tespiti:** Discord `ActivityStore` üzerinden o an oynadığınız oyunu otomatik yakalar ve `{game}` değişkeniyle mesaj atan kişiye bildirir.
+- **Spam Koruması & Cooldown:** Aynı kişiye sürekli mesaj gitmesini önleyen ayarlanabilir bekleme süresi (1–120 dakika) ve DND/Idle durum filtreleri.
+
+---
+
+### 🎭 Shimeji Maskot Kadrosu (20 Karakter • 10 Evren)
+
+KeyWare, masaüstünüzü canlandıran 10 farklı popüler evrenden 20 adet özel karaktere sahiptir:
+
+| Evren | Maskot | Etiket | Rol / Ünvan | Özel İmza Hareketi & Animasyon |
 | :--- | :--- | :--- | :--- | :--- |
-| **Devil May Cry** `[Capcom]` | **Dante** | `DMC` | Devil Hunter | Ebony & Ivory Stance, Sword Agility, Classic Air Pose |
-| **Hazbin Hotel** `[A24 / SpindleHorse]` | **Alastor** | `RADIO` | Radio Demon | Radio Broadcast, Shadow Tentacles, Cane Spinning |
-| | **Vox** | `TV` | TV Overlord | Broadcast Showcase, Electric Glitch, CRT Glitch Jitter |
-| | **Husk** | `CASINO` | Casino Cat | Umbrella Open (shime42-46), Alcohol Drinking Sequence (shime26->28->29->blush), Casino Card Shuffle |
-| | **Angel Dust** | `STAR` | Spider Star | Flirty Pose, Tommy Gun Spray, Signature Blush |
-| | **Lucifer** | `KING` | King of Hell | Rubber Duck Summon, Golden Apple, Top Hat Flourish |
-| | **Adam** | `GENERAL` | Exorcist Leader | Holy Guitar Shred, Golden Radiance, Smug Taunt |
-| | **Vaggie** | `SPEAR` | Exorcist Angel | Spear Thrust, Combat Ready Stance, Stern Patrol |
-| | **Valentino** | `LUST` | Overlord of Lust | Cigar Smoke Cloud, Heart Sunglasses, Overlord Laugh |
-| | **Velvette** | `FASHION` | Overlord of Fashion | Phone Selfie Pose, Runway Strut, Hair Flip |
-| **The Amazing Digital Circus** `[GLITCH]` | **Kinger** | `CHESS` | Paranoid Chess King | Impenetrable Fortress Paranoia, Insect Fixation, Panic Freeze |
-| **Freaky Circus** `[Freaky Circus]` | **Pierrot** | `JESTER` | Chaotic Circus Jester | Panic Juggling, 360 Spin, Bewildered Gaze |
-| **My Little Pony & Pibby** `[Hasbro]` | **Fluttershy** | `MLP` | Kind Pegasus | 6-Frame Trot Cycle, Gentle Resting, Meadow Stare |
-| | **Rainbow Dash** | `SONIC` | Supersonic Pegasus | Sonic Rainboom Rush, High-Speed Wing Flutter, Cool Salute |
-| | **Twilight Sparkle** | `PIBBY` | Corrupted Virus | Glitched Magic Walk, Void Distortion, Sitting Idle |
-| **Marvel** `[Marvel]` | **Spider-Man** | `SPIDER` | Friendly Neighborhood | Web Swinging, Wall Anchor, Low Crouching Patrol |
-| **Five Nights at Freddy's** `[ScottGames]` | **Foxy** | `FNAF` | Pirate Fox | Pirate Hook Swing, Hallway Creep Stance, Eyepatch Adjust |
-| **League of Legends** `[Riot Games]` | **Sett** | `THE BOSS` | Underground Boss | Showstopper Knuckle Crack, Pit Boss Flex, Lounging Rest |
-| **Cookie Run Kingdom** `[Devsisters]` | **Shadow Milk** | `BEAST` | Cookie of Deceit | Puppet Theater Strings, Blue Flame Juggle, Deceit Waltz |
-| **Deltarune & Toby Fox** `[Toby Fox]` | **Tenna** | `TV SHOW` | CRT Showman Host | CRT TV Broadcast Static, Antenna Pulse, Gameshow Host Pose |
+| **Devil May Cry** `[Capcom]` | **Dante** | `DMC` | İblis Avcısı | Çift Tabanca Duruşu, Kılıç Çevikliği, Orijinal Havada Düşüş |
+| **Hazbin Hotel** `[A24 / SpindleHorse]` | **Alastor** | `RADIO` | Radyo İblisi | Radyo Mikrofon Yayını, Gölge Dokunaçları, Baston Döndürme |
+| | **Vox** | `TV` | Medya Derebeyi | Reklam Kartı Gösterimi, TV Elektrik Glitch'i, CRT Statik Titreme |
+| | **Husk** | `CASINO` | Kumarbaz Kedi | Şemsiye Açma (`shime42-46`), Alkol İçme & Yanak Kızarması (`shime26->28->29->blush`), Kart Dağıtma |
+| | **Angel Dust** | `STAR` | Örümcek Yıldız | Cilveli Poz, Tommy Gun Taraması, İkonik Gülümseme |
+| | **Lucifer Morningstar** | `KING` | Cehennem Kralı | Sarı Lastik Ördek Çıkarma, Altın Elma Gösterisi, Şapka Selamı |
+| | **Adam** | `GENERAL` | Baş Melek Lideri | Altın Elektro Gitar Solosu, İlahi Altın Işık, Ukala Kahkaha |
+| | **Vaggie** | `SPEAR` | Muhafız Melek | Mızrak Saldırısı Duruşu, Savaş Pozisyonu, Devriye Yürüyüşü |
+| | **Valentino** | `LUST` | Şehvet Derebeyi | Puro Dumanı Bulutu, Kalpli Güneş Gözlükleri, Derebeyi Gülüşü |
+| | **Velvette** | `FASHION` | Moda Derebeyi | Telefonla Selfie Pozu, Podyum Yürüyüşü, Saç Savurma |
+| **The Amazing Digital Circus** `[GLITCH]` | **Kinger** | `CHESS` | Paranoyak Şah | Aşılmaz Kale Paranoyası, Kelebek Odaklanması, Çığlık Atarak Donma |
+| **Freaky Circus** `[Freaky Circus]` | **Pierrot** | `JESTER` | Kaotik Palyaço | Panik İçinde Labut Çevirme, 360 Derece Hızlı Dönüş, Şaşkın Bakış |
+| **My Little Pony & Pibby** `[Hasbro]` | **Fluttershy** | `MLP` | Nezaket Pegasusu | 6 Kare Akıcı Tırıs Yürüyüşü, Sakin Çayır Bakışı, Sevimli Oturuş |
+| | **Rainbow Dash** | `SONIC` | Süpersonik Pegasus | Sonic Rainboom Uçuş Hızı, Kanat Çırpma, Havalı Pegasus Selamı |
+| | **Twilight Sparkle** | `PIBBY` | Pibby Virüsü | Glitch Bozulma Yürüyüşü, Hiçlik Paraziti, Boyutsal Titreme |
+| **Marvel Universe** `[Marvel]` | **Spider-Man** | `SPIDER` | Mahallenin Dostu | Ağ Atma & Sallanma, Duvar Tutunması, Alçak Örümcek Çömelmesi |
+| **Five Nights at Freddy's** `[ScottGames]` | **Foxy** | `FNAF` | Korsan Tilki | Korsan Kancası Sallama, Koridor Pusu Pozu, Göz Bandı Düzeltme |
+| **League of Legends** `[Riot Games]` | **Sett** | `THE BOSS` | Yeraltı Patronu | Showstopper Parmak Çıtlatma, Pazu Sıkma & Güç Gösterisi, Patron Dinlenmesi |
+| **Cookie Run Kingdom** `[Devsisters]` | **Shadow Milk** | `BEAST` | Hilebaz Bisküvi | Kukla İpleri Tiyatrosu, Mavi Alev Çevirme, Hilebazlık Dansı |
+| **Deltarune & Undertale** `[Toby Fox]` | **Tenna** | `TV SHOW` | CRT Yarışma Sunucusu | CRT Televizyon Paraziti, Anten Yayını Titremesi, Yarışma Sunucu Pozu |
 
 ---
 
-### Technical Specifications
+### ❓ Sıkça Sorulan Sorular (SSS)
 
-```
-  +-------------------------------------------------------------------+
-  |                        KEYWARE CORE ENGINE                        |
-  +-------------------------------------------------------------------+
-  |  [DOM Injection]         -> nav[aria-label="Direct Messages"]     |
-  |  [Audio Hook]            -> Dispatcher.dispatch (Pre-Dispatch)   |
-  |  [Physics Loop]          -> requestAnimationFrame (Delta-Timed)   |
-  |  [Physics Mode]          -> Momentum Toss + Elastic Wall Bounce  |
-  |  [Data Persistence]      -> BdApi.Data (Isolated JSON Storage)    |
-  |  [Memory Footprint]      -> < 2.5 MB (Zero Polling Timers)        |
-  |  [Idle CPU Usage]        -> 0.0% (Cached Dirty-Checking)          |
-  +-------------------------------------------------------------------+
-```
+<details>
+<summary><b>1. Bu eklentiyi kullanmak Discord'da ban riski taşır mı?</b></summary>
+<br>
+Hayır. KeyWare tamamen istemci tarafında (client-side) çalışır. Discord sunucularına herhangi bir yetkisiz istek göndermez, kullanıcı token'ınıza erişmez ve Discord API limitlerini aşmaz. Yalnızca yerel arayüzünüzü güzelleştirir.
+</details>
+
+<details>
+<summary><b>2. Shimeji maskotları oyun oynarken veya sohbet ederken kasma yapar mı?</b></summary>
+<br>
+Kesinlikle yapmaz. KeyWare'in Shimeji motoru doğrudan GPU katmanında <code>translate3d</code> ve katı CSS containment (<code>contain: strict</code>) ile çalışır. Ayrıca mesaj yazışmaları ve chat akışı Shimeji motorundan tamamen izole edilmiştir. Bilgisayarınız boştayken CPU kullanımı %0.0'dır.
+</details>
+
+<details>
+<summary><b>3. Maskotları fareyle nasıl kontrol ederim?</b></summary>
+<br>
+Karakterin üzerine farenin sol tuşuyla tıklayıp tutarak ekranın istediğiniz yerine taşıyabilir, farenizi hızlıca savurup bıraktığınızda ise gerçekçi momentum fiziğiyle karakteri havada fırlatabilirsiniz. Karakterler yerçekimiyle ekran kenarlarından sekip zemine güvenle iner.
+</details>
+
+<details>
+<summary><b>4. Karakter ve ses ayarlarını nereden değiştirebilirim?</b></summary>
+<br>
+Discord DM listenizin en üstündeki başlık çubuğunda <b>Shimeji Maskot Butonu</b> ve <b>Kategori Ekle Butonu</b> yer alır. Buradan veya karakterin üzerine sağ tıklayarak açılan menüden maskotunuzu, hızını, boyutunu, takip modunu ve ışıma rengini tek tıkla değiştirebilirsiniz.
+</details>
+
+<details>
+<summary><b>5. Güncellemeleri nasıl alırım?</b></summary>
+<br>
+KeyWare, BetterDiscord'un otomatik güncelleme sistemine entegredir. GitHub'a yeni bir sürüm yüklendiğinde Discord içerisinde üstte otomatik olarak güncelleme bildirimi çıkar ve tek tıkla güncellenir.
+</details>
 
 ---
 
-### Installation
+### 📥 Kurulum Rehberi
 
-#### Automated Install (Windows PowerShell)
+#### ⚡ Otomatik Kurulum (Windows PowerShell - Tek Komut)
+PowerShell'i açıp aşağıdaki komutu yapıştırmanız yeterlidir:
 ```powershell
 iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js" -OutFile "$env:APPDATA\BetterDiscord\plugins\KeyWare.plugin.js"
 ```
 
-#### Manual Installation
-1. Ensure **[BetterDiscord](https://betterdiscord.app/)** is installed.
-2. Download [`KeyWare.plugin.js`](https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js).
-3. Move the downloaded file into your BetterDiscord plugins folder:
+#### 🛠️ Manuel Kurulum
+1. Bilgisayarınızda **[BetterDiscord](https://betterdiscord.app/)** kurulu olduğundan emin olun.
+2. [`KeyWare.plugin.js`](https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWare.plugin.js) dosyasını indirin.
+3. İndirdiğiniz dosyayı BetterDiscord eklentiler klasörüne taşıyın:
    ```
    %appdata%\BetterDiscord\plugins
    ```
-4. In Discord, navigate to **User Settings > Plugins** and enable **KeyWare**.
+4. Discord'u açın, **Kullanıcı Ayarları > Eklentiler (Plugins)** sekmesine gidin ve **KeyWare**'i aktif edin.
 
 ---
 
-### Automatic Updates
-
-KeyWare integrates with BetterDiscord's native release notification engine. When a new version is pushed to GitHub, an update banner will appear automatically within Discord:
+### ⚙️ Teknik Özellikler
 
 ```
-[ Update Available ] KeyWare v7.7.0 -> [ Update Now ]
+  +-------------------------------------------------------------------+
+  |                       KEYWARE TEKNİK MİMARİ                       |
+  +-------------------------------------------------------------------+
+  |  [DOM Entegrasyonu]      -> nav[aria-label="Direkt Mesajlar"]     |
+  |  [Ses Müdahalesi]        -> Dispatcher.dispatch (Pre-Dispatch)   |
+  |  [Fizik Motoru]          -> requestAnimationFrame (Delta-Timed)   |
+  |  [Fizik Modu]            -> Momentum Fırlatma + Kenar Sekmesi     |
+  |  [Veri Depolama]         -> BdApi.Data (İzole JSON Yapılandırma)  |
+  |  [Bellek Ayak İzi]       -> < 2.5 MB (Sıfır Bellek Sızıntısı)     |
+  |  [Boşta CPU Tüketimi]    -> %0.0 (Önbellekli Dirty-Checking)      |
+  |  [GPU Hızlandırma]       -> Hardware Translate3D + Strict Contain |
+  +-------------------------------------------------------------------+
 ```
 
 ---
 
-### License & Credits
+### 📜 Lisans & Geliştirici
 
-Distributed under the **MIT License**. Created with precision by [**keyrex**](https://github.com/keyrexdevelopment).
+Bu proje **MIT Lisansı** altında korunmaktadır.
+
+- **Geliştirici:** `keyrex` (Keyrex Development)
+- **Menşei:** Türkiye 🇹🇷
+- **Kaynak Kodu:** [GitHub - keyrexdevelopment/keyware-dms](https://github.com/keyrexdevelopment/keyware-dms)
+
+<p align="center">
+  <sub>KeyWare DMS © 2026 • Made with ❤️ in Türkiye</sub>
+</p>
