@@ -5,13 +5,13 @@
 <p align="center">
   <img src="https://img.shields.io/badge/MOTOR-BETTERDISCORD-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Motor" />
   <img src="https://img.shields.io/badge/S%C3%9CR%C3%9CM-v7.7.0-00d2d3?style=for-the-badge" alt="Sürüm" />
-  <img src="https://img.shields.io/badge/MEN%C5%9EE%C4%B0-T%C3%9CRK%C4%B0YE%20%F0%9F%87%B9%F0%9F%87%B7-e84118?style=for-the-badge" alt="Türkiye" />
+  <img src="https://img.shields.io/badge/MEN%C5%9EE%C4%B0-T%C3%9CRK%C4%B0YE-e84118?style=for-the-badge" alt="Türkiye" />
   <img src="https://img.shields.io/badge/MASKOTLAR-20%20KARAKTER%20%E2%80%A2%2010%20EVREN-fbc531?style=for-the-badge" alt="Karakterler" />
   <img src="https://img.shields.io/badge/L%C4%B0SANS-MIT-4cd137?style=for-the-badge" alt="Lisans" />
 </p>
 
 <h2 align="center">
-  🇹🇷 A Wonderful Plugin Made in Türkiye 🇹🇷<br>
+  A Wonderful Plugin Made in Türkiye<br>
   <sub>Türkiye'de Geliştirilen Gelişmiş BetterDiscord Direkt Mesaj & Masaüstü Maskot Ekosistemi</sub>
 </h2>
 
@@ -22,11 +22,10 @@
 <p align="center">
   <a href="#-genel-bakış">Genel Bakış</a> •
   <a href="#-temel-modüller">Temel Modüller</a> •
-  <a href="#-shimeji-maskot-kadrosu-20-karakter--10-evren">Maskot Kadrosu (20 Karakter)</a> •
-  <a href="#-kurulum-rehberi">Kurulum</a> •
   <a href="#-sıkça-sorulan-sorular-sss">Sıkça Sorulan Sorular (SSS)</a> •
+  <a href="#-kurulum-rehberi">Kurulum</a> •
   <a href="#-teknik-özellikler">Teknik Özellikler</a> •
-  <a href="#-lisans">Lisans</a>
+  <a href="#-lisans--geliştirici">Lisans</a>
 </p>
 
 ---
@@ -44,19 +43,17 @@ Bununla da kalmayıp masaüstünüzde dolaşan, farenizi takip eden, fırlatıla
 
 ### 🚀 Temel Modüller
 
-```
-  +-------------------------------------------------------------------------------+
-  |                             KEYWARE MODÜLER MİMARİ                            |
-  +-------------------------------------------------------------------------------+
-  | [01] DM Kategorilendirme  -> Non-destructive CSS Flexbox Order Sıralama       |
-  | [02] Özel Bildirim Sesi   -> Dispatcher Düzeyinde Müdahale & Soundboard Entegre|
-  | [03] Shimeji Maskotları   -> 20 Karakter, 10 Evren, Momentum Fırlatma Fiziği  |
-  | [04] Görsel Shader & Yağmur-> 5 Donanım Hızlandırmalı Shader + Emoji Yağmuru  |
-  | [05] Tipografi & Fontlar  -> Sistem Fontları + 7 Google Web Font Paketi       |
-  | [06] LinkShield Güvenlik  -> Sahte Nitro, Steam ve IP Grabber URL Engelleyici |
-  | [07] Otomatik Yanıtlayıcı -> {game} Değişkenli Akıllı Durum Yanıt Motoru       |
-  +-------------------------------------------------------------------------------+
-```
+| Modül No | Modül Adı | Açıklama / Entegrasyon |
+| :---: | :--- | :--- |
+| **`[01]`** | **DM Kategorilendirme** | Non-destructive CSS Flexbox `order` ile kusursuz kanal sıralama |
+| **`[02]`** | **Özel Bildirim Sesleri** | `Dispatcher` düzeyinde önleyici ses engelleme & Soundboard entegrasyonu |
+| **`[03]`** | **Shimeji Maskotları** | 20 Karakter, 10 Evren, Momentum Fırlatma Fiziği & GPU İzolasyonu |
+| **`[04]`** | **Görsel Shader & Yağmur** | 5 Donanım Hızlandırmalı Shader & Kişiselleştirilebilir Emoji Yağmuru |
+| **`[05]`** | **Tipografi & Fontlar** | Yerel Sistem Fontları + 7 Google Web Font Paketi Entegrasyonu |
+| **`[06]`** | **LinkShield Güvenlik** | Sahte Nitro, Sahte Steam ve IP Grabber URL'lerini Anında Engelleme |
+| **`[07]`** | **Otomatik Yanıtlayıcı** | `{game}` değişkenli akıllı oyun algılama & durum yanıt motoru |
+
+<br>
 
 #### `[01]` 📁 Direkt Mesaj Kategorilendirme & Düzenleme Motoru
 - **React-Safe Sıralama:** Kanalları silip yeniden oluşturmak yerine saf CSS Flexbox `order` indeksiyle sıralar. Discord'un sürükle-bırak, arama ve bileşen durumlarını %100 korur.
@@ -95,35 +92,6 @@ Bununla da kalmayıp masaüstünüzde dolaşan, farenizi takip eden, fırlatıla
 #### `[07]` 🤖 Akıllı Otomatik Yanıtlayıcı (Smart Auto-Responder)
 - **Oyun/Etkinlik Tespiti:** Discord `ActivityStore` üzerinden o an oynadığınız oyunu otomatik yakalar ve `{game}` değişkeniyle mesaj atan kişiye bildirir.
 - **Spam Koruması & Cooldown:** Aynı kişiye sürekli mesaj gitmesini önleyen ayarlanabilir bekleme süresi (1–120 dakika) ve DND/Idle durum filtreleri.
-
----
-
-### 🎭 Shimeji Maskot Kadrosu (20 Karakter • 10 Evren)
-
-KeyWare, masaüstünüzü canlandıran 10 farklı popüler evrenden 20 adet özel karaktere sahiptir:
-
-| Evren | Maskot | Etiket | Rol / Ünvan | Özel İmza Hareketi & Animasyon |
-| :--- | :--- | :--- | :--- | :--- |
-| **Devil May Cry** `[Capcom]` | **Dante** | `DMC` | İblis Avcısı | Çift Tabanca Duruşu, Kılıç Çevikliği, Orijinal Havada Düşüş |
-| **Hazbin Hotel** `[A24 / SpindleHorse]` | **Alastor** | `RADIO` | Radyo İblisi | Radyo Mikrofon Yayını, Gölge Dokunaçları, Baston Döndürme |
-| | **Vox** | `TV` | Medya Derebeyi | Reklam Kartı Gösterimi, TV Elektrik Glitch'i, CRT Statik Titreme |
-| | **Husk** | `CASINO` | Kumarbaz Kedi | Şemsiye Açma (`shime42-46`), Alkol İçme & Yanak Kızarması (`shime26->28->29->blush`), Kart Dağıtma |
-| | **Angel Dust** | `STAR` | Örümcek Yıldız | Cilveli Poz, Tommy Gun Taraması, İkonik Gülümseme |
-| | **Lucifer Morningstar** | `KING` | Cehennem Kralı | Sarı Lastik Ördek Çıkarma, Altın Elma Gösterisi, Şapka Selamı |
-| | **Adam** | `GENERAL` | Baş Melek Lideri | Altın Elektro Gitar Solosu, İlahi Altın Işık, Ukala Kahkaha |
-| | **Vaggie** | `SPEAR` | Muhafız Melek | Mızrak Saldırısı Duruşu, Savaş Pozisyonu, Devriye Yürüyüşü |
-| | **Valentino** | `LUST` | Şehvet Derebeyi | Puro Dumanı Bulutu, Kalpli Güneş Gözlükleri, Derebeyi Gülüşü |
-| | **Velvette** | `FASHION` | Moda Derebeyi | Telefonla Selfie Pozu, Podyum Yürüyüşü, Saç Savurma |
-| **The Amazing Digital Circus** `[GLITCH]` | **Kinger** | `CHESS` | Paranoyak Şah | Aşılmaz Kale Paranoyası, Kelebek Odaklanması, Çığlık Atarak Donma |
-| **Freaky Circus** `[Freaky Circus]` | **Pierrot** | `JESTER` | Kaotik Palyaço | Panik İçinde Labut Çevirme, 360 Derece Hızlı Dönüş, Şaşkın Bakış |
-| **My Little Pony & Pibby** `[Hasbro]` | **Fluttershy** | `MLP` | Nezaket Pegasusu | 6 Kare Akıcı Tırıs Yürüyüşü, Sakin Çayır Bakışı, Sevimli Oturuş |
-| | **Rainbow Dash** | `SONIC` | Süpersonik Pegasus | Sonic Rainboom Uçuş Hızı, Kanat Çırpma, Havalı Pegasus Selamı |
-| | **Twilight Sparkle** | `PIBBY` | Pibby Virüsü | Glitch Bozulma Yürüyüşü, Hiçlik Paraziti, Boyutsal Titreme |
-| **Marvel Universe** `[Marvel]` | **Spider-Man** | `SPIDER` | Mahallenin Dostu | Ağ Atma & Sallanma, Duvar Tutunması, Alçak Örümcek Çömelmesi |
-| **Five Nights at Freddy's** `[ScottGames]` | **Foxy** | `FNAF` | Korsan Tilki | Korsan Kancası Sallama, Koridor Pusu Pozu, Göz Bandı Düzeltme |
-| **League of Legends** `[Riot Games]` | **Sett** | `THE BOSS` | Yeraltı Patronu | Showstopper Parmak Çıtlatma, Pazu Sıkma & Güç Gösterisi, Patron Dinlenmesi |
-| **Cookie Run Kingdom** `[Devsisters]` | **Shadow Milk** | `BEAST` | Hilebaz Bisküvi | Kukla İpleri Tiyatrosu, Mavi Alev Çevirme, Hilebazlık Dansı |
-| **Deltarune & Undertale** `[Toby Fox]` | **Tenna** | `TV SHOW` | CRT Yarışma Sunucusu | CRT Televizyon Paraziti, Anten Yayını Titremesi, Yarışma Sunucu Pozu |
 
 ---
 
@@ -182,20 +150,16 @@ iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWar
 
 ### ⚙️ Teknik Özellikler
 
-```
-  +-------------------------------------------------------------------+
-  |                       KEYWARE TEKNİK MİMARİ                       |
-  +-------------------------------------------------------------------+
-  |  [DOM Entegrasyonu]      -> nav[aria-label="Direkt Mesajlar"]     |
-  |  [Ses Müdahalesi]        -> Dispatcher.dispatch (Pre-Dispatch)   |
-  |  [Fizik Motoru]          -> requestAnimationFrame (Delta-Timed)   |
-  |  [Fizik Modu]            -> Momentum Fırlatma + Kenar Sekmesi     |
-  |  [Veri Depolama]         -> BdApi.Data (İzole JSON Yapılandırma)  |
-  |  [Bellek Ayak İzi]       -> < 2.5 MB (Sıfır Bellek Sızıntısı)     |
-  |  [Boşta CPU Tüketimi]    -> %0.0 (Önbellekli Dirty-Checking)      |
-  |  [GPU Hızlandırma]       -> Hardware Translate3D + Strict Contain |
-  +-------------------------------------------------------------------+
-```
+| Bileşen | Detay / Mimari |
+| :--- | :--- |
+| **DOM Entegrasyonu** | `nav[aria-label="Direkt Mesajlar"]` & Non-destructive order |
+| **Ses Müdahalesi** | `Dispatcher.dispatch` (Pre-Dispatch seviyesinde yakalama) |
+| **Fizik & Render Motoru** | `requestAnimationFrame` (Delta-Timed & GPU Hızlandırmalı) |
+| **Fizik Modeli** | Parabolik Momentum Fırlatma + Elastik Kenar Sekmesi |
+| **Veri Depolama** | `BdApi.Data` (İzole JSON Yapılandırma) |
+| **Bellek Ayak İzi** | `< 2.5 MB` (Sıfır Bellek Sızıntısı) |
+| **Boşta CPU Tüketimi** | `%0.0` (Önbellekli Dirty-Checking) |
+| **GPU Hızlandırma** | Hardware `translate3d` + Strict CSS Containment |
 
 ---
 
@@ -204,9 +168,9 @@ iwr "https://raw.githubusercontent.com/keyrexdevelopment/keyware-dms/main/KeyWar
 Bu proje **MIT Lisansı** altında korunmaktadır.
 
 - **Geliştirici:** `keyrex` (Keyrex Development)
-- **Menşei:** Türkiye 🇹🇷
+- **Menşei:** Türkiye
 - **Kaynak Kodu:** [GitHub - keyrexdevelopment/keyware-dms](https://github.com/keyrexdevelopment/keyware-dms)
 
 <p align="center">
-  <sub>KeyWare DMS © 2026 • Made with ❤️ in Türkiye</sub>
+  <sub>KeyWare DMS © 2026 • Made in Türkiye</sub>
 </p>
