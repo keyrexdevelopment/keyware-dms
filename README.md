@@ -11,6 +11,11 @@
 
 <h1 align="center">KeyWare DMs</h1>
 
+<h3 align="center">
+  A Wonderful Plugin Made in Türkiye<br>
+  <sub>Türkiye'de Geliştirilen Gelişmiş BetterDiscord Direkt Mesaj & Masaüstü Maskot Ekosistemi</sub>
+</h3>
+
 <p align="center">
   <b>KeyWare</b>, Discord Direkt Mesajlarınızı (DM) kategorilere ayıran, kişiye özel bildirim sesleri sunan, 15 farklı evrenden <b>30 interaktif Shimeji maskotu</b> ve <b>LinkShield</b> anti-phishing kalkanı içeren modern bir BetterDiscord eklentisidir.
 </p>
