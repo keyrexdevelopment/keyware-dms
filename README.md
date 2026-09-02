@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://betterdiscord.app/"><img src="https://img.shields.io/badge/Platform-BetterDiscord-5865F2?style=flat-square&logo=discord&logoColor=white" alt="BetterDiscord" /></a>
-  <img src="https://img.shields.io/badge/Version-10.3.0-00d2d3?style=flat-square" alt="Version" />
+  <img src="https://img.shields.io/badge/Version-10.3.1-00d2d3?style=flat-square" alt="Version" />
   <img src="https://img.shields.io/badge/License-MIT-4cd137?style=flat-square" alt="License" />
   <img src="https://img.shields.io/badge/Made%20in-T%C3%BCrkiye-e84118?style=flat-square" alt="Türkiye" />
 </p>
