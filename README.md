@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://betterdiscord.app/"><img src="https://img.shields.io/badge/Platform-BetterDiscord-5865F2?style=flat-square&logo=discord&logoColor=white" alt="BetterDiscord" /></a>
-  <img src="https://img.shields.io/badge/Version-10.2.0-00d2d3?style=flat-square" alt="Version" />
+  <img src="https://img.shields.io/badge/Version-10.3.0-00d2d3?style=flat-square" alt="Version" />
   <img src="https://img.shields.io/badge/License-MIT-4cd137?style=flat-square" alt="License" />
   <img src="https://img.shields.io/badge/Made%20in-T%C3%BCrkiye-e84118?style=flat-square" alt="Türkiye" />
 </p>
@@ -17,7 +17,7 @@
 </h3>
 
 <p align="center">
-  <b>KeyWare</b>, Discord Direkt Mesajlarınızı (DM) kategorilere ayıran, kişiye özel bildirim sesleri sunan, 15 farklı evrenden <b>30 interaktif Shimeji maskotu</b> ve <b>LinkShield</b> anti-phishing kalkanı içeren modern bir BetterDiscord eklentisidir.
+  <b>KeyWare</b>, Discord Direkt Mesajlarınızı (DM) kategorilere ayıran, kişiye özel bildirim sesleri sunan, 15 farklı evrenden <b>31 interaktif Shimeji maskotu</b> ve <b>LinkShield</b> anti-phishing kalkanı içeren modern bir BetterDiscord eklentisidir.
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
 ### Özellikler
 
 - **DM Kategorileri & Organizasyon:** Direkt mesajlarınızı klasörlere ayırın, daraltın ve React yapısını bozmadan sürükleyip bırakarak düzenleyin.
-- **30+ Shimeji Maskotu:** DMC, Hazbin Hotel, Undertale, Marvel, LoL ve Genshin gibi 15 evrenden masaüstü maskotları. Gerçekçi momentum fırlatma fiziği ve özel imza animasyonları.
+- **31+ Shimeji Maskotu:** DMC, Hazbin Hotel, Undertale & Undertale Yellow (Clover), Marvel, LoL ve Genshin gibi 15 evrenden masaüstü maskotları. Gerçekçi momentum fırlatma fiziği ve özel imza animasyonları.
 - **Kişiye Özel Bildirim Sesleri:** Belirli kişilere veya gruplara sunucu Soundboard'larından ya da yerel `.mp3` dosyalarından özel zil sesleri atayın.
 - **Shader & Temalar:** Frosted Glass, Cyberpunk Neon gibi 5 donanım hızlandırmalı görsel efekt ve özel Google yazı tipleri.
 - **LinkShield Güvenlik Kalkanı:** Sahte Nitro, sahte Steam ve IP toplayıcı tuzak bağlantıları tıklandığı an engelleyen güvenlik sistemi.
